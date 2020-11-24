@@ -1,0 +1,44 @@
+---
+# Config file for generating aruco corners and storing them in the right path.
+path : ../aruco/
+origin : 0
+# Use the caruco corner as orgin
+charuco_origin : False
+filename: "aruco_{nr:02}.png"
+images : True
+loging:
+  file : "../logs/gen_aruco.log"
+  # format : "%(name)s - %(levelname)s - %(message)s"
+  format : "%(name)s:%(levelname)s:%(lineno)s-> %(message)s"
+pdf:
+  generate : True
+  filename : "Aruco_markers.pdf"
+size :
+  ar : 700
+  bg : 1
+charuco:
+  path: "../aruco/charuco.pdf"
+  pix: 4000
+  shape: [3,3]
+  border: 0.8
+generate :
+  - 0
+  # - 1
+  # - 2
+  # - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  # - 12
+  # - 13
+  # - 14
+  # - 15
+  # - 16
+  # - 17
+  # - 18
+  # - 19

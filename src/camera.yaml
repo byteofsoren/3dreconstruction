@@ -1,0 +1,16 @@
+---
+# Configurate the camera matrises and where they are stored.
+# General structure of cameras:
+# cameras:
+#   mobiles:
+#     path: "../cameras/name of camera"
+#     params:
+#       # Those are generated:
+cameras:
+  mobile:
+    path: "../camera/mobile"
+  webcam:
+    path: "../camera/webcam"
+
+
+
