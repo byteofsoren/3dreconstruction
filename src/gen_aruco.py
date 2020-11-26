@@ -16,7 +16,6 @@ class argen():
         self._dic = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_250)
         img = np.zeros((size,size), dtype=np.uint8)
         self._img = aruco.drawMarker(self._dic,idi,size,img, borderBits=bgsize)
-        del(self._dic)
 
     def show(self):
         wn = f"Aruco nr {self._id}"
@@ -37,7 +36,7 @@ class argen():
 #         self._conf = conf['charuco']
 #         nx,ny = self._conf['shape']
 
-def caruco_board()->np.ndarray:
+def caruco_board(retboard:bool=False,retimg:bool=True)->np.ndarray:
     """ Creates a caruco board with the config denoted in gen_aruco.yaml
         input: None
         Return: image:nd.ndarray
@@ -49,8 +48,16 @@ def caruco_board()->np.ndarray:
     nx,ny = conf['shape']
     arucotemp = aruco.Dictionary_get(aruco.DICT_6X6_250)
     bord = aruco.CharucoBoard_create(nx,ny,1,conf['border'],arucotemp)
-    img = bord.draw((conf['pix'],conf['pix']))
-    return img
+    if (retboard) and (retimg):
+        img = bord.draw((conf['pix'],conf['pix']))
+        return img,bord
+    elif (retboard) and (not retimg):
+        return bord
+    elif (not retboard) and (retimg):
+        img = bord.draw((conf['pix'],conf['pix']))
+        return img
+    elif (not retboard) and (not retimg):
+        raise Exception("Both retboard and retimg can not be False")
 
 
 def main():
@@ -96,6 +103,9 @@ def main():
                 else:
                     ar.save(f"{path}/{fname.format(nr=nr)}")
                 f.write("\\newpage\n")
+                if conf['dual']:
+                    log.info("dual sided paper set to true")
+                    f.write("\\myemptypage\n")
             if not conf['charuco_origin']:
                 log.info("Caruco borad was not used as origin thus adding it att the end")
                 f.write("\\vspace{5cm}\n")
@@ -105,6 +115,9 @@ def main():
                 f.write(str("\includegraphics[width=\\textwidth, keepaspectratio]{caruco_board.png}\n"))
                 f.write("\\end{center}\n")
                 f.write("\\newpage\n")
+                if conf['dual']:
+                    log.info("dual sided paper set to true")
+                    f.write("\\myemptypage\n")
 
 
 

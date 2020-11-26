@@ -6,11 +6,18 @@
 #     path: "../cameras/name of camera"
 #     params:
 #       # Those are generated:
+log:
+  file : "../logs/camera.log"
+  # format : "%(name)s - %(levelname)s - %(message)s"
+  format : "%(name)s:%(levelname)s:%(lineno)s-> %(message)s"
+  level: 10
 cameras:
   mobile:
     path: "../camera/mobile"
-  webcam:
-    path: "../camera/webcam"
+    filetypes:
+      - jpg
+  # webcam:
+  #   path: "../camera/webcam"
 
 
 

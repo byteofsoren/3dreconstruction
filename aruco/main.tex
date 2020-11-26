@@ -46,6 +46,14 @@
 % Adding math symbols for real numbers.
 \newcommandx{\R}{\mathbb{R}}
 
+\usepackage{afterpage}
+\newcommand\myemptypage{
+    \null
+    \thispagestyle{empty}
+    \addtocounter{page}{-1}
+    \newpage
+    }
+
 \title{3D reconstruction of spatial skeletal model}
 \author{Magnus Sörensen}
 \date{2020 November}

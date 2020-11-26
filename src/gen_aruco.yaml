@@ -6,6 +6,8 @@ origin : 0
 charuco_origin : False
 filename: "aruco_{nr:02}.png"
 images : True
+# Eliminate dual sided in print
+dual : True
 loging:
   file : "../logs/gen_aruco.log"
   # format : "%(name)s - %(levelname)s - %(message)s"

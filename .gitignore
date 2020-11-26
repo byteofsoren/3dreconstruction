@@ -155,3 +155,7 @@ aruco/*.log
 aruco/*.pdf
 aruco/*.run.xml
 
+# ignore datasets
+datasets/
+camera/
+
