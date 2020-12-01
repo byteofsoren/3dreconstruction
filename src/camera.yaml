@@ -14,10 +14,22 @@ log:
 cameras:
   mobile:
     path: "../camera/mobile"
+    matrixfile: "camera.h5py"
+    corp_img: True
+    corp_scaling: 0.75
     filetypes:
       - jpg
   # webcam:
   #   path: "../camera/webcam"
+  #   matrixfile: "camera.h5py"
+  #   corp_img: True
+  #   filetypes:
+  #     - jpg
+codetests:
+  camera_calibration: True
+  save_camera: True
+  load_camera: False
+  rectify_img: True
 
 
 

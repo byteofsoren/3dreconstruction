@@ -1,0 +1,7 @@
+---
+# Configuration and setting for the map ojbect.
+log:
+  file : "../logs/map.log"
+  format : "%(name)s:%(levelname)s:%(lineno)s-> %(message)s"
+  level: 10
+

@@ -1,12 +1,23 @@
 import numpy as np
 import cv2, PIL
 import yaml
-import logging as log
+import logging
 from cv2 import aruco
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 # import pandas as pd
 from pathlib import Path
+
+# == Logging basic setup ===
+log = logging.getLogger(__name__)
+f_log = logging.FileHandler("../logs/gen_aruco.log")
+f_log.setLevel(logging.INFO)
+f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")
+f_log.setFormatter(f_logformat)
+log.addHandler(f_log)
+log.setLevel(logging.INFO)
+# == END ===
+
 
 
 class argen():
@@ -131,10 +142,7 @@ def gen():
 if __name__ == '__main__':
     with open('./gen_aruco.yaml','r') as f:
         conf = yaml.load(f,Loader=yaml.FullLoader)
-    lconf = conf['loging']
-    log.basicConfig(filename=lconf['file'], filemode='w', format=lconf['format'],level=log.DEBUG)
     del(conf)
-    del(lconf)
     main()
     # gen()
     log.info("END of programm")
