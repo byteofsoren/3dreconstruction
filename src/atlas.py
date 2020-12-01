@@ -1,6 +1,7 @@
 import numpy as np
 import cv2, yaml
 import logging
+import pandas as pd
 from cv2 import aruco
 
 # == Logging basic setup ===
@@ -19,7 +20,8 @@ class view():
     corners:list = list()
     ids:None
 
-    def __init__(self, img:np.ndarray, arucodict, arucoparam):
+    def __init__(self, name:str, img:np.ndarray, arucodict, arucoparam):
+        self._name=name
         self.img = img
         # read the config file.
         with open('./atlas.yaml','r') as f:
@@ -32,17 +34,17 @@ class view():
         self._parameters = arucoparam
 
     def __str__(self):
-        return f"View object of shape {self.img.shape}"
-
+        return f"View object filename={self._name} shape={self.img.shape}"
 
     def dectect_corners(self):
-        tmp = aruco.detectMarkers(gray, self._aruco, parameters=self._parameters)
+        tmp = aruco.detectMarkers(self._gray, self._aruco, parameters=self._parameters)
         self.corners, self.ids, self._rejectedImgPoints = tmp
 
 
 class projection():
     """The map object calculats the relations between view and aruco corners"""
-    views:list = list()
+    _corner_proj = dict()
+    _views = list()
     def __init__(self):
         with open('./atlas.yaml','r') as f:
             conf = yaml.load(f,Loader=yaml.FullLoader)
@@ -50,10 +52,35 @@ class projection():
     def add_view(self, view):
         """ Add a view to the map """
         log.info("Atlas add view {view}")
-        self.views.append(view)
+        view.dectect_corners()
+        self._views.append(view)
+        if not view.ids is None:
+            if len(view.ids) <= 2:
+                log.warn(f"<== Low length of 'view.ids={view.ids}' ==>")
+            for id in view.ids:
+                log.info(f"Adding {view} to aruco id={id[0]}")
+                if id[0] in self._corner_proj:
+                    self._corner_proj[id[0]].append(view)
+                else:
+                    self._corner_proj[id[0]] = list()
+                    self._corner_proj[id[0]].append(view)
+        else:
+            log.warn(f"View contained Nan {view._name}")
 
-    def calucate_views(self):
-        """ Clulates all corners of from all the views """
-        for v in self.views:
-            v.dectect_corners()
+    def view_atlas(self):
+        """ returns an table reprecentation for the atlas. """
+        log.info("-- View_atlas show table --")
+        keys = sorted(self._corner_proj.keys())
+        log.info(f"Recorded ids\n{keys}")
+        for key in keys:
+            l = self._corner_proj[key]
+            names = [i._name for i in l]
+            log.info(f"corner_proj[{key}]={names}")
+
+
+
+
+
+
+
 

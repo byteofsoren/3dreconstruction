@@ -47,7 +47,6 @@ class dataset():
         setdir:str = self._conf['path']
         setdir:pathlib.PosixPath = Path(setdir.format(name=name))
         setfile:pathlib.PosixPath = Path(f"{setdir}/{self._conf['setfile']}")
-        print(setfile)
         # Aruco config
         self._aruco = aruco.Dictionary_get(aruco.DICT_6X6_250)
         self._parameters = aruco.DetectorParameters_create()
@@ -90,6 +89,9 @@ class dataset():
     def __str__(self):
         return f"Database at dir {self._setdir}"
 
+    def show_atlas(self):
+        print(self._atlas.view_atlas())
+
     def create_views(self):
         """ Creates view used in the atlas """
         log.info("--Create vews--")
@@ -101,12 +103,8 @@ class dataset():
                 log.info("Reading image {img}")
                 frame = cv2.imread(str(img))
                 rectframe = self._camera.rectify(frame)
-                self._atlas.add_view(atlas.view(rectframe ,self._aruco,self._parameters))
+                self._atlas.add_view(atlas.view(img,rectframe ,self._aruco,self._parameters))
 
-    def connect_corners(self):
-        """ Calulates corners and connect them form each view """
-        log.info("-- Connect corners --")
-        self._atlas.calucate_views()
 
 
 
@@ -119,6 +117,7 @@ def main():
     log.info(f"Created dataset object p1 {datap1}")
     datap1.create_views()
     log.info("Done. Loaded all images")
+    datap1.show_atlas()
 
 if __name__ == '__main__':
     main()
