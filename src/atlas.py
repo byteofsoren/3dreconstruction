@@ -19,6 +19,7 @@ class view():
     """The view object contains the image and its connections to aruc corners"""
     corners:list = list()
     ids:None
+    _name:str # Often the filename of the frame/camera angle
 
     def __init__(self, name:str, img:np.ndarray, arucodict, arucoparam):
         self._name=name
@@ -70,12 +71,15 @@ class projection():
     def view_atlas(self):
         """ returns an table reprecentation for the atlas. """
         log.info("-- View_atlas show table --")
-        keys = sorted(self._corner_proj.keys())
-        log.info(f"Recorded ids\n{keys}")
-        for key in keys:
-            l = self._corner_proj[key]
-            names = [i._name for i in l]
-            log.info(f"corner_proj[{key}]={names}")
+        keys_toprow = sorted(self._corner_proj.keys())
+        corner = self._corner_proj
+        view_leftcol = self._views
+        for key in keys_toprow:
+            if key in corner.keys():
+                pass # key in frame ok
+            else:
+                pass # ken not in frame
+
 
 
 

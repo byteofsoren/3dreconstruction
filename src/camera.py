@@ -147,7 +147,7 @@ class camera():
                     end_row, end_col = int(width * (corps)), int(width*(corps))
                     # corp the img.
                     ret = img[start_row:end_row,start_col:end_col]
-                    log.info(f"Corped the img to new shape (ret.shape)")
+                    log.info(f"Corped the img to new shape {ret.shape}")
                 return ret
 
             def save_param(self):
