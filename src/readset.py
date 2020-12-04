@@ -82,7 +82,7 @@ class dataset():
             log.ERROR(err)
             raise Exception(err)
         try:
-            self._atlas = atlas.projection()
+            self._atlas = atlas.atlas()
         except Exception as e:
             raise e
 
@@ -90,7 +90,7 @@ class dataset():
         return f"Database at dir {self._setdir}"
 
     def show_atlas(self):
-        print(self._atlas.view_atlas())
+        self._atlas.view_atlas()
 
     def create_views(self):
         """ Creates view used in the atlas """
@@ -105,6 +105,8 @@ class dataset():
                 rectframe = self._camera.rectify(frame)
                 self._atlas.add_view(atlas.view(img,rectframe ,self._aruco,self._parameters))
 
+    def build_atlas(self):
+        self._atlas.build()
 
 
 
@@ -118,6 +120,8 @@ def main():
     datap1.create_views()
     log.info("Done. Loaded all images")
     datap1.show_atlas()
+    log.info("builds the atlas")
+    datap1.build_atlas()
 
 if __name__ == '__main__':
     main()
