@@ -30,12 +30,12 @@ class view():
     """The view object contains the image and its connections to aruc corners"""
     corners:list = list()
     ids:None
-    _name:str # Often the filename of the frame/camera angle
+    name:str # Often the filename of the frame/camera angle
     isorigin:bool = False
     _origin_aruco:int = 0
 
     def __init__(self, name:str, img:np.ndarray, arucodict, arucoparam):
-        self._name=name
+        self.name=name
         self.img = img
         # read the config file.
         with open('./atlas.yaml','r') as f:
@@ -49,7 +49,7 @@ class view():
         self._parameters = arucoparam
 
     def __str__(self):
-        return f"View object filename={self._name} shape={self.img.shape}"
+        return f"View object filename={self.name} shape={self.img.shape}"
 
     def dectect_corners(self):
         tmp = aruco.detectMarkers(self._gray, self._aruco, parameters=self._parameters)
@@ -116,12 +116,14 @@ class atlas():
         # for it in unique:
         #     log.info(it._name)
         for key in self.aruco_ids:
-            row = []
+            row = dict()
             for uid in unique:
                 if uid in corner[key]:
-                    row.append(1)
+                    # row.append(1)
+                    row[uid.name] = 1
                 else:
-                    row.append(0)
+                    # row.append(0)
+                    row[uid.name] = 0
             frame[key] = row
         self._confusion_atlas = True
         self._confusion_frame = pd.DataFrame(frame)

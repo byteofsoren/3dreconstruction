@@ -103,7 +103,7 @@ class dataset():
                 log.info("Reading image {img}")
                 frame = cv2.imread(str(img))
                 rectframe = self._camera.rectify(frame)
-                self._atlas.add_view(atlas.view(img,rectframe ,self._aruco,self._parameters))
+                self._atlas.add_view(atlas.view(img.name,rectframe ,self._aruco,self._parameters))
 
     def build_atlas(self):
         self._atlas.build()
