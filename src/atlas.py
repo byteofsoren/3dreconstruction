@@ -16,7 +16,13 @@ log.setLevel(logging.INFO)
 # == END ===
 
 class corner():
-    """Class for aruco corners"""
+    """Class for aruco corner relations"""
+    class transfer():
+        """Transferobject for tranfereing between different corners"""
+        _T:np.ndarray # is the transfer matrix for this object
+
+        def __init__(self, name:str):
+            pass
     _views:list # connection from the aruco to each view
                 # where the aruco was observed.
     def __init__(self, id:int):
@@ -31,11 +37,11 @@ class view():
     corners:list = list()
     ids:None
     name:str # Often the filename of the frame/camera angle
-    isorigin:bool = False
+    # isorigin:bool = False
     _origin_aruco:int = 0
 
     def __init__(self, name:str, img:np.ndarray, arucodict, arucoparam):
-        self.name=name
+        self.name=str(name)
         self.img = img
         # read the config file.
         with open('./atlas.yaml','r') as f:
@@ -47,28 +53,34 @@ class view():
         # self._parameters = aruco.DetectorParameters_create()
         self._aruco = arucodict
         self._parameters = arucoparam
+        tmp = aruco.detectMarkers(self._gray, self._aruco, parameters=self._parameters)
+        self.corners, self._ids, self._rejectedImgPoints = tmp
+        # Flatten the list incase of problem
+        log.info(f"ids: {self._ids}")
+        if not self._ids is None:
+            self.ids = [x[0] for x in self._ids]
+        else:
+            raise Exception("No corner in images")
 
     def __str__(self):
-        return f"View object filename={self.name} shape={self.img.shape}"
+        return f"View object filename={self.name} pressent aruco ids = {self.ids}"
 
-    def dectect_corners(self):
-        tmp = aruco.detectMarkers(self._gray, self._aruco, parameters=self._parameters)
-        self.corners, self.ids, self._rejectedImgPoints = tmp
-        self.isorigin = self._origin_aruco in self.ids
-        log.info(f"\nid={self.ids} {'-= Is origin =-' if self.isorigin else 'not'}")
-
+    # def dectect_corners(self):
 
 class atlas():
     """The map object calculats the relations between view and aruco corners"""
     _corner_proj = dict()
-    _views = list()
-    aruco_ids:list  # Contains a list of aruco corner ids
+    # _views = list()
+
+    _views = dict()
+    aruco_ids:list=list()  # Contains a list of aruco corner ids
                     # indentified in the set
     aruco_corners:list = list() # Stores the aruco corners in the atlas
     _aruco_origin_id:int = 0 # origin id set in atlas.yml
     _aruco_origin:corner # A handle to the origin aruco
     _confusion_atlas=False
     _confusion_frame:pd.DataFrame # Stores the confusion frame
+
     def __init__(self):
         with open('./atlas.yaml','r') as f:
             conf = yaml.load(f,Loader=yaml.FullLoader)
@@ -77,21 +89,16 @@ class atlas():
 
     def add_view(self, view):
         """ Add a view to the map """
-        log.info(f"Atlas add view {view} {'Is Origin' if view.isorigin else 'Not Origin'}")
-        view.dectect_corners()
-        self._views.append(view)
+        log.info(f"#Atlas add view {view}")
+        self._views[view.name] = view
         if not view.ids is None:
-            if len(view.ids) <= 2:
-                log.warn(f"<== Low length of 'view.ids={view.ids}' ==>")
-            for id in view.ids:
-                log.info(f"Adding {view} to aruco id={id[0]}")
-                if id[0] in self._corner_proj:
-                    self._corner_proj[id[0]].append(view)
-                else:
-                    self._corner_proj[id[0]] = list()
-                    self._corner_proj[id[0]].append(view)
-        else:
-            log.warn(f"View contained Nan {view._name}")
+            for index in view.ids:
+                if not index in self.aruco_ids:
+                    log.info(f"#add {index}")
+                    self.aruco_ids.append(index)
+
+
+        self.aruco_ids = sorted(self.aruco_ids)
 
     def view_atlas(self):
         if not self._confusion_atlas:
@@ -102,29 +109,20 @@ class atlas():
     def confusion_atlas(self):
         """ returns an table reprecentation for the atlas. """
         log.info("-- Calculate confusion atlas  --")
-        self.aruco_ids = sorted(self._corner_proj.keys())
-        corner = self._corner_proj
-        view_leftcol = self._views
-        unique=[]
-        for key in self.aruco_ids:
-            for instance in corner[key]:
-                if not instance in unique:
-                    unique.append(instance)
+        names = self._views.keys()
+
         frame = dict()
-        # self._unique_aruco = unique
-        # log.info("-= unique arucos =-")
-        # for it in unique:
-        #     log.info(it._name)
-        for key in self.aruco_ids:
+        for id in self.aruco_ids:
             row = dict()
-            for uid in unique:
-                if uid in corner[key]:
-                    # row.append(1)
-                    row[uid.name] = 1
+            for name in names:
+                ids=self._views[name].ids
+                log.info(f"Avaible ids = {ids} for name = {name}")
+                if id in ids :
+                    row[name] = 1
                 else:
-                    # row.append(0)
-                    row[uid.name] = 0
-            frame[key] = row
+                    row[name] = 0
+            frame[id]=row
+
         self._confusion_atlas = True
         self._confusion_frame = pd.DataFrame(frame)
 
@@ -139,6 +137,8 @@ class atlas():
             if id == self._aruco_origin_id:
                 log.info("Origin Was set")
                 self._aruco_origin = ct
+        # Findex is the file name for each view
+        # findex = self._confusion_frame.index
         # Is there more corners in this view?
         # if yes calculate path to origin.
         # store connectino between origin and next view

@@ -103,19 +103,25 @@ class dataset():
                 log.info("Reading image {img}")
                 frame = cv2.imread(str(img))
                 rectframe = self._camera.rectify(frame)
-                self._atlas.add_view(atlas.view(img.name,rectframe ,self._aruco,self._parameters))
+                try:
+                    v = atlas.view(img.name,rectframe ,self._aruco,self._parameters)
+                except Exception as e:
+                    log.info("view not added")
+                else:
+                    self._atlas.add_view(v)
+
 
     def build_atlas(self):
         self._atlas.build()
 
 
 
-def main():
+def test_set(name):
     # conf = None
     # with open('./readset.yaml','r') as f:
     #     conf = yaml.load(f,Loader=yaml.FullLoader)
     log.info("test")
-    datap1 = dataset("P1")
+    datap1 = dataset(name)
     log.info(f"Created dataset object p1 {datap1}")
     datap1.create_views()
     log.info("Done. Loaded all images")
@@ -123,5 +129,6 @@ def main():
     log.info("builds the atlas")
     datap1.build_atlas()
 
+
 if __name__ == '__main__':
-    main()
+    test_set("P2")
