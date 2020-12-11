@@ -26,9 +26,9 @@ cameras:
   #   filetypes:
   #     - jpg
 codetests:
-  camera_calibration: True
-  save_camera: True
-  load_camera: False
+  camera_calibration: False
+  save_camera: False
+  load_camera: True
   rectify_img: True
 
 

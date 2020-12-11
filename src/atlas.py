@@ -1,9 +1,11 @@
 import numpy as np
 import cv2, yaml
 import logging
+import copy
 import pandas as pd
 from tabulate import tabulate
 from cv2 import aruco
+
 
 # == Logging basic setup ===
 log = logging.getLogger(__name__)
@@ -17,20 +19,57 @@ log.setLevel(logging.INFO)
 
 class corner():
     """Class for aruco corner relations"""
-    class transfer():
+    class T():
         """Transferobject for tranfereing between different corners"""
-        _T:np.ndarray # is the transfer matrix for this object
+        T:np.ndarray # is the transfer matrix for this object
 
-        def __init__(self, name:str):
-            pass
-    _views:list # connection from the aruco to each view
+        def __init__(self, aruco_link, T):
+            self._aruco_link = aruco_link
+            log.info(f"Created transfer to {aruco_link.id}")
+            self.T = T
+
+
+    _views:list=list() # connection from the aruco to each view
                 # where the aruco was observed.
-    def __init__(self, id:int):
+    aruco_value:int = 10e6 # Connection value in reference to orgin set large in the begining
+    def __init__(self, id:int, back_atlas):
         self.id:int = id
-        log.info(f"Created aruco corner id={id}")
+        self._back_atlas = back_atlas
+        self._connection = dict() # The connection from corner to corner
+        log.info(f"Created aruco corner id={id} connection:{self._connection}")
 
     def add_view(self, view):
-        self._views.append(view)
+        ids = np.array(view.ids)
+        if (not ids is None) and (len(ids) > 1):
+            self._views.append(view)
+            # print(f"Corner:{self.id} Before {self._connection}")
+            for i in ids:
+                if (i != self.id):
+                    ar = self._back_atlas.aruco_corners[i]
+                    # log.info(f"Connected {i}->{t.id}")
+                    log.info(f"corners:{view.corners}, len: {len(view.corners)}")
+                    Tarr = view.corners[i]
+                    self._connection[i] = self.T(ar,Tarr)
+                # else:
+                #     print(f"{i} == self.id={self.id}")
+            log.info(f"Corner:{self.id} After {self._connection}")
+
+    def get_connections(self, sort=False)->list:
+        """ Returns a list of ids  """
+        if sort:
+            return sorted(self._connection.keys())
+        else:
+            return self._connection.keys()
+
+    def is_connected(self)-> bool:
+        """ Is the corner connected to other corners? """
+        return len(self._connection) > 0
+
+
+
+
+
+
 
 class view():
     """The view object contains the image and its connections to aruc corners"""
@@ -75,16 +114,16 @@ class atlas():
     _views = dict()
     aruco_ids:list=list()  # Contains a list of aruco corner ids
                     # indentified in the set
-    aruco_corners:list = list() # Stores the aruco corners in the atlas
+    aruco_corners:dict = dict() # Stores the aruco corners in the atlas
     _aruco_origin_id:int = 0 # origin id set in atlas.yml
     _aruco_origin:corner # A handle to the origin aruco
     _confusion_atlas=False
     _confusion_frame:pd.DataFrame # Stores the confusion frame
 
-    def __init__(self):
+    def __init__(self, setconf):
         with open('./atlas.yaml','r') as f:
             conf = yaml.load(f,Loader=yaml.FullLoader)
-        self._aruco_origin_id = conf['origin_aruco']
+        self._aruco_origin_id = setconf['origin']
 
 
     def add_view(self, view):
@@ -132,11 +171,31 @@ class atlas():
             self.confusion_atlas()
         log.info("Started building atlas")
         for id in self.aruco_ids:
-            ct = corner(id)
-            self.aruco_corners.append(ct)
+            self.aruco_corners[id]=corner(id,self)
             if id == self._aruco_origin_id:
                 log.info("Origin Was set")
-                self._aruco_origin = ct
+                self._aruco_origin = self.aruco_corners[id]
+                self.aruco_corners[id].aruco_value = 0
+
+        frame = self._confusion_frame
+        rows=frame.index
+        cols = frame.keys()
+        for col in cols: # For every column
+            for row in rows: # For every row
+                if frame.loc[row][col] == 1:
+                    # Add views for that aruco corner
+                    log.info(f"#atlas:build:L3 col:{col};row:{row}")
+                    view = self._views[row]
+                    self.aruco_corners[col].add_view(view)
+
+        ckeys = [k for k in self.aruco_corners.keys()]
+        for c in ckeys:
+            tlist = self.aruco_corners[c].get_connections(True)
+            tcon = self.aruco_corners[c].is_connected()
+            log.info(f"{c}=>{tlist}, {'OK' if tcon else '--'}")
+            if not tcon:
+                self.aruco_corners.pop(c)
+        log.info(f"Pruning corners: {self.aruco_corners.keys()}")
         # Findex is the file name for each view
         # findex = self._confusion_frame.index
         # Is there more corners in this view?

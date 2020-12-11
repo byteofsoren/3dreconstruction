@@ -82,7 +82,7 @@ class dataset():
             log.ERROR(err)
             raise Exception(err)
         try:
-            self._atlas = atlas.atlas()
+            self._atlas = atlas.atlas(self._setconf)
         except Exception as e:
             raise e
 
