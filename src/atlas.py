@@ -43,13 +43,19 @@ class corner():
         if (not ids is None) and (len(ids) > 1):
             self._views.append(view)
             # print(f"Corner:{self.id} Before {self._connection}")
+            log.info("ids:{ids}, ")
+            # As the id for each corner do not have an incremental
+            # increasment from such tath corners can be addressed
+            # by the id, a extra variable is needed as an indexer.
+            indexer = 0
             for i in ids:
                 if (i != self.id):
                     ar = self._back_atlas.aruco_corners[i]
                     # log.info(f"Connected {i}->{t.id}")
                     log.info(f"corners:{view.corners}, len: {len(view.corners)}")
-                    Tarr = view.corners[i]
+                    Tarr = view.corners[indexer]
                     self._connection[i] = self.T(ar,Tarr)
+                    indexer += 1
                 # else:
                 #     print(f"{i} == self.id={self.id}")
             log.info(f"Corner:{self.id} After {self._connection}")
@@ -79,9 +85,20 @@ class view():
     # isorigin:bool = False
     _origin_aruco:int = 0
 
-    def __init__(self, name:str, img:np.ndarray, arucodict, arucoparam):
+    def __init__(self, name:str, img:np.ndarray, arucodict, arucoparam, corner_size,camera):
+        """ The view object takes the following arguments
+        @name: is teh name of the file tex img1.png
+        @img: Is the acual content of the file as an ndarray
+        @arucodict: Is a link to the aruco corners used in this project.
+        @arucoparam: Aruco parametsers
+        @corner_size: is the physical sice of the corner in meter
+        @camera: I connection to the camera object.
+        """
+        log.info(f"-- View with name:{name} created --")
         self.name=str(name)
         self.img = img
+        self.corner_size = corner_size
+        self.camera = camera
         # read the config file.
         with open('./atlas.yaml','r') as f:
             conf = yaml.load(f,Loader=yaml.FullLoader)
@@ -94,6 +111,8 @@ class view():
         self._parameters = arucoparam
         tmp = aruco.detectMarkers(self._gray, self._aruco, parameters=self._parameters)
         self.corners, self._ids, self._rejectedImgPoints = tmp
+        # tmp = aruco.estimatePoseSingleMarkers(self.corners,self.corner_size,self.camera)
+
         # Flatten the list incase of problem
         log.info(f"ids: {self._ids}")
         if not self._ids is None:
@@ -104,7 +123,12 @@ class view():
     def __str__(self):
         return f"View object filename={self.name} pressent aruco ids = {self.ids}"
 
-    # def dectect_corners(self):
+    def estimate_markers(self):
+        mtx = self.camera._camera_matrix
+        dist = self.camera._distortion_coefficients0
+        self.rvec, self.tvec= aruco.estimatePoseSingleMarkers(self.corners,self.corner_size,mtx,dist)
+
+
 
 class atlas():
     """The map object calculats the relations between view and aruco corners"""
@@ -123,6 +147,7 @@ class atlas():
     def __init__(self, setconf):
         with open('./atlas.yaml','r') as f:
             conf = yaml.load(f,Loader=yaml.FullLoader)
+        self._setconf = setconf
         self._aruco_origin_id = setconf['origin']
 
 
@@ -171,6 +196,7 @@ class atlas():
             self.confusion_atlas()
         log.info("Started building atlas")
         for id in self.aruco_ids:
+            # Create a corner with a link to the atlas
             self.aruco_corners[id]=corner(id,self)
             if id == self._aruco_origin_id:
                 log.info("Origin Was set")

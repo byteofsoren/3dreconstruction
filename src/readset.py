@@ -100,11 +100,21 @@ class dataset():
         log.info("imgpath {imgpath} exists {exists}")
         for imgtype in self._setconf['imgtypes']:
             for img in imgpath.glob(imgtype):
-                log.info("Reading image {img}")
+                log.info(f"Reading image {img}")
                 frame = cv2.imread(str(img))
                 rectframe = self._camera.rectify(frame)
+                if self._setconf['arucosize'][1] == 'mm':
+                    ars = self._setconf['arucosize'][0]/1000
+                elif self._setconf['arucosize'][1] == 'M':
+                    ars = self._setconf['arucosize'][0]
+                else:
+                    raise Exception("Only meters and milimeters suported right now.")
+                cam = self._camera
+                log.info(f'Arucosize:{ars}, cam:{cam}')
+                # v = atlas.view(img.name,rectframe, self._aruco, self._parameters, ars, cam)
+                # self._atlas.add_view(v)
                 try:
-                    v = atlas.view(img.name,rectframe ,self._aruco,self._parameters)
+                    v = atlas.view(img.name,rectframe, self._aruco, self._parameters, ars, cam)
                 except Exception as e:
                     log.info("view not added")
                 else:
