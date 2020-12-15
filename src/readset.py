@@ -27,17 +27,19 @@ log.setLevel(logging.INFO)
 
 
 class dataset():
-    """Classa handle for datasets in this project.
     """
-    _conf:list # Stores the global configuration from readset.yaml
-    _setdir:pathlib.PurePath # Stores the directory for the dataset
-    _setconf:list # Stores the configuration of the set it self.
-    _camera:camera # is the camera object used to correct the images.
+        Classa handle for datasets in this project.
+        @parm name:str := Name of a sub dir in defined in readset.yaml [sets][path]
+    """
+    _conf:list
+    """Stores the global configuration from readset.yaml"""
+    _setdir:pathlib.PurePath
+    """Stores the directory for the dataset"""
+    _setconf:list
+    """Stores the configuration of the set it self."""
+    _camera:camera
+    """is the camera object used to correct the images."""
     def __init__(self, name:str):
-        """ Creatse the object
-        input:
-            name:str := Name of a sub dir in defined in readset.yaml [sets][path]
-        """
         # load configurations from yaml file
         with open('./readset.yaml','r') as f:
             conf = yaml.load(f,Loader=yaml.FullLoader)
@@ -50,7 +52,7 @@ class dataset():
         # Aruco config
         self._aruco = aruco.Dictionary_get(aruco.DICT_6X6_250)
         self._parameters = aruco.DetectorParameters_create()
-        # Check if the direcory exsits:
+        """Check if the direcory exsits: """
         if setdir.exists() and setdir.is_dir():
             log.info(f"The given path was: {str(setdir)} and it existed")
             #Store the set dir in the object
@@ -93,7 +95,10 @@ class dataset():
         self._atlas.view_atlas()
 
     def create_views(self):
-        """ Creates view used in the atlas """
+        """
+            Creates view used in the atlas
+            :raises MesurmentError: If the unit is not suported
+        """
         log.info("--Create vews--")
         imgpath = Path(f"{self._setdir}/{self._setconf['imgdir']}")
         exists = imgpath.exists() and imgpath.is_dir()
@@ -108,7 +113,8 @@ class dataset():
                 elif self._setconf['arucosize'][1] == 'M':
                     ars = self._setconf['arucosize'][0]
                 else:
-                    raise Exception("Only meters and milimeters suported right now.")
+                    log.error("MesurmentError: The unit given ({self._setconf[1]}) is not suported")
+                    raise Exception("MesurmentError")
                 cam = self._camera
                 log.info(f'Arucosize:{ars}, cam:{cam}')
                 # v = atlas.view(img.name,rectframe, self._aruco, self._parameters, ars, cam)
@@ -122,11 +128,16 @@ class dataset():
 
 
     def build_atlas(self):
+        """Shorthand for building the atlas"""
         self._atlas.build()
 
 
 
 def test_set(name):
+    """
+        Tests a set in the dataset directory.
+        :param name:str is the name of the dataset that is loaded with this function
+    """
     # conf = None
     # with open('./readset.yaml','r') as f:
     #     conf = yaml.load(f,Loader=yaml.FullLoader)

@@ -29,7 +29,7 @@ codetests:
   camera_calibration: False
   save_camera: False
   load_camera: True
-  rectify_img: True
+  rectify_img: False
 
 
 

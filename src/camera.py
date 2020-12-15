@@ -23,12 +23,19 @@ log.setLevel(logging.INFO)
 # == END ===
 
 class camera():
-    """my camera object that takes care with camera calibration and stuff."""
+    """
+        my camera object that takes care with camera calibration and stuff.
+        :param str name: Is the name and the dicectory where the camera stores its inforameton.
+    """
     # Internal member variables
-    _allCorners:list # Decected corrners?
+    _allCorners:list
+    """Decected corrners."""
     _allIds:list
-    _conf:list # configuration from ymal file
-    _camera_name:str # Name and the string for the camera path
+    """a list of aruco id."""
+    _conf:list
+    """Configuration from ymal file"""
+    _camera_name:str
+    """Name and the string for the camera path."""
 
     def __init__(self, name:str):
         log.info("Start camera object")
@@ -55,7 +62,6 @@ class camera():
         return f"name={self._camera_name}"
 
     def load_img(self):
-        """ Loads the images needded for the calibration """
         """ Loads the images needded for the calibration """
         ftypes = self._conf['filetypes']
         ftypes = self._conf['filetypes']
@@ -118,7 +124,10 @@ class camera():
         log.info("Storing results in camera obj")
 
     def rectify(self, img:np.ndarray):
-        """ Rectifies the input image using the calibarted camera """
+        """
+            Rectifies the input image using the calibarted camera
+            :param np.ndarray img: The input image
+        """
         if (not img is None):
             try:
                 # ret, mtx, dist, rvecs, tvecs

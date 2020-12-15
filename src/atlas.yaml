@@ -1,4 +1,5 @@
 ---
 # Configuration and setting for the map ojbect.
 origin_aruco: 0
+add_view_estimatemarkers: False
 
