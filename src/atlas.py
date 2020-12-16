@@ -314,7 +314,7 @@ class atlas():
                 break
             i += 1
 
-        """Dijkstra the shortest path to origin"""
+        """Dijkstra the shortest path to original"""
         for key in arkeys:
             log.info(f"key:{key}, aruco_value:{self.aruco_corners[key].aruco_value}")
 
