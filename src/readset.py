@@ -31,11 +31,11 @@ class dataset():
         Classa handle for datasets in this project.
         @parm name:str := Name of a sub dir in defined in readset.yaml [sets][path]
     """
-    _conf:list
+    conf:list
     """Stores the global configuration from readset.yaml"""
     _setdir:pathlib.PurePath
     """Stores the directory for the dataset"""
-    _setconf:list
+    setconf:list
     """Stores the configuration of the set it self."""
     _camera:camera
     """is the camera object used to correct the images."""
@@ -45,10 +45,10 @@ class dataset():
             conf = yaml.load(f,Loader=yaml.FullLoader)
         log.info("test")
         # path configuration
-        self._conf = conf['sets']
-        setdir:str = self._conf['path']
+        self.conf = conf['sets']
+        setdir:str = self.conf['path']
         setdir:pathlib.PosixPath = Path(setdir.format(name=name))
-        setfile:pathlib.PosixPath = Path(f"{setdir}/{self._conf['setfile']}")
+        setfile:pathlib.PosixPath = Path(f"{setdir}/{self.conf['setfile']}")
         # Aruco config
         self._aruco = aruco.Dictionary_get(aruco.DICT_6X6_250)
         self._parameters = aruco.DetectorParameters_create()
@@ -62,13 +62,13 @@ class dataset():
             if setfile.exists() and setfile.is_file():
                 log.info(f"The file {str(setfile)} existed")
                 with open(str(setfile),"r") as sf:
-                    self._setconf = yaml.load(sf, Loader=yaml.FullLoader)
+                    self.setconf = yaml.load(sf, Loader=yaml.FullLoader)
                 # Create a camera object
-                self._camera = camera(self._setconf['camera'])
+                self._camera = camera(self.setconf['camera'])
                 self._camera.read_param()
                 log.info(f"camera='{self._camera}'")
                 # Load path to csv file
-                self._camera_pose= Path(f"{setdir}/{self._setconf['cameraposes']}")
+                self._camera_pose= Path(f"{setdir}/{self.setconf['cameraposes']}")
                 pose_exists = self._camera_pose.exists()
                 log.info(f"File used to store camera poses is '{self._camera_pose}' exists {pose_exists}")
                 if not pose_exists:
@@ -83,10 +83,13 @@ class dataset():
             err = "The name was not a directory or not found."
             log.ERROR(err)
             raise Exception(err)
-        try:
-            self._atlas = atlas.atlas(self._setconf)
-        except Exception as e:
-            raise e
+        # try:
+        #     self._atlas = atlas.atlas(self.setconf)
+        # except Exception as e:
+        #     raise e
+
+    def set_atlas(self, atlas_link):
+        self._atlas = atlas_link
 
     def __str__(self):
         return f"Database at dir {self._setdir}"
@@ -100,20 +103,20 @@ class dataset():
             :raises MesurmentError: If the unit is not suported
         """
         log.info("--Create vews--")
-        imgpath = Path(f"{self._setdir}/{self._setconf['imgdir']}")
+        imgpath = Path(f"{self._setdir}/{self.setconf['imgdir']}")
         exists = imgpath.exists() and imgpath.is_dir()
         log.info("imgpath {imgpath} exists {exists}")
-        for imgtype in self._setconf['imgtypes']:
+        for imgtype in self.setconf['imgtypes']:
             for img in imgpath.glob(imgtype):
                 log.info(f"Reading image {img}")
                 frame = cv2.imread(str(img))
                 rectframe = self._camera.rectify(frame)
-                if self._setconf['arucosize'][1] == 'mm':
-                    ars = self._setconf['arucosize'][0]/1000
-                elif self._setconf['arucosize'][1] == 'M':
-                    ars = self._setconf['arucosize'][0]
+                if self.setconf['arucosize'][1] == 'mm':
+                    ars = self.setconf['arucosize'][0]/1000
+                elif self.setconf['arucosize'][1] == 'M':
+                    ars = self.setconf['arucosize'][0]
                 else:
-                    log.error("MesurmentError: The unit given ({self._setconf[1]}) is not suported")
+                    log.error("MesurmentError: The unit given ({self.setconf[1]}) is not suported")
                     raise Exception("MesurmentError")
                 cam = self._camera
                 log.info(f'Arucosize:{ars}, cam:{cam}')
@@ -143,6 +146,8 @@ def test_set(name):
     #     conf = yaml.load(f,Loader=yaml.FullLoader)
     log.info("test")
     datap1 = dataset(name)
+    myatlas = atlas.atlas(datap1.setconf)
+    datap1.set_atlas(myatlas)
     log.info(f"Created dataset object p1 {datap1}")
     datap1.create_views()
     log.info("Done. Loaded all images")

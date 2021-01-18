@@ -40,15 +40,20 @@ class transfer():
         log.info(f"tvec={self.tvec} shape {self.tvec.shape}")
         log.info(f"rvec={self.rvec} shape {self.rvec.shape}")
         self.is_invese = inverse
-        # self.T = np.vstack([np.column_stack([np.diagonal(rvec),tvec]),[0,0,0,1]])
-        diag = np.diag(self.rvec)
+        # convert rot vector to rot matrix both do: markerworld -> cam-world
+        mrv, jacobian = cv2.Rodrigues(rvec)
+        # https://answers.ros.org/question/314828/opencv-camera-rvec-tvec-to-ros-world-pose/
         log.info(f"diag={diag}")
         diagt = np.column_stack([diag,self.tvec])
         log.info(f"diagt={diagt}")
-        self.T = np.vstack([diagt,[0,0,0,1]])
+        T = np.vstack([diagt,[0,0,0,1]])
         if inverse:
             log.info("Inverting T")
-            self.T = np.linalg.inv(self.T)
+            self.T = np.linalg.inv(T)
+            self.Tinv = T
+        else:
+            self.T = T
+            self.Tinv = np.linalg.inv(self.T)
         log.info(f"TFmatrix {obj_link.name} got T=\n{self.T}")
 
 # == Corner START ==
@@ -60,16 +65,19 @@ class corner():
     :param atlas back_atlas: is a link back to the atlas object.
     """
 
-    _views:list=list()
+    views:list=list()
     """Connection from the aruco to each view  where the aruco was observed. """
     aruco_value:int = 10e6 #
     """Connection value in reference to origin set large in the beginning"""
+
+    connection = dict()
+    """The connection from corner to each view"""
+
 
     def __init__(self, id:int, back_atlas):
         self.id:int = id
         self.name = f"Corner id:{id}"
         self._back_atlas = back_atlas
-        self.connection = dict() # The connection from corner to corner
         log.info(f"Created aruco corner id={id} connection:{self.connection}")
 
     def add_view(self, view):
@@ -78,8 +86,7 @@ class corner():
         """
         ids = np.array(view.ids)
         if (not ids is None) and (len(ids) > 1):
-            self._views.append(view)
-            # print(f"Corner:{self.id} Before {self.connection}")
+            self.views.append(view)
             log.info("ids:{ids}, ")
             """
                 As the id for each corner do not have an incremental
@@ -93,13 +100,18 @@ class corner():
                     # log.info(f"Connected {i}->{t.id}")
                     log.info(f"corners:{view.corners}, len: {len(view.corners)}")
                     Tarr = view.corners[indexer] #view.corner used in corner
-                    tvec = view.tvec[indexer]
+                    tvec = view.tvec[indexer]    # Indexer follows 0,1,2,...n while id is 2,4,5
                     rvec = view.rvec[indexer]
-                    self.connection[i] = transfer(ar,tvec,rvec,inverse=True)
+                    self.connection[i] = transfer(ar,tvec,rvec,inverse=True) # < -- This do not work
                     indexer += 1
                 # else:
                 #     print(f"{i} == self.id={self.id}")
             log.info(f"Corner:{self.id} After {self.connection}")
+
+    def connect_corner(self, connection):
+        """ Connect the corner to a other corner using a transfer matrix """
+        pass
+
 
     def getconnections(self, sort=False)->list:
         """
@@ -191,11 +203,13 @@ class view():
         # for c in self.corners:
         #     log.info(f"corner {c}")
         log.info("size={self.corner_size}M")
+        # This part needs to change. url{https://aliyasineser.medium.com/calculation-relative-positions-of-aruco-markers-eee9cc4036e3}
         self.rvec, self.tvec, _objPoints = aruco.estimatePoseSingleMarkers(
                 corners=self.corners, #Corners used
                 markerLength=self.corner_size,
                 cameraMatrix=mtx,
                 distCoeffs=dist)
+
 
     def get_transfer(self,id:int):
         pass
@@ -365,8 +379,25 @@ class atlas():
             i += 1
 
         """Dijkstra the shortest path to original"""
+        minaruco = lambda d: min([d[key].aruco_value for key in d.keys()])
+        # Finds the smallest aruco_value.
+
         for key in arkeys:
-            log.info(f"key:{key}, aruco_value:{self.aruco_corners[key].aruco_value}")
+            # log.info(f"key:{key}, aruco_value:{self.aruco_corners[key].aruco_value}")
+            # log.info(f"self.aruco_corners[key].connection={self.aruco_corners[key].connection}")
+            arc:corner = self.aruco_corners[key]
+            value = arc.aruco_value
+            con = arc.connection.keys()
+            tmp = []
+            minimal_value_index = tmp
+
+
+
+
+
+
+
+
 
 
         # Findex is the file name for each view
