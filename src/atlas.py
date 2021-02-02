@@ -316,7 +316,7 @@ class atlas():
         """ Create corners with Id is done here """
         for id in self.aruco_ids:
             # Create a corner with a link to the atlas
-            self.aruco_corners[id]=corner(id,self)
+            self.aruco_corners[id]=corner(id,self) # Dict of corner class
             if id == self._aruco_origin_id:
                 log.info("Origin Was set")
                 self._aruco_origin = self.aruco_corners[id]

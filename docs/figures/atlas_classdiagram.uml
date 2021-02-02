@@ -1,0 +1,101 @@
+@startuml
+'Settings'
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor Black
+skinparam titleBackgroundColor Silver-WhiteSmoke
+skinparam classFontColor automatic
+skinparam classHeaderBackgroundColor WhiteSmoke
+skinparam monochrome true
+skinparam handwritten false
+
+title Class diagram\n<b>atlas.py
+
+'-- Transfer class --'
+class transfer {
+    - arr T <color:gray> # Transfer matrix
+    - link obj_link <color:gray> # Transfer target link
+    .. <b> init ..
+        + self
+        + tvec <color:gray> #
+        + rvec <color:gray> #
+        + inverse:bool=False <color:gray> #
+
+}
+note top of transfer
+    Transfer decripbes the tranfer between camera, arucos and other arucos.
+end note
+note left of transfer::inverse
+    ToDo: Remove
+end note
+'-- end Transfer --'
+
+'-- Corner class --'
+class corner {
+    + list views <color:gray> # List of views in wich this corner shows up.
+    + int aruco_value <color:gray> # Dikstra value for that corer.<b> default 10e6
+    + dict connection <color:gray> # The connection from each corner to each view
+    .. <b> init ..
+        - self
+        + id:int <color:gray> # The id number of the aruco
+        + back_atlas <color:gray> # revere link to atlas object
+    ==
+    + add_view(self, view) <color:gray> # Adds a view to a corner
+    + connect_corner(self, connection) <color:gray> # ToDo: Remove because its empthy?
+}
+corner::add_view <-- view : As argument
+
+note top of corner
+    The corner object reprecents one aruco corner.
+end note
+'-- end Corner --'
+
+'-- View class --'
+class view {
+    + list ids <color:gray> # Lis of connected ids
+    + list corners <color:gray> # Corners is a list of cordinates for each detected marker.
+    + str name <color:gray> # Name or filename for the view
+    - int _origin_aruco = 0 <color:gray> #
+    + arr tvec <color:gray> # <- remove
+    + arr rvec <color:gray> # <- this to
+}
+
+note top of view
+    The view object contains one view of many.
+end note
+note left of view::tvec
+This is wrong..
+Or perhaps not view could be the transfer object..
+no! Its wrong, corner do not contain tvec, rvec
+end note
+note left of view::rvec
+    This to it should be in transfer
+end note
+'-- end view --'
+
+'--- Atlas class ----'
+class atlas {
+    - dict _corner_proj  <color:gray># A dict of views or camera angles
+    - dict _views <color:gray> # A list of veavs
+    + list aruco_ids <color:gray> #
+    + dict aruco_corners <color:gray> #
+    - int _aruco_orgin_id=0 <color:gray> #
+    - corner _aruco_orgin <color:gray> #
+    - bool _confusion_atlas=False <color:gray> #
+    - DataFrame _confusion_frame <color:gray> #
+    - _aruco_orgin=None <color:gray> # A connection to the aruco orgin in the scene.
+    --  init --
+    self
+    setconf <color:gray> # Settings readed from file
+    -- methods --
+    + add_view(self, view) <color:gray> # adds view
+    + view_atlas(self) <color:gray> # Prints a pretty table
+    + confusion_atlas(self) <color:gray> # Calulates the confusion table
+    + build(self) <color:gray> # Build the mapp of the scene
+}
+atlas::add_view <-- view : As argument
+note top of atlas
+    The atlas object calulate therelations between viwe and aruco corners
+end note
+
+@enduml
