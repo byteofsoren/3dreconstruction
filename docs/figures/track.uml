@@ -1,0 +1,149 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor Black
+skinparam titleBackgroundColor Silver-WhiteSmoke
+skinparam classFontColor automatic
+skinparam classHeaderBackgroundColor WhiteSmoke
+skinparam monochrome true
+skinparam handwritten false
+
+:track function|
+start
+:**Define:**
+* pointCircle = (0,0)
+* markerTvecList as empty list
+* markerRvecList as empty list
+* coposeRvec = None
+* coposeTvec = None
+;
+while (true)
+        :read img;
+        :conert to grayscale;
+        :aruco DetectorParameters;
+        :aruco List of ids and
+        corners in grayscale img;
+        note left
+            **parameters**:
+            * gray image
+            * DetectorParameters
+            * cameraMatrix
+            * distMatrix
+        end note
+        if (markers found) then (ids is not None)
+            :ziped = zip(ids,corners);
+            note left
+                How zip works
+                ""[(3,[5,4]),(2,[7,1])] = zip([3,2],[[[5,4],[7,1]]])""
+            end note
+            :sort ziped;
+            :Extract shorted zip\nids,corners = ziped;
+            :create an axis\nmatrix with shape(-1,3);
+            note right
+                |  -0.01 |  -0.01 |  0 |
+                |  -0.01 |   0.01 |  0 |
+                |   0.01 |  -0.01 |  0 |
+                |   0.01 |   0.01 |  0 |
+            end note
+            while (**for** i in range(id)) is (true)
+                :Estimate pose of each marker and return
+                rvec,tvec,markerpos using
+                aruco estematePoseSingleMarkers;
+                note left
+                    **Input arguments**
+                    * corners[i]
+                    * 0.02
+                    * mtx,
+                    * dst
+                end note
+                if (**if** ids[i] is firstMarkerID) then (true)
+                    :**store** first tvec, rvec, corners[i];
+                elseif (**elseif** ids[i] is secqundMarkerID) then (true)
+                    :**store** secoundtvec, rvec, corners[i];
+                endif
+                :Fix numpy value error;
+                note right
+                    (rvec-tvec).any()
+                end note
+                :Append to markerList;
+                :Visualise with
+                aruco drawDetectMarkers;
+                if (**If** number of ids is more then one)  and coposed[tvec,rvec] is not None) then (true)
+                    :info = composedRT;
+                    note right
+                        composes 2 [R|t] transformations together
+                        **input arguments**
+                        * composedRvec,
+                        * composedTvec,
+                        * transposed secoundRvec,
+                        * transposed secoundTvec,
+                    end note
+                    :Unpack composed and
+                    transformed tvec,rvec;
+                    note right
+                        Creates:
+                        * TComposedRvec
+                        * TComposedTvec
+                    end note
+                    :3D point for projection;
+                    note left
+                        ObjectPositions = [0,0,0]
+                        type: Float
+                    end note
+                    :cv2 projectPoints;
+                    note right
+                        **input parameters:**
+                        * TcomposedRvec,
+                        * TComposedTvec,
+                        * mtx,
+                        * dist,
+                    end note
+                    :aruco drawAxis;
+                    note left
+                        **input parameters:**
+                        * frame,
+                        * mtx,
+                        * dst,
+                        * TComposedRvec,
+                        * TcomposedTvec
+                    end note
+                    :Generate relativePoint;
+                    note right
+                        (int(imgpts[0][0][0])),
+                        (int(imgpts[0][0][1])),
+                    end note
+                    :Draw circle;
+                    note left
+                        **input arguments:**
+                        * frame,
+                        * relativePoint,
+                        * thickness,
+                        * color
+                    end note
+                endif
+                if (**if** key is 'q') then (true)
+                    end
+                elseif (**if** key is 'c') then (true)
+                    if (**if** nr of ids is larger then 1) then (true)
+                        :Reshape slected vectors;
+                        :relativePosition;
+                        note right
+                            Written function:
+                            **Input arguments**
+                            * firstRvec,
+                            * firstTvec,
+                            * secoundRvec,
+                            * secoundTvec,
+                            **Return argumenst**
+                            * composedRvec,
+                            * composedTvec
+                        end note
+                    endif
+                endif
+            endwhile(false)
+        endif
+        :Display the results;
+    endwhile
+end
+
+@enduml

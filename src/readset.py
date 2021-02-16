@@ -123,11 +123,11 @@ class dataset():
                 # v = atlas.view(img.name,rectframe, self._aruco, self._parameters, ars, cam)
                 # self._atlas.add_view(v)
                 try:
-                    v = atlas.view(img.name,rectframe, self._aruco, self._parameters, ars, cam)
+                    v = atlas.View(img.name,rectframe, self._aruco, self._parameters, ars, cam)
                 except Exception as e:
                     log.info("view not added")
                 else:
-                    self._atlas.add_view(v)
+                    self._atlas.add_View(v)
 
 
     def build_atlas(self):
@@ -146,7 +146,7 @@ def test_set(name):
     #     conf = yaml.load(f,Loader=yaml.FullLoader)
     log.info("test")
     datap1 = dataset(name)
-    myatlas = atlas.atlas(datap1.setconf)
+    myatlas = atlas.Atlas(datap1.setconf)
     datap1.set_atlas(myatlas)
     log.info(f"Created dataset object p1 {datap1}")
     datap1.create_views()

@@ -1,0 +1,18 @@
+@startuml
+left to right direction
+skinparam componentStyle rectangle
+    package atlas {
+        [Read set]
+        package build {
+            [Read set] --> [Confusion table]: Table of images
+            [Confusion table] -left-> [Create corner with ID]: Confusion Table
+            [Create corner with ID] -left-> [Connect corners with each view]: list of\ncorners
+            [Connect corners with each view] -left-> [Prune unconnected corners]: list of\npruned corners
+            [Prune unconnected corners] --> [Dijkstra value for corner]: List of\nweighted corners
+            [Dijkstra value for corner] -right-> [Create transfers\nfrom corner to corner]: Weighted\n corner list
+            [Create transfers\nfrom corner to corner] -right-> [Derive view transfer\nrelated to Origin corner]: List of\n transfer matrices
+        }
+        [Derive view transfer\nrelated to Origin corner] --> [Epipolar geometry\nFunction]: Camera\ntransfers
+
+    }
+@enduml

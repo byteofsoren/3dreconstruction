@@ -1,0 +1,18 @@
+@startuml
+    left to right direction
+    actor Images as img
+    actor Camera as cam
+    package Validat_OpenPose {
+        usecase "Camera calibration" as cam_cal
+        usecase "readset" as read
+        usecase "Atlas" as atlas
+        usecase "Validate" as validate
+    }
+    usecase "results" as res
+    img --> read
+    cam --> cam_cal
+    read --> atlas
+    cam_cal --> atlas
+    atlas --> validate
+    validate --> res
+@enduml

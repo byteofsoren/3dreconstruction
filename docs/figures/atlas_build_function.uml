@@ -19,10 +19,9 @@ if (_confusion_frame exists) then (no)
 | View10 | 0  | 0  | 1  |
 ;
 endif
- while (Condition?) is (true)
-
-    :Do something;
-
+while (id in self.aruco_ids) is (true)
+    :self.aruco_corners = corners(id,self);
+    note right: corner class creation of ID
 endwhile (false)
 stop
 

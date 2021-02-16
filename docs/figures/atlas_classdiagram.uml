@@ -94,6 +94,7 @@ class atlas {
     + build(self) <color:gray> # Build the mapp of the scene
 }
 atlas::add_view <-- view : As argument
+atlas::aruco_corners <-- view : Link
 note top of atlas
     The atlas object calulate therelations between viwe and aruco corners
 end note

@@ -37,6 +37,9 @@ class camera():
     _camera_name:str
     """Name and the string for the camera path."""
 
+    _camera_matrix = None
+    """Stores the camera matrix"""
+
     def __init__(self, name:str):
         log.info("Start camera object")
         self._camera_name:str = name
@@ -219,6 +222,26 @@ class camera():
         matrixfile.create_dataset(name="dist",data=dist)
         matrixfile.create_dataset(name="rvecs",data=rvecs)
         matrixfile.create_dataset(name="tvecs",data=tvecs)
+
+    @property
+    def mtx(self):
+        if self._camera_matrix is None:
+            self.read_param()
+        return self._camera_matrix
+
+    @mtx.setter
+    def mtx(self,matrix):
+        raise ValueError("Can not be set")
+
+    @property
+    def dist(self):
+        if self._camera_matrix is None:
+            self.read_param()
+        return self._distortion_coefficients0
+
+    @dist.setter
+    def dist(self,matrix):
+        raise ValueError("Can not be set")
 
 
 
