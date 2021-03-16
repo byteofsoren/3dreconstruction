@@ -6,13 +6,14 @@ from glob import glob
 from pathlib import Path
 import pathlib
 from mpl_toolkits.mplot3d import Axes3D
-from gen_aruco import caruco_board
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-# Import the camera.
+# Local imports
 from camera import camera
-# Import map classes.
-import atlas
+# from .atlas import Atlas
+# from .gen_aruco import caruco_board
+
+from atlasCL.Viewmod import View
 
 # == Logging basic setup ===
 log = logging.getLogger(__name__)
@@ -123,16 +124,22 @@ class dataset():
                 # v = atlas.view(img.name,rectframe, self._aruco, self._parameters, ars, cam)
                 # self._atlas.add_view(v)
                 try:
-                    v = atlas.View(img.name,rectframe, self._aruco, self._parameters, ars, cam)
+                    # breakpoint()
+                    view = View(img.name,rectframe, self._aruco, self._parameters, ars, cam)
                 except Exception as e:
-                    log.info("view not added")
+                    log.info(f"view not added {e}")
                 else:
-                    self._atlas.add_View(v)
+                    self._atlas.add_View(view)
+                    del(view)
 
 
     def build_atlas(self):
         """Shorthand for building the atlas"""
         self._atlas.build()
+
+    @property
+    def count(self):
+        return self._atlas.count
 
 
 

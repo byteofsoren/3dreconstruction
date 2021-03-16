@@ -3,19 +3,23 @@ import cv2, yaml
 import logging
 import copy
 import pandas as pd
+import networkx as nx
+from bcolor import bcolors
 from tabulate import tabulate
 from pathlib import Path
 from cv2 import aruco
-from camera import camera
 from simple_term_menu import TerminalMenu  # Used to select display options
 from shapely.geometry import Polygon # Calculations of the aria
 from typing import Type # Used to be able to pass var:Type[object] to a function
 
-# Atlas dependent classes import
-from atlasCL_Corner import Corner
-from atlasCL_view   import View
-from atlasCL_Transfer import Transfer
 
+# Local import
+# from .camera import camera
+
+# # Atlas dependent classes import
+from atlasCL.Viewmod  import View
+from atlasCL.Cornermod import Corner
+from atlasCL.Transfermod import Transfer, Linkable
 
 # == Logging basic setup ===
 log = logging.getLogger(__name__)
@@ -40,14 +44,14 @@ class Atlas():
     _corner_proj = dict()
     # _views = list()
 
-    _views = dict()
+    _views:dict
     """A dict of views in in the atlas indexed by name of the view"""
-    aruco_ids:list=list()
+    aruco_ids:list
     """
     Contains a list of aruco corner ids
     identified in the set
     """
-    corners:dict = dict()
+    corners:dict
     """Stores the aruco corners in the atlas"""
     _aruco_origin_id:int = 0
     """origin id in the set readset loaded. The setting is in set.yaml for that set"""
@@ -66,6 +70,9 @@ class Atlas():
         self._conf = conf
         self._setconf = setconf
         self._aruco_origin_id = setconf['origin']
+        self.corners = dict()
+        self.aruco_ids = list()
+        self._views = dict()
 
 
     def add_View(self, view):
@@ -74,9 +81,9 @@ class Atlas():
 
             :param view: is a link to the view object
         """
-        print(f"atlas add_View {view.name}")
+        print(f"atlas add_View {bcolors.OKCYAN}{view.name}{bcolors.END} ids {view.ids}")
         log.info(f"#Atlas add view {view}")
-        self._views[view.name] = view
+        self._views[view.fname] = view
         if not view.ids is None:
             for index in view.ids:
                 if not index in self.aruco_ids:
@@ -121,109 +128,113 @@ class Atlas():
         print("atlas build")
         if not self._confusion_atlas:
             self.confusion_atlas()
-        log.info("Started building atlas")
+        log.info(f"{bcolors.INF}Started building atlas{bcolors.END}")
+
         """ Create corners with Id is done here """
         for id in self.aruco_ids:
             # Create a corner with a link to the atlas
             # ------------
+            # breakpoint()
             self.corners[id]=Corner(id,self) # Dict of corner class
             # -- Stored --
             if id == self._aruco_origin_id:
                 log.info("Origin Was set")
                 self._aruco_origin = self.corners[id]
                 self.corners[id].aruco_value = 0
-        frame = self._confusion_frame
-        rows=frame.index
-        cols = frame.keys()
+
         """ Atlas: Connecting the corners with each view is done here """
         for name in self._views.keys():
             ids = self._views[name].ids
-            config = self._views[name].corners # dict of {id:(tvec,rvec,corners)}
-            print(config)
+            tfs = self._views[name].transfers
+            # corners = self._views[name].corners # dict of {id:(tvec,rvec,corners)}
+            target:View = self._views[name]
+
             # Connect corner with view over trasfer.
-            for id in config.keys():
-                tf = Transfer(self.corners[id],config[0],config[1],config[2])
+            # For id in each view
+            for id in target.ids:
+                tsource = self.corners[id]
+                tvec, rvec, corner2D = self._views[name].get_TRvec(id)
+                # log.info(f"Adding {tsource} and {target} to {id} ")
+                tf = Transfer(tsource,target,tvec,rvec)
+                self._views[name].add_transfer(tf)
+            # For each id in the view create a connection from corner to corner
+
+        # Creating connections from corner to corner in each view.
+        # For names of all views.
+        for name in self._views.keys():
+            view:View = self._views[name]
+            tfs = view.transfers
+            for id in range(0,len(tfs)-1):
+                tfa = view.transfers[id]
+                tfb = view.transfers[id + 1]
+                tfab:Transfer = tfa - tfb
+                self.corners[tfab.source.id].add_transfer(tfab)
 
 
-
-
-
-        # for col in cols: # For every column
-        #     for row in rows: # For every row
-        #         if frame.loc[row][col] == 1:
-        #             # Add views for that aruco corner
-        #             log.info(f"#atlas:build:L3 col:{col};row:{row}")
-        #             # print(f"#atlas:build:L3 col:{col};row:{row}")
-        #             view_tem = self._views[row]
-        #             self.corners[col].add_View(view_tem)
-
-        # for c in self.corners.keys():
-        #     print("---------------------------")
-        #     localviews = self.corners[c].views
-        #     print(f"id={self.corners[c].id} count:{len(localviews.keys())}")
-        #     for v in localviews.keys():
-        #         print(localviews[v].name)
-        #     print("---------------------------")
-
-
-        arkeys = [k for k in self.corners.keys()]
         """Atlas: Pruning the corners so that non connected is removed"""
-        for c in arkeys:
-            tlist = self.corners[c].getconnections(True)
-            tcon = self.corners[c].is_connected()
-            log.info(f"{c}=>{tlist}, {'OK' if tcon else '--'}")
-            if not tcon:
-                self.corners.pop(c)
-        log.info(f"Pruning corners: {self.corners.keys()}")
-        arkeys = [k for k in self.corners.keys()]
-        """Atlas: Value update for connection"""
-        # maxval = 10e6
-        # i = 0
-        # cont = True
-        # maxcount = len(arkeys)*2*np.log(len(arkeys))
-        # log.info(f"maxcount={maxcount}")
-        # while cont :
-        #     values = np.array(([self.corners[x].aruco_value for x in self.corners.keys()]))
-        #     log.info(f"iteration i={i} {values} [{' maxval present' if maxval in values else ' --'}]")
-        #     # If values contains any max values enter:
-        #     if maxval in values:
-        #         # The arkeys is a list of corner keys.
-        #         for key in arkeys:
-        #             # For each corner
-        #             arc:corners = self.corners[key]
-        #             log.info(f"Searching key={key} child {arc.aruco_value} {'Enter' if arc.aruco_value < maxval else 'skip'}")
-        #             # If the corner is less then max value enter.
-        #             if arc.aruco_value < maxval:
-        #                 con = arc.connection
-        #                 log.info(f"Corner id: {arc.id} conkeys:{con.keys()}")
-        #                 # For each connection from previous corner to a next corner
-        #                 for conkey in con.keys():
-        #                     v = con[conkey].obj_link.aruco_value
-        #                     log.info(f"v={v} {'OK' if not v < maxval else '--'}")
-        #                     if v ==  maxval:
-        #                         log.info(f"Update child {conkey}")
-        #                         con[conkey].obj_link.aruco_value = arc.aruco_value + 1
-        #     else:
-        #         log.info("Solution found")
-        #         cont = False # A solution must have bean found if no maxvals in array is found.
-        #     if i > maxcount:
-        #         log.warn("Not al solutions was found in time")
-        #         break
-        #     i += 1
+        delete = [key for key in self.corners if self.corners[key].len_transfers() == 0]
+        print(delete)
+        for key in delete: del(self.corners[key])
 
-        """Dijkstra the shortest path to original"""
-        minaruco = lambda d: min([d[key].aruco_value for key in d.keys()])
-        # Finds the smallest aruco_value.
 
-        for key in arkeys:
-            # log.info(f"key:{key}, aruco_value:{self.aruco_corners[key].aruco_value}")
-            # log.info(f"self.aruco_corners[key].connection={self.aruco_corners[key].connection}")
-            arc:Corner = self.aruco_corners[key]
-            value = arc.aruco_value
-            con = arc.connection.keys()
-            tmp = []
-            minimal_value_index = tmp
+        """Show results of connected corners"""
+        for key in self.corners.keys():
+            corner = self.corners[key]
+            log.info(f"-- {corner.name}")
+            for tf in corner.transfers:
+                log.info(f" |- {tf.target.name}")
 
+        """Dijkstra values the shortest path to original"""
+        counter = 0
+        value = 0
+        nrc = len(self.corners)
+        cop = self._aruco_origin
+        while counter < nrc*10:
+            if cop.aruco_value < 10e5:
+                for tf in cop.transfers:
+                    tf.target.aruco_value = min(cop.aruco_value + 1, tf.target.aruco_value)
+            fuck = True
+            while fuck:
+                rnd = np.random.random_integers(0,nrc)
+                try:
+                    key = list(self.corners.keys())[rnd]
+                    fuck = False
+                except IndexError as e:
+                    log.warn(f"random vale {rnd} has no key")
+                    pass
+            # log.info(f"nrc={nrc}, rnd={rnd}, key={key}")
+            cop = self.corners[key]
+            counter += 1
+
+        """ log aruco values  """
+        for corner in self.corners.values():
+            val = f"{f'{bcolors.OK}{corner.aruco_value} [GOOD]{bcolors.END}' if corner.aruco_value < 10e5 else f'{bcolors.ERR}  [BAAD]{bcolors.END}'}"
+            # log.info(f"{corner.name} -> val:{corner.aruco_value}")
+            log.info(f"{corner.name} -> val:\t{val}")
+
+
+        """ Calculate distance to cameras (finaly) """
+        for view in self._views.values():
+            pass
+
+
+
+        # todo: transfers is calulated origin -> view.
+        # but need to be derived view -> origin.
+        # thus view need a back trace stack as a list().
+        # [transefr(corner13,view3),transfer(corner5,corner13), transfer(corner0,corner5)]
+        # Remember that corner -> view is the only direction for tf connecting corners.
+        # And perhaps corner <--> corner exist but it can be corner --> corner only.
+        # thus the back trace need to compensate for that.
+        # perhaps then [view,corner,corner,corner] is a better backtrace.
+
+
+
+
+
+    @property
+    def count(self):
+        return len(self._views)
 
 
 # == Atlas END ==
@@ -238,7 +249,7 @@ def _view_test():
     img = cv2.imread(fname)
     cam = camera("mobile")
     cam.read_param()
-    v = view(fname,img,ar,param,171/1000,cam)
+    v = View(fname,img,ar,param,171/1000,cam)
     print(v)
     print("Show image")
     cv2.imwrite("../logs/temp.jpg",v.img)
@@ -269,7 +280,7 @@ def _view_file_select():
     tmen = TerminalMenu(fnames)
     s = tmen.show()
     img = cv2.imread(fnames[s])
-    v = view(fnames[s],img,ar,param,171/1000,cam)
+    v = View(fnames[s],img,ar,param,171/1000,cam)
     cv2.imwrite("../logs/temp.jpg",v.img)
     scale_percent = 40 # percent of original size
     width =  int(v.img.shape[1] * scale_percent / 100)
@@ -282,6 +293,8 @@ def _view_file_select():
 
 
 
+# if __name__ == '__main__':
+#     _view_file_select()
 
 
 

@@ -7,10 +7,12 @@ from glob import glob
 from pathlib import Path
 import pathlib
 from mpl_toolkits.mplot3d import Axes3D
-from gen_aruco import caruco_board
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 # import pandas as pd
+
+# Local imports
+from gen_aruco import caruco_board
 
 # == Logging basic setup ===
 log = logging.getLogger(__name__)

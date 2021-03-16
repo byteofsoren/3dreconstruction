@@ -1,0 +1,21 @@
+@startuml
+usecase "view1" as view1
+usecase "corners" as corner1
+usecase "transfers" as tf1
+view1 --> corner1:Create & Store in\nview.corners
+view1 --> tf1:create & store in\n view.transfers
+corner1 <-- tf1: corner_link
+usecase "view2" as view2
+usecase "corners" as corner2
+usecase "transfers" as tf2
+view2 --> corner2: Create & store in\nview.corners
+view2 --> tf2: create & store in\nview.transfers
+corner2 <-- tf2: corner_link
+usecase "Atlas" as atlas
+tf2 <-- atlas
+corner1 <-- atlas: Link
+corner2 <-- atlas: Link
+view1 <-- atlas: fetch corners\nand transfers
+view2 <-- atlas: fetch corners\nand transfers
+tf1 <-- atlas : Link
+@enduml
