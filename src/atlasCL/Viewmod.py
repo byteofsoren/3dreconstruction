@@ -3,6 +3,7 @@ import cv2, yaml
 import logging
 import copy
 import pandas as pd
+from bcolor import bcolors
 from tabulate import tabulate
 from pathlib import Path
 from cv2 import aruco
@@ -135,6 +136,100 @@ class View(Linkable):
 
     def __str__(self):
         return f"View filename={self.name}  aruco ids = {self.ids}"
+
+    def generate_transfer(self, origin=0):
+        """generate tarnsfer function for this view."""
+        # direction of transfers:
+        # Origin -> corner -> corner -> view
+        # Diretion of discovery:
+        # view -> corner -> corner -> origin
+        # The problem is that the back trace may not mach the discovery:
+        # O -> C2 -> c3 -> view
+        #   \           /
+        #     <- c5 <-
+        tf:Transfer
+        # breakpoint()
+        log.info(f"{bcolors.OKBLUE}-- {self.name} --{bcolors.END}")
+        low = None
+        if len(self.transfers) == 0 or self.transfers is None:
+            log.warn(f"{bcolors.INF}{self.name}{bcolors.END} Has no transfers")
+            return
+        for tf in self.transfers:
+            log.info(f"{bcolors.OK}Indexing aruco value for tf {tf.source.aruco_value}{bcolors.END}")
+            if low is None:
+                low = tf.source
+            elif isinstance(tf.source, self.Corner) and tf.source.aruco_value < low.aruco_value:
+                log.info(f"{bcolors.INF}{low.name}:{low.aruco_value}{bcolors.END} < {bcolors.OK}{tf.source.name}:{tf.source.aruco_value}{bcolors.END}")
+                low = tf.source
+        # if low is None:
+        #     breakpoint()
+        log.info(f"{bcolors.OKBLUE}{self.name}{bcolors.END} aruco_value= {low.aruco_value}")
+        stack = list()
+        stack.append(low)
+        current = 10e3
+        if not stack[-1].aruco_value == origin:
+            while not current == origin:
+                lc:Corner = stack[-1]
+                low = None
+                low_tf = None
+                # find lowest aruco_value in targets
+                if len(lc.transfers) == 0:
+                    log.error(f"{bcolors.OKCYAN}{lc.name}{bcolors.ERR} Number of transfers to low {bcolors.END}")
+                    break
+                log.info(f"{self.name} -> transfers len {len(lc.transfers)} {bcolors.SIGN.OK}")
+                for tf in lc.transfers:
+                    if low is None:
+                        low = tf.target
+                        low_tf = tf
+                    elif isinstance(tf.target, self.Corner) and tf.target.aruco_value < low.aruco_value:
+                        low = tf.target
+                        low_tf = tf
+                # Now low contains an target Corner with the lowest aruco_value:
+                # Verify that there is a transfer:
+                # ----              ----
+                # |  | <----------  |  |
+                # |  | ---------->  |  |
+                # ----              ----
+                # But as the low target has several connections it self
+                # the back connection must be searched for.
+                found = False
+                for tf in low.transfers:
+                    if tf.target == lc:
+                        found = True
+                        log.info(f"tf.target = lc {bcolors.OK}[OK]{bcolors.END}")
+                        break
+                if not found:
+                    try:
+                        # This do not work because low is a Corner rather then a transfer.
+                        lc.transfers.pop(lc.transfers.index(low_tf))
+                    except ValueError as e:
+                        log.error(f"low {bcolors.ERR}{low.name}{bcolors.END} not in {[tf.name for tf in lc.transfers]}")
+                        # breakpoint()
+                        break
+                else:
+                    log.error(f"{bcolors.ERR}No low transfer match lc{bcolors.END}")
+                    stack.append(low)
+                    current = low.aruco_value
+                # Now pruning is done
+        # else:
+        #     breakpoint()
+        # breakpoint()
+        for it in stack:
+            print(f"{it.name} -> ")
+            for tf in it.transfers:
+                print(f"|- {tf.name}")
+
+
+
+
+
+
+
+
+
+
+
+
 
     def set_TRvec(self,id:int, tvec,rvec,corners2d):
         """ Sets TRvecs  containing tvec,rvec and corners for a aruco id

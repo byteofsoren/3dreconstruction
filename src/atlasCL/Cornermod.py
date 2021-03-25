@@ -50,7 +50,7 @@ class Corner(Linkable):
 
 
     def __init__(self, id:int, back_atlas):
-        super(Corner, self).__init__(name=f"Corner {id}")
+        super(Corner, self).__init__(name=f"Corner {str(id)}")
         self.id:int = id
         self._connection:list = list()
         # self.name = f"Corner id:{id}"

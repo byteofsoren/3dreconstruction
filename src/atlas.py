@@ -42,9 +42,8 @@ class Atlas():
     :param list setconf: is a link to the set.yaml
     """
     _corner_proj = dict()
-    # _views = list()
 
-    _views:dict
+    views:dict
     """A dict of views in in the atlas indexed by name of the view"""
     aruco_ids:list
     """
@@ -72,7 +71,7 @@ class Atlas():
         self._aruco_origin_id = setconf['origin']
         self.corners = dict()
         self.aruco_ids = list()
-        self._views = dict()
+        self.views = dict()
 
 
     def add_View(self, view):
@@ -83,7 +82,7 @@ class Atlas():
         """
         print(f"atlas add_View {bcolors.OKCYAN}{view.name}{bcolors.END} ids {view.ids}")
         log.info(f"#Atlas add view {view}")
-        self._views[view.fname] = view
+        self.views[view.fname] = view
         if not view.ids is None:
             for index in view.ids:
                 if not index in self.aruco_ids:
@@ -106,13 +105,13 @@ class Atlas():
         """
         print("atlas confusion_atlas")
         log.info("-- Calculate confusion atlas  --")
-        names = self._views.keys()
+        names = self.views.keys()
 
         frame = dict()
         for id in self.aruco_ids:
             row = dict()
             for name in names:
-                ids=self._views[name].ids
+                ids=self.views[name].ids
                 log.info(f"Avaible ids = {ids} for name = {name}")
                 if id in ids :
                     row[name] = 1
@@ -143,26 +142,26 @@ class Atlas():
                 self.corners[id].aruco_value = 0
 
         """ Atlas: Connecting the corners with each view is done here """
-        for name in self._views.keys():
-            ids = self._views[name].ids
-            tfs = self._views[name].transfers
-            # corners = self._views[name].corners # dict of {id:(tvec,rvec,corners)}
-            target:View = self._views[name]
+        for name in self.views.keys():
+            ids = self.views[name].ids
+            tfs = self.views[name].transfers
+            # corners = self.views[name].corners # dict of {id:(tvec,rvec,corners)}
+            target:View = self.views[name]
 
             # Connect corner with view over trasfer.
             # For id in each view
             for id in target.ids:
                 tsource = self.corners[id]
-                tvec, rvec, corner2D = self._views[name].get_TRvec(id)
+                tvec, rvec, corner2D = self.views[name].get_TRvec(id)
                 # log.info(f"Adding {tsource} and {target} to {id} ")
                 tf = Transfer(tsource,target,tvec,rvec)
-                self._views[name].add_transfer(tf)
+                self.views[name].add_transfer(tf)
             # For each id in the view create a connection from corner to corner
 
         # Creating connections from corner to corner in each view.
         # For names of all views.
-        for name in self._views.keys():
-            view:View = self._views[name]
+        for name in self.views.keys():
+            view:View = self.views[name]
             tfs = view.transfers
             for id in range(0,len(tfs)-1):
                 tfa = view.transfers[id]
@@ -212,10 +211,67 @@ class Atlas():
             # log.info(f"{corner.name} -> val:{corner.aruco_value}")
             log.info(f"{corner.name} -> val:\t{val}")
 
+        """ Pruning of connections """
+        # As corners and perhaps views has disappeared from the set,
+        # a pruning of transfers must be done.
+        # c1.transfers -> tf[s:c1 t:c2] -> c2
+        # c1.transfers -> tf[s:c1 t:c3]
+        # last must be removed both from transfers
+        # because c3 do not exist.
+        onedict = self.corners.copy()
+        onedict.update(self.views)
+        for fkey in onedict.keys():
+            transfers = list()
+            log.info(f"-- {fkey} ---")
+            for tf in onedict[fkey].transfers:
+                if tf.target in onedict.values() and tf.source in onedict.values():
+                    log.info(f"\t|- append tf:{bcolors.OKBLUE}{tf}{bcolors.END}")
+                    transfers.append(tf)
+                else:
+                    log.warn(f"\t|- destroyed tf:{bcolors.WARN}{tf}{bcolors.END}")
+            if len(onedict[fkey].transfers) == len(transfers):
+                log.info(f"{bcolors.SIGN.OK} transfers equal")
+            else:
+                # breakpoint()
+                diff = len(onedict[fkey].transfers) - len(transfers)
+                log.info(f"{bcolors.SIGN.FAIL} transfers NOT equal, elements removed  {diff} new length {len(transfers)}")
+                # breakpoint()
+                # Store the shorted transfer
+                onedict[fkey].transfers = transfers
+
+        """ Pruning unconnected corners """
+        # Due to the pruning above a few corners lost all connections.
+        # Thus they need to be pruned from the list
+
 
         """ Calculate distance to cameras (finaly) """
-        for view in self._views.values():
-            pass
+        for view in self.views.values():
+            # breakpoint()
+            view.generate_transfer()
+            # # find minimal transfer for view
+            # log.info(f"--{bcolors.OKCYAN} {view} {bcolors.END}--")
+            # mkdikt=dict()
+            # tf:Transfer
+            # for tf in view.transfers:
+            #     log.info(f"{bcolors.INF}{tf.name}{bcolors.END} types\n\t{type(tf.source)}:{type(tf.target)}")
+            #     if type(tf.target) is Corner:
+            #         log.info(f"target: {tf.target.name} as value {tf.target.aruco_value}")
+            #     if type(tf.source) is Corner:
+            #         log.info(f"source: {tf.source.name} as value {tf.source.aruco_value}")
+            #     if not type(tf.source) is None:
+            #         mkdikt[tf.source.aruco_value] = tf
+            #     else:
+            #         breakpoint()
+            # log.info(mkdikt.keys())
+            # if len(mkdikt) > 0:
+            #     minkey = min(list(mkdikt))
+            #     log.info(f"minkey:{minkey}->{mkdikt[minkey].name} mkdikt:{mkdikt} ")
+            # else:
+            #     log.warn("No good key found")
+            # while True:
+            #     # Prune on empty dict
+
+            #     pass
 
 
 
@@ -234,7 +290,7 @@ class Atlas():
 
     @property
     def count(self):
-        return len(self._views)
+        return len(self.views)
 
 
 # == Atlas END ==

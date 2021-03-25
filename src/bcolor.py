@@ -9,4 +9,7 @@ class bcolors:
     BOLD = '\033[1m'
     UND = '\033[4m'
     INF = '\033[38;5;81m'
+    class SIGN:
+        OK = "\033[92m[OK]\033[0m"
+        FAIL = "\033[91m[FAIL]\033[0m"
 
