@@ -176,6 +176,8 @@ class View(Linkable):
                 if len(lc.transfers) == 0:
                     log.error(f"{bcolors.OKCYAN}{lc.name}{bcolors.ERR} Number of transfers to low {bcolors.END}")
                     break
+                else:
+                    log.error(f"{lc.name} OK")
                 log.info(f"{self.name} -> transfers len {len(lc.transfers)} {bcolors.SIGN.OK}")
                 for tf in lc.transfers:
                     if low is None:

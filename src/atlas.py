@@ -243,6 +243,9 @@ class Atlas():
         # Due to the pruning above a few corners lost all connections.
         # Thus they need to be pruned from the list
 
+        """ Drawing a networkx diagram """
+
+
 
         """ Calculate distance to cameras (finaly) """
         for view in self.views.values():
