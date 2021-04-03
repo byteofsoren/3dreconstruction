@@ -3,6 +3,7 @@ import cv2, yaml
 import logging
 import copy
 import pandas as pd
+import matplotlib.pyplot as plt
 import networkx as nx
 from bcolor import bcolors
 from tabulate import tabulate
@@ -72,6 +73,7 @@ class Atlas():
         self.corners = dict()
         self.aruco_ids = list()
         self.views = dict()
+        self.G = nx.DiGraph(module='atlas')
 
 
     def add_View(self, view):
@@ -129,128 +131,163 @@ class Atlas():
             self.confusion_atlas()
         log.info(f"{bcolors.INF}Started building atlas{bcolors.END}")
 
-        """ Create corners with Id is done here """
-        for id in self.aruco_ids:
-            # Create a corner with a link to the atlas
-            # ------------
-            # breakpoint()
-            self.corners[id]=Corner(id,self) # Dict of corner class
-            # -- Stored --
-            if id == self._aruco_origin_id:
-                log.info("Origin Was set")
-                self._aruco_origin = self.corners[id]
-                self.corners[id].aruco_value = 0
+        G = self.G
+        cnode = lambda id:  G.add_node(id,  node=Corner(id,self))
+        vnode = lambda obj: G.add_node(obj.id, node=obj)
+        edge = lambda s,t,tvec,rvec: G.add_edge(s.id,t.id,transfer=Transfer(s,t,tvec,rvec))
+
+        # """ Create corners with Id is done here """
+        # for id in self.aruco_ids:
+        #     cnode(id)
 
         """ Atlas: Connecting the corners with each view is done here """
         for name in self.views.keys():
-            ids = self.views[name].ids
-            tfs = self.views[name].transfers
-            # corners = self.views[name].corners # dict of {id:(tvec,rvec,corners)}
-            target:View = self.views[name]
+            view = self.views[name]
+            vnode(view)
+            log.info(f"{name} is added to graph")
+            for id in view.ids:
+                log.info(f"{name} is connected with {id}")
+                cnode(id)
 
-            # Connect corner with view over trasfer.
-            # For id in each view
-            for id in target.ids:
-                tsource = self.corners[id]
-                tvec, rvec, corner2D = self.views[name].get_TRvec(id)
-                # log.info(f"Adding {tsource} and {target} to {id} ")
-                tf = Transfer(tsource,target,tvec,rvec)
-                self.views[name].add_transfer(tf)
-            # For each id in the view create a connection from corner to corner
+        """ Create transfer connection """
+        # Generate the edges and connect the view -> corner
+        for n in list(G.nodes):
+            node = G.nodes[n]['node']
+            if type(node) is View:
+                for id in node.ids:
+                    print(f"{node.fname} is connected to {id}")
+                    t = node
+                    s = G.nodes[id]['node']
+                    tvec,rvec,corners2d = t.get_TRvec(id)
+                    edge(s,t,tvec,rvec)
+        print(G.edges)
+        # Connect transfer object to each edge
+        for n in list(G.nodes):
+            node = G.nodes[n]['node']
+            if type(node) is View:
+                for id in node.ids:
+                    t = node
+                    s = G.nodes[id]['node']
+                    print(f"s={s.id}, t={t.id}")
+                    # breakpoint()
+                    eobj = G.edges[s.id,t.id]['transfer']
+                    node.add_transfer(eobj)
+                    log.info(f"Added {eobj.name} to {node.name}")
 
-        # Creating connections from corner to corner in each view.
-        # For names of all views.
-        for name in self.views.keys():
-            view:View = self.views[name]
-            tfs = view.transfers
-            for id in range(0,len(tfs)-1):
-                tfa = view.transfers[id]
-                tfb = view.transfers[id + 1]
-                tfab:Transfer = tfa - tfb
-                self.corners[tfab.source.id].add_transfer(tfab)
+        # Connect corner -> conren with transfer
+        for n in list(G.nodes):
+            node = G.nodes[n]['node']
+            if type(node) is View and len(node.ids) >= 2:
+                ida = 0
+                idb = 1
+                while True:
+                    # BC = AC - BC
+                    # CornerA->CornerB = (CornerA->View) - (CornerB->View)
+                    # Target = View
+                    # Source 1 = corner.id
+                    # Source 2 = corner.otherid
+                    # Note:
+                    # The connection from corner to corner reports view to view
+                    # The problem may be that the source and target is
+                    # done in the wrong order above.
+                    A = G.edges[node.ids[ida],node.id]['transfer']
+                    B = G.edges[node.ids[idb],node.id]['transfer']
+                    Atid = A.source.id
+                    Btid = B.source.id
+                    tfAB = A - B
+                    tfBA = B - A
+                    G.add_edge(Atid,Btid, transfer=tfAB)
+                    G.add_edge(Btid,Atid, transfer=tfBA)
+                    # print(f"A={A.name}\nB={B.name}")
 
-
-        """Atlas: Pruning the corners so that non connected is removed"""
-        delete = [key for key in self.corners if self.corners[key].len_transfers() == 0]
-        print(delete)
-        for key in delete: del(self.corners[key])
-
-
-        """Show results of connected corners"""
-        for key in self.corners.keys():
-            corner = self.corners[key]
-            log.info(f"-- {corner.name}")
-            for tf in corner.transfers:
-                log.info(f" |- {tf.target.name}")
-
-        """Dijkstra values the shortest path to original"""
-        counter = 0
-        value = 0
-        nrc = len(self.corners)
-        cop = self._aruco_origin
-        while counter < nrc*10:
-            if cop.aruco_value < 10e5:
-                for tf in cop.transfers:
-                    tf.target.aruco_value = min(cop.aruco_value + 1, tf.target.aruco_value)
-            fuck = True
-            while fuck:
-                rnd = np.random.random_integers(0,nrc)
-                try:
-                    key = list(self.corners.keys())[rnd]
-                    fuck = False
-                except IndexError as e:
-                    log.warn(f"random vale {rnd} has no key")
-                    pass
-            # log.info(f"nrc={nrc}, rnd={rnd}, key={key}")
-            cop = self.corners[key]
-            counter += 1
-
-        """ log aruco values  """
-        for corner in self.corners.values():
-            val = f"{f'{bcolors.OK}{corner.aruco_value} [GOOD]{bcolors.END}' if corner.aruco_value < 10e5 else f'{bcolors.ERR}  [BAAD]{bcolors.END}'}"
-            # log.info(f"{corner.name} -> val:{corner.aruco_value}")
-            log.info(f"{corner.name} -> val:\t{val}")
-
-        """ Pruning of connections """
-        # As corners and perhaps views has disappeared from the set,
-        # a pruning of transfers must be done.
-        # c1.transfers -> tf[s:c1 t:c2] -> c2
-        # c1.transfers -> tf[s:c1 t:c3]
-        # last must be removed both from transfers
-        # because c3 do not exist.
-        onedict = self.corners.copy()
-        onedict.update(self.views)
-        for fkey in onedict.keys():
-            transfers = list()
-            log.info(f"-- {fkey} ---")
-            for tf in onedict[fkey].transfers:
-                if tf.target in onedict.values() and tf.source in onedict.values():
-                    log.info(f"\t|- append tf:{bcolors.OKBLUE}{tf}{bcolors.END}")
-                    transfers.append(tf)
-                else:
-                    log.warn(f"\t|- destroyed tf:{bcolors.WARN}{tf}{bcolors.END}")
-            if len(onedict[fkey].transfers) == len(transfers):
-                log.info(f"{bcolors.SIGN.OK} transfers equal")
-            else:
-                # breakpoint()
-                diff = len(onedict[fkey].transfers) - len(transfers)
-                log.info(f"{bcolors.SIGN.FAIL} transfers NOT equal, elements removed  {diff} new length {len(transfers)}")
-                # breakpoint()
-                # Store the shorted transfer
-                onedict[fkey].transfers = transfers
-
-        """ Pruning unconnected corners """
-        # Due to the pruning above a few corners lost all connections.
-        # Thus they need to be pruned from the list
-
-        """ Drawing a networkx diagram """
+                    ida += 1
+                    idb += 1
+                    if idb >= len(node.ids):
+                        break
 
 
 
-        """ Calculate distance to cameras (finaly) """
-        for view in self.views.values():
-            # breakpoint()
-            view.generate_transfer()
+        # for n in list(G.nodes):
+        #     nobj = G.nodes[n]['node']
+        #     # print(f"{nobj.name} len={len(nobj.transfers)}")
+
+        # for e in list(G.edges):
+        #     print(G.edges[e]['transfer'].name)
+
+        nx.draw(G,with_labels=True,font_weight='bold')
+        plt.show()
+
+
+
+
+        # """Dijkstra values the shortest path to original"""
+        # counter = 0
+        # value = 0
+        # nrc = len(self.corners)
+        # cop = self._aruco_origin
+        # while counter < nrc*10:
+        #     if cop.aruco_value < 10e5:
+        #         for tf in cop.transfers:
+        #             tf.target.aruco_value = min(cop.aruco_value + 1, tf.target.aruco_value)
+        #     fuck = True
+        #     while fuck:
+        #         rnd = np.random.random_integers(0,nrc)
+        #         try:
+        #             key = list(self.corners.keys())[rnd]
+        #             fuck = False
+        #         except IndexError as e:
+        #             log.warn(f"random vale {rnd} has no key")
+        #             pass
+        #     # log.info(f"nrc={nrc}, rnd={rnd}, key={key}")
+        #     cop = self.corners[key]
+        #     counter += 1
+
+        # """ log aruco values  """
+        # for corner in self.corners.values():
+        #     val = f"{f'{bcolors.OK}{corner.aruco_value} [GOOD]{bcolors.END}' if corner.aruco_value < 10e5 else f'{bcolors.ERR}  [BAAD]{bcolors.END}'}"
+        #     # log.info(f"{corner.name} -> val:{corner.aruco_value}")
+        #     log.info(f"{corner.name} -> val:\t{val}")
+
+        # """ Pruning of connections """
+        # # As corners and perhaps views has disappeared from the set,
+        # # a pruning of transfers must be done.
+        # # c1.transfers -> tf[s:c1 t:c2] -> c2
+        # # c1.transfers -> tf[s:c1 t:c3]
+        # # last must be removed both from transfers
+        # # because c3 do not exist.
+        # onedict = self.corners.copy()
+        # onedict.update(self.views)
+        # for fkey in onedict.keys():
+        #     transfers = list()
+        #     log.info(f"-- {fkey} ---")
+        #     for tf in onedict[fkey].transfers:
+        #         if tf.target in onedict.values() and tf.source in onedict.values():
+        #             log.info(f"\t|- append tf:{bcolors.OKBLUE}{tf}{bcolors.END}")
+        #             transfers.append(tf)
+        #         else:
+        #             log.warn(f"\t|- destroyed tf:{bcolors.WARN}{tf}{bcolors.END}")
+        #     if len(onedict[fkey].transfers) == len(transfers):
+        #         log.info(f"{bcolors.SIGN.OK} transfers equal")
+        #     else:
+        #         # breakpoint()
+        #         diff = len(onedict[fkey].transfers) - len(transfers)
+        #         log.info(f"{bcolors.SIGN.FAIL} transfers NOT equal, elements removed  {diff} new length {len(transfers)}")
+        #         # breakpoint()
+        #         # Store the shorted transfer
+        #         onedict[fkey].transfers = transfers
+
+        # """ Pruning unconnected corners """
+        # # Due to the pruning above a few corners lost all connections.
+        # # Thus they need to be pruned from the list
+
+        # """ Drawing a networkx diagram """
+
+
+
+        # """ Calculate distance to cameras (finaly) """
+        # for view in self.views.values():
+        #     # breakpoint()
+        #     view.generate_transfer()
             # # find minimal transfer for view
             # log.info(f"--{bcolors.OKCYAN} {view} {bcolors.END}--")
             # mkdikt=dict()

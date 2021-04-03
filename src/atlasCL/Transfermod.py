@@ -87,9 +87,9 @@ class Linkable():
         if self.check_transfer(): # <- check_transfer is over written
             log.info(f"Transfer {bcolors.OK}[OK]{bcolors.END}")
             self.transfers.append(tf)
-        # else:
-        #     log.info(f"Transfer {bcolors.ERR}[FAIL]{bcolors.END}")
-        #     raise ValueError(f"Transfer {str(tf)} was not axepted")
+        else:
+            log.info(f"Transfer {bcolors.ERR}[FAIL]{bcolors.END}")
+            # raise ValueError(f"Transfer {str(tf)} was not axepted")
 
     def len_transfers(self)->int:
         return len(self.transfers)
