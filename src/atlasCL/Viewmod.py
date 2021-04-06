@@ -101,7 +101,8 @@ class View(Linkable):
         corners, self._ids, self._rejectedImgPoints = tmp #corner def
         # Sort the corners.
         ziped=zip(self._ids, corners)
-        self._ids, self._corners2d = zip(*(sorted(ziped)))
+        # self._ids, self._corners2d = zip(*(sorted(ziped)))
+        self._ids, self._corners2d = zip(*ziped)
         self._axis_matrix = np.float32(
                 [[-0.01, -0.01, 0],
                 [-0.01, 0.01, 0],

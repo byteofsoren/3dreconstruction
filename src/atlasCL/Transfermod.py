@@ -47,6 +47,9 @@ class Linkable():
     temp_transfer:Transfer = None
     """ Used to pass information over to _check_transfer() funciton """
 
+    T:np.ndarray = None
+    """ Used to storet the position/rotation of the class """
+
     def __init__(self, name:str)->None:
         log.info(f"Link created {name}")
         from .Viewmod  import View

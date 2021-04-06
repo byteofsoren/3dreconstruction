@@ -5,4 +5,6 @@ view_obj:
   use_camera_matrix: True
 transfer_obj:
   weight_calculation_method: "simple"
-
+sort_aruco: False
+save:
+  mapimg: '../logs/atlas.png'

@@ -91,7 +91,8 @@ class Atlas():
                     log.info(f"#add {index}")
                     self.aruco_ids.append(index)
 
-        self.aruco_ids = sorted(self.aruco_ids)
+        if self._conf['sort_aruco']:
+            self.aruco_ids = sorted(self.aruco_ids)
 
     def view_atlas(self):
         """Print the confusion array to terminal"""
@@ -151,9 +152,18 @@ class Atlas():
 
         """ Create transfer connection """
         # Generate the edges and connect the view -> corner
+        # Also create a color map for the draw function
+        colormap = []
         for n in list(G.nodes):
             node = G.nodes[n]['node']
+            if type(node) is Corner:
+                colormap.append('#76c5a1')
+                s:Corner = G.nodes[id]['node']
+                if s.id == self._aruco_origin_id:
+                    self._aruco_origin = s
+
             if type(node) is View:
+                colormap.append('#76b5c5')
                 for id in node.ids:
                     print(f"{node.fname} is connected to {id}")
                     t = node
@@ -161,6 +171,7 @@ class Atlas():
                     tvec,rvec,corners2d = t.get_TRvec(id)
                     edge(s,t,tvec,rvec)
         print(G.edges)
+
         # Connect transfer object to each edge
         for n in list(G.nodes):
             node = G.nodes[n]['node']
@@ -206,16 +217,69 @@ class Atlas():
                         break
 
 
+        for n in list(G.nodes):
+            node = G.nodes[n]['node']
+            # breakpoint()
+            if type(node) is View:
+                s = self._aruco_origin_id
+                t = node.id
+                path = nx.dijkstra_path(G, s,t)
+                back = 0
+                T=np.eye(4)
+                forw = 1
+                if len(path) > 1:
+                    while True:
+                        sid = path[back]
+                        tid = path[forw]
+                        tf  =     G.edges[sid,tid]['transfer']
+                        temp:Corner = G.nodes[tid]['node']
+                        T = T@tf.T
+                        temp.T=T
+                        G.nodes[tid]['pos'] = list(T[:2,3])
+                        back += 1
+                        forw += 1
+                        if forw >= len(path):
+                            break
 
-        # for n in list(G.nodes):
-        #     nobj = G.nodes[n]['node']
-        #     # print(f"{nobj.name} len={len(nobj.transfers)}")
+        # Some nodes have not gotten the T matrix and position.
+        # Calculate pos and T for those.
+        for n in list(G.nodes):
+            node = G.nodes[n]
+            if node.get('pos') is None:
+                node = G.nodes[n]['node']
+                s = self._aruco_origin_id
+                t = node.id
+                path = nx.dijkstra_path(G, s,t)
+                back = 0
+                T=np.eye(4)
+                forw = 1
+                if len(path) > 1:
+                    while True:
+                        sid = path[back]
+                        tid = path[forw]
+                        tf  =     G.edges[sid,tid]['transfer']
+                        temp:Corner = G.nodes[tid]['node']
+                        T = T@tf.T
+                        temp.T=T
+                        G.nodes[tid]['pos'] = list(T[:2,3])
+                        # print(f"{sid}->{tid} => {tf.name}")
+                        # print(T)
+                        # breakpoint()
+                        back += 1
+                        forw += 1
+                        if forw >= len(path):
+                            break
 
-        # for e in list(G.edges):
-        #     print(G.edges[e]['transfer'].name)
 
-        nx.draw(G,with_labels=True,font_weight='bold')
+        G.nodes[self._aruco_origin_id]['pos']=[0,0]
+        pos=nx.get_node_attributes(G,'pos')
+        for key in pos.keys():
+            node = pos[key]
+            print(f"{key} pos:{node[0]:.2f},{node[0]:.2f}")
+        nx.draw(G,pos,node_color=colormap,with_labels=True,font_weight='bold')
+        plt.savefig(self._conf['save']['mapimg'])
         plt.show()
+
 
 
 
