@@ -22,9 +22,28 @@ def test_set(name):
     datap1.show_atlas()
     print("builds the atlas")
     datap1.build_atlas()
+    print('Sovle geometry')
+    datap1.geometry_solver()
+    print("end")
 
 def main():
     pass
+
+def input_analysis(name:str,test:list):
+    """
+        This function calulaces the input mean/variance
+        from both the provided human input and the
+        open pose input.
+
+        :param name:str Is the name of the set in dataset diretory.
+        :param test:list Test method if several is avaible.
+    """
+    dataobj = dataset(name)
+    atlasobj = Atlas(dataobj.setconf)
+    dataobj.set_atlas(atlasobj)
+    print(f"Created dataset object {name} {dataobj} size = {dataobj.count}")
+    dataobj.create_views()
+
 
 if __name__ == '__main__':
     test_set("P2")

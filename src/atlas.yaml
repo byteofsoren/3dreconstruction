@@ -7,4 +7,12 @@ transfer_obj:
   weight_calculation_method: "simple"
 sort_aruco: False
 save:
+  showmap: False
+  saveimg: True
   mapimg: '../logs/atlas.png'
+
+# Selecting method for calulating the epipolar geometry.
+# 0 Select a camera and the nearest camera.
+# 1 Select a camera and every camera
+#   containing that feature.
+epipolar_geometry_method: 0

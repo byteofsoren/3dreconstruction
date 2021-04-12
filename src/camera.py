@@ -24,7 +24,10 @@ log.addHandler(f_log)
 log.setLevel(logging.INFO)
 # == END ===
 
-class camera():
+# Local macros:
+mxstr =lambda cell: np.array2string(cell, precision=2, separator=',', suppress_small=True)
+
+class Camera():
     """
         my camera object that takes care with camera calibration and stuff.
         :param str name: Is the name and the dicectory where the camera stores its inforameton.
@@ -172,6 +175,7 @@ class camera():
                     dist  = self._distortion_coefficients0
                     rvecs = self._rotation_vectors
                     tvecs = self._rotation_vectors
+                    imgsize = self._imgsize
                     log.info("Sucsess: Local varibles created")
                 except AttributeError as e:
                     print("No camera matrix is defined run calibrate first.")
@@ -184,6 +188,7 @@ class camera():
                 matrixfile.create_dataset("dist",data=dist)
                 matrixfile.create_dataset("rvecs",data=rvecs)
                 matrixfile.create_dataset("tvecs",data=tvecs)
+                matrixfile.create_dataset("imgsize",data=imgsize)
                 matrixfile.close()
                 log.info("Sucsess: Matrixfile written to disk and closed")
         else:
@@ -202,6 +207,7 @@ class camera():
             self._distortion_coefficients0 = matrixfile["dist"][:]
             self._rotation_vectors = matrixfile['rvecs'][:]
             self._rotation_vectors = matrixfile['tvecs'][:]
+            self._imgsize = matrixfile['imgsize'][:]
             matrixfile.close()
             log.info("Params restored and matrixfile closed")
         else:
@@ -214,6 +220,7 @@ class camera():
             dist  = self._distortion_coefficients0
             rvecs = self._rotation_vectors
             tvecs = self._rotation_vectors
+            imgsize = self._imgsize
         except AttributeError as e:
             log.warn(f"No calibration has been done {e}")
             raise e
@@ -224,6 +231,45 @@ class camera():
         matrixfile.create_dataset(name="dist",data=dist)
         matrixfile.create_dataset(name="rvecs",data=rvecs)
         matrixfile.create_dataset(name="tvecs",data=tvecs)
+        matrixfile.create_dataset(name="imgsize",data=imgsize)
+
+    def ext_convert(self, T:np.ndarray, u:int,v:int)->np.ndarray:
+        """ Converts the in picture u,v cordinates to real world X,Y and Z
+            Cordinates usig the transfer matrix T.
+
+            :param T: Transfer matrix 4x4.
+            :param u: The x position on an image
+            :param v: the y position on an image
+        """
+        # Unknown right now
+        Pu = 1
+        Pv = 1
+        # Sise of half the image
+        #    self._imgsize
+        U0 = self._imgsize[0]/2
+        V0 = self._imgsize[1]/2
+        print(f"U0={U0}, V0={V0}")
+        # extra to u,v
+        w  = 1
+        x  = np.array([[u,v,w]]).T
+        print(f"x=\n{x}")
+        K1 = np.array([[1/Pu,   0 , U0],
+                       [   0, 1/Pv, V0],
+                       [0   ,    0,  1]])
+        print(K1)
+        # K2 = np.ndarray([[f, 0, 0, 0],
+        #                  [0, f, 0, 0],
+        #                  [0, 0, 1, 0]])
+        K2 = np.hstack((self._camera_matrix,np.zeros((3,1))))
+        print(f"Argumented camera_matrix=\n{mxstr(K2)}")
+        breakpoint()
+        K = K1@K2
+        print(f"K=\n{mxstr(K)}")
+        Kinv = np.linalg.inv(K)
+        print(f"Kiv=\n{Kinv}")
+        ret = T@Kinv@x
+        print(ret)
+        return ret
 
     @property
     def mtx(self):
@@ -264,7 +310,7 @@ def main():
     tests = conf['codetests']
     log.info("Main start")
     # End basic setup start tests:
-    cam = camera("mobile")
+    cam = Camera("mobile")
     log.info(f"loaded {cam}")
     if tests['camera_calibration']:
         cam.load_img()

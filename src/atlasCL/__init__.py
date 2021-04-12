@@ -1,5 +1,5 @@
 # Local import
-from camera import camera
+from camera import Camera
 
 # Atlas dependent classes import
 # from .atlasCL.View  import View

@@ -9,7 +9,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 # Local imports
-from camera import camera
+from camera import Camera
 # from .atlas import Atlas
 # from .gen_aruco import caruco_board
 
@@ -38,7 +38,7 @@ class dataset():
     """Stores the directory for the dataset"""
     setconf:list
     """Stores the configuration of the set it self."""
-    _camera:camera
+    _camera:Camera
     """is the camera object used to correct the images."""
     def __init__(self, name:str):
         # load configurations from yaml file
@@ -65,7 +65,7 @@ class dataset():
                 with open(str(setfile),"r") as sf:
                     self.setconf = yaml.load(sf, Loader=yaml.FullLoader)
                 # Create a camera object
-                self._camera = camera(self.setconf['camera'])
+                self._camera = Camera(self.setconf['camera'])
                 self._camera.read_param()
                 log.info(f"camera='{self._camera}'")
                 # Load path to csv file
@@ -136,6 +136,12 @@ class dataset():
     def build_atlas(self):
         """Shorthand for building the atlas"""
         self._atlas.build()
+
+    def geometry_solver(self):
+        self._atlas.ep_solver(self._camera)
+        self._atlas.gd_solver()
+
+
 
     @property
     def count(self):

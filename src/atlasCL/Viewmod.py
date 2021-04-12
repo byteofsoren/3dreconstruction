@@ -12,7 +12,7 @@ from shapely.geometry import Polygon # Calculations of the aria
 from typing import Type # Used to be able to pass var:Type[object] to a function
 
 # Local imports
-# from . import camera
+# from ..camera import camera
 
 from   .Cornermod import Corner
 from .Transfermod import Transfer

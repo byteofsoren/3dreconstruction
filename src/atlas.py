@@ -15,7 +15,7 @@ from typing import Type # Used to be able to pass var:Type[object] to a function
 
 
 # Local import
-# from .camera import camera
+from camera import Camera
 
 # # Atlas dependent classes import
 from atlasCL.Viewmod  import View
@@ -205,11 +205,36 @@ class Atlas():
                     B = G.edges[node.ids[idb],node.id]['transfer']
                     Atid = A.source.id
                     Btid = B.source.id
-                    tfAB = A - B
-                    tfBA = B - A
-                    G.add_edge(Atid,Btid, transfer=tfAB)
-                    G.add_edge(Btid,Atid, transfer=tfBA)
-                    # print(f"A={A.name}\nB={B.name}")
+                    # tfAB = A - B
+                    # tfBA = B - A
+                    tfAB = B - A
+                    tfBA = A - B
+                    # tfAB:Transfer = B - A
+                    # tfBA = tfAB.Tinv
+                    try:
+                        existing = G.edges[Atid,Btid]['transfer']
+                        test = existing.dist < tfAB.dist
+                        teststr = f"{bcolors.SIGN.OK if test else bcolors.SIGN.FAIL}"
+                        # breakpoint()
+                        log.info(f"{existing.dist:.2f} < {tfAB.dist:.2f}{teststr}")
+                        if test:
+                            G.add_edge(Atid,Btid, transfer=tfAB)
+                        del(existing)
+                    except Exception as e:
+                        log.info(f"{e}: {Atid}->{Btid} Was empathy")
+                        G.add_edge(Atid,Btid, transfer=tfAB)
+
+                    try:
+                        existing = G.edges[Btid,Atid]['transfer']
+                        test = existing.dist < tfBA.dist
+                        teststr = f"{bcolors.SIGN.OK if test else bcolors.SIGN.FAIL}"
+                        log.info(f"{existing.dist:.2f} < {tfBA.dist:.2f}{teststr}")
+                        if test:
+                            G.add_edge(Btid,Atid, transfer=tfBA)
+                        del(existing)
+                    except Exception as e:
+                        log.info(f"{e}: {Atid}->{Btid} Was empathy")
+                        G.add_edge(Btid,Atid, transfer=tfBA)
 
                     ida += 1
                     idb += 1
@@ -219,7 +244,6 @@ class Atlas():
 
         for n in list(G.nodes):
             node = G.nodes[n]['node']
-            # breakpoint()
             if type(node) is View:
                 s = self._aruco_origin_id
                 t = node.id
@@ -261,6 +285,7 @@ class Atlas():
                         temp:Corner = G.nodes[tid]['node']
                         T = T@tf.T
                         temp.T=T
+                        temp.pos = list(T[:2,3])
                         G.nodes[tid]['pos'] = list(T[:2,3])
                         # print(f"{sid}->{tid} => {tf.name}")
                         # print(T)
@@ -275,118 +300,44 @@ class Atlas():
         pos=nx.get_node_attributes(G,'pos')
         for key in pos.keys():
             node = pos[key]
-            print(f"{key} pos:{node[0]:.2f},{node[0]:.2f}")
+            log.info(f"{key} pos:{node[0]:.2f},{node[0]:.2f}")
         nx.draw(G,pos,node_color=colormap,with_labels=True,font_weight='bold')
-        plt.savefig(self._conf['save']['mapimg'])
-        plt.show()
+        if self._conf['save']['saveimg']:
+            plt.savefig(self._conf['save']['mapimg'])
+        if self._conf['save']['showmap']:
+            plt.show()
+
+    def ep_solver(self, camera:Camera):
+        """
+            Calculate the  Epipolar geometry to
+            get the real position of the feature.
+            ie. [x,y] -> [X,Y,Z]
+            Where x,y is in the picture and the X,Y,Z is in the real world.
+            There are many ways to do that thus in
+
+            atlas.yaml
+
+            There are a chance to select method as follow:
+                epipolar_geometry_method: 0
+                    # 0 Select a camera and the nearest camera.
+                    # 1 Select a camera and every camera
+                    #   containing that feature.
+        """
+        G = self.G
+        for n in list(G.nodes):
+            node:View = G.nodes[n]['node']
+            if type(node) is View:
+                camera.ext_convert(node.T,1,1)
+
+    def gd_solver(self):
+        """ Gaussian Distribution data Solver
+            Using the derived camera position in the
+            build function and the provided feature markers
+            in the CSV, this function calculates the covariance matrix.
+        """
+        pass
 
 
-
-
-
-        # """Dijkstra values the shortest path to original"""
-        # counter = 0
-        # value = 0
-        # nrc = len(self.corners)
-        # cop = self._aruco_origin
-        # while counter < nrc*10:
-        #     if cop.aruco_value < 10e5:
-        #         for tf in cop.transfers:
-        #             tf.target.aruco_value = min(cop.aruco_value + 1, tf.target.aruco_value)
-        #     fuck = True
-        #     while fuck:
-        #         rnd = np.random.random_integers(0,nrc)
-        #         try:
-        #             key = list(self.corners.keys())[rnd]
-        #             fuck = False
-        #         except IndexError as e:
-        #             log.warn(f"random vale {rnd} has no key")
-        #             pass
-        #     # log.info(f"nrc={nrc}, rnd={rnd}, key={key}")
-        #     cop = self.corners[key]
-        #     counter += 1
-
-        # """ log aruco values  """
-        # for corner in self.corners.values():
-        #     val = f"{f'{bcolors.OK}{corner.aruco_value} [GOOD]{bcolors.END}' if corner.aruco_value < 10e5 else f'{bcolors.ERR}  [BAAD]{bcolors.END}'}"
-        #     # log.info(f"{corner.name} -> val:{corner.aruco_value}")
-        #     log.info(f"{corner.name} -> val:\t{val}")
-
-        # """ Pruning of connections """
-        # # As corners and perhaps views has disappeared from the set,
-        # # a pruning of transfers must be done.
-        # # c1.transfers -> tf[s:c1 t:c2] -> c2
-        # # c1.transfers -> tf[s:c1 t:c3]
-        # # last must be removed both from transfers
-        # # because c3 do not exist.
-        # onedict = self.corners.copy()
-        # onedict.update(self.views)
-        # for fkey in onedict.keys():
-        #     transfers = list()
-        #     log.info(f"-- {fkey} ---")
-        #     for tf in onedict[fkey].transfers:
-        #         if tf.target in onedict.values() and tf.source in onedict.values():
-        #             log.info(f"\t|- append tf:{bcolors.OKBLUE}{tf}{bcolors.END}")
-        #             transfers.append(tf)
-        #         else:
-        #             log.warn(f"\t|- destroyed tf:{bcolors.WARN}{tf}{bcolors.END}")
-        #     if len(onedict[fkey].transfers) == len(transfers):
-        #         log.info(f"{bcolors.SIGN.OK} transfers equal")
-        #     else:
-        #         # breakpoint()
-        #         diff = len(onedict[fkey].transfers) - len(transfers)
-        #         log.info(f"{bcolors.SIGN.FAIL} transfers NOT equal, elements removed  {diff} new length {len(transfers)}")
-        #         # breakpoint()
-        #         # Store the shorted transfer
-        #         onedict[fkey].transfers = transfers
-
-        # """ Pruning unconnected corners """
-        # # Due to the pruning above a few corners lost all connections.
-        # # Thus they need to be pruned from the list
-
-        # """ Drawing a networkx diagram """
-
-
-
-        # """ Calculate distance to cameras (finaly) """
-        # for view in self.views.values():
-        #     # breakpoint()
-        #     view.generate_transfer()
-            # # find minimal transfer for view
-            # log.info(f"--{bcolors.OKCYAN} {view} {bcolors.END}--")
-            # mkdikt=dict()
-            # tf:Transfer
-            # for tf in view.transfers:
-            #     log.info(f"{bcolors.INF}{tf.name}{bcolors.END} types\n\t{type(tf.source)}:{type(tf.target)}")
-            #     if type(tf.target) is Corner:
-            #         log.info(f"target: {tf.target.name} as value {tf.target.aruco_value}")
-            #     if type(tf.source) is Corner:
-            #         log.info(f"source: {tf.source.name} as value {tf.source.aruco_value}")
-            #     if not type(tf.source) is None:
-            #         mkdikt[tf.source.aruco_value] = tf
-            #     else:
-            #         breakpoint()
-            # log.info(mkdikt.keys())
-            # if len(mkdikt) > 0:
-            #     minkey = min(list(mkdikt))
-            #     log.info(f"minkey:{minkey}->{mkdikt[minkey].name} mkdikt:{mkdikt} ")
-            # else:
-            #     log.warn("No good key found")
-            # while True:
-            #     # Prune on empty dict
-
-            #     pass
-
-
-
-        # todo: transfers is calulated origin -> view.
-        # but need to be derived view -> origin.
-        # thus view need a back trace stack as a list().
-        # [transefr(corner13,view3),transfer(corner5,corner13), transfer(corner0,corner5)]
-        # Remember that corner -> view is the only direction for tf connecting corners.
-        # And perhaps corner <--> corner exist but it can be corner --> corner only.
-        # thus the back trace need to compensate for that.
-        # perhaps then [view,corner,corner,corner] is a better backtrace.
 
 
 
@@ -407,7 +358,7 @@ def _view_test():
     # fname="../datasets/P2/images/093440.jpg"   # ids[4,3,8,9,11]
     fname="../datasets/P2/images/093428.jpg"   # ids[0,4,5,6,7,9,11]
     img = cv2.imread(fname)
-    cam = camera("mobile")
+    cam = Camera("mobile")
     cam.read_param()
     v = View(fname,img,ar,param,171/1000,cam)
     print(v)
@@ -435,7 +386,7 @@ def _view_file_select():
     fnames = list()
     for file in path.glob("*.jpg"):
         fnames.append(str(file))
-    cam = camera("mobile")
+    cam = Camera("mobile")
     cam.read_param()
     tmen = TerminalMenu(fnames)
     s = tmen.show()

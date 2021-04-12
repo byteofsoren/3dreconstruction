@@ -50,6 +50,9 @@ class Linkable():
     T:np.ndarray = None
     """ Used to storet the position/rotation of the class """
 
+    _pos:np.ndarray
+    """ Used to store the position of the Corner/View set by probety pos"""
+
     def __init__(self, name:str)->None:
         log.info(f"Link created {name}")
         from .Viewmod  import View
@@ -97,6 +100,16 @@ class Linkable():
     def len_transfers(self)->int:
         return len(self.transfers)
 
+    @property
+    def pos(self):
+        return self._pos
+
+    @pos.setter
+    def pos(self, pos):
+        self._pos = np.array(pos)
+        log.info(f"Set new position at {self._pos}")
+
+
 
 
 
@@ -143,6 +156,7 @@ class Transfer():
         R, jacobian = cv2.Rodrigues(rvec)
         log.info(f"R={R} shape={R.shape}")
         # breakpoint()
+        log.info(f"tvec={tvec} sh{tvec.shape}, rvec={rvec} sh{rvec.shape}")
         self.T = np.vstack([np.hstack([R,tvec[0].T]),[0,0,0,1]])
         log.info(f"__init__ end self.T =\n{self.T}")
         # https://answers.ros.org/question/314828/opencv-camera-rvec-tvec-to-ros-world-pose/
@@ -199,6 +213,20 @@ class Transfer():
             return tf
 
     @property
+    def dist(self):
+        # s = self.source.
+        return np.sum(np.array([x**2 for x in self.tvec]))
+
+    @property
     def Tinv(self):
         """Invested Transfer matrix for this link"""
-        return np.linalg.inv(self.T)
+        # inv = np.linalg.inv(self.T)
+        # tvec = tinv[0:3,3]
+        invTvec, invRvec = self._inversePerspective()
+        invTvec = np.array(invTvec.reshape((1,3)))
+        invRvec = np.array(invRvec[0].reshape((1,3)))
+        invTvec = np.array([invTvec])
+        invRvec = np.array([invRvec])
+        log.info(f"invTvec={invTvec}\tinvRvec={invRvec}")
+        # breakpoint()
+        return Transfer(self.target,self.source,tvec=invTvec,rvec=invRvec)
