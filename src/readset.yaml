@@ -4,3 +4,11 @@ sets:
   path: "../datasets/{name}"
   setfile: "set.yaml"
 
+3dplot:
+  showimg: True
+  # showimg: False
+  plotstd: True
+  plotalpha: 0.4
+  gridstep: 50
+  zscaling: 1000000
+

@@ -8,6 +8,7 @@ from bcolor import bcolors
 #from tabulate import tabulate
 #from pathlib import Path
 from cv2 import aruco
+# import aruco
 # from camera import camera
 from shapely.geometry import Polygon # Calculations of the aria
 from typing import Type # Used to be able to pass var:Type[object] to a function

@@ -80,7 +80,7 @@ class Atlas():
         """
             Add a view to the map
 
-            :param view: is a link to the view object
+            :param View view: is a link to the view object
         """
         print(f"atlas add_View {bcolors.OKCYAN}{view.name}{bcolors.END} ids {view.ids}")
         log.info(f"#Atlas add view {view}")
@@ -322,6 +322,9 @@ class Atlas():
                     # 0 Select a camera and the nearest camera.
                     # 1 Select a camera and every camera
                     #   containing that feature.
+                    #
+
+            :param Camera camera: Is the input camera object
         """
         G = self.G
         for n in list(G.nodes):

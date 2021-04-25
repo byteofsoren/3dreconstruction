@@ -3,6 +3,7 @@ import cv2, PIL
 import yaml
 import logging
 from cv2 import aruco
+# import aruco
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 # import pandas as pd

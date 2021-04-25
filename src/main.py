@@ -7,7 +7,7 @@ from atlas import Atlas
 def test_set(name):
     """
         Tests a set in the dataset directory.
-        :param name:str is the name of the dataset that is loaded with this function
+        :param str name: is the name of the dataset that is loaded with this function
     """
     # conf = None
     # with open('./readset.yaml','r') as f:
@@ -35,14 +35,16 @@ def input_analysis(name:str,test:list):
         from both the provided human input and the
         open pose input.
 
-        :param name:str Is the name of the set in dataset diretory.
-        :param test:list Test method if several is avaible.
+        :param str name: Is the name of the set in dataset diretory.
+        :param list test: Test method if several is avaible.
     """
     dataobj = dataset(name)
     atlasobj = Atlas(dataobj.setconf)
     dataobj.set_atlas(atlasobj)
     print(f"Created dataset object {name} {dataobj} size = {dataobj.count}")
     dataobj.create_views()
+
+
 
 
 if __name__ == '__main__':
