@@ -1,3 +1,13 @@
+
+# Local imports
+from camera import Camera
+from bcolor import bcolors
+from atlasCL.Viewmod import View
+# from .atlas import Atlas
+# from .gen_aruco import caruco_board
+
+
+from cv2 import aruco
 import numpy as np
 import cv2, yaml, PIL
 import logging
@@ -10,21 +20,13 @@ import matplotlib.image as mplimg
 import pylab
 from matplotlib.cbook import get_sample_data
 from typing import Type
-from cv2 import aruco
-# import aruco
 from glob import glob
 from pathlib import Path
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from scipy.stats import multivariate_normal
 
-# Local imports
-from camera import Camera
-from bcolor import bcolors
-# from .atlas import Atlas
-# from .gen_aruco import caruco_board
 
-from atlasCL.Viewmod import View
 
 # == Logging basic setup ===
 log = logging.getLogger(__name__)
@@ -170,11 +172,7 @@ class dataset():
         med,std,cov = self.analyse_feature(andarg, ['u','v'])
         # First make the image
         df = self.select_data(andarg)
-        # fig = plt.Figure()
-        # fig= plt.figure(figsize=(3,6))
-        print("1")
-        fig= plt.figure()
-        print("1 done")
+        fig = plt.Figure(figsize=(15,15))
         ax = fig.add_subplot(projection='3d')
         if conf['showimg']:
             if 'filename' in andarg.keys():

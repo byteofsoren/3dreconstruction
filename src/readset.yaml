@@ -8,7 +8,7 @@ sets:
   showimg: True
   # showimg: False
   plotstd: True
-  plotalpha: 0.4
+  plotalpha: 0.7
   gridstep: 50
   zscaling: 1000000
 

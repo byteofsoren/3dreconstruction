@@ -10,7 +10,6 @@ from bcolor import bcolors
 from typing import TYPE_CHECKING
 from tabulate import tabulate
 from pathlib import Path
-# from cv2 import aruco
 from simple_term_menu import TerminalMenu  # Used to select display options
 from shapely.geometry import Polygon # Calculations of the aria
 from typing import Type # Used to be able to pass var:Type[object] to a function

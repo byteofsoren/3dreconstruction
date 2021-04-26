@@ -1,4 +1,4 @@
-
+from cv2 import aruco
 import numpy as np
 import cv2, yaml
 import logging
@@ -7,7 +7,6 @@ import pandas as pd
 from bcolor import bcolors
 #from tabulate import tabulate
 #from pathlib import Path
-from cv2 import aruco
 # import aruco
 # from camera import camera
 from shapely.geometry import Polygon # Calculations of the aria
