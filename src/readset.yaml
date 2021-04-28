@@ -9,6 +9,8 @@ sets:
   # showimg: False
   plotstd: True
   plotalpha: 0.7
-  gridstep: 50
+  # gridstep: 50
+  resize: 50
   zscaling: 1000000
+  zplotrange: 1000
 

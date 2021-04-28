@@ -1,4 +1,11 @@
 
+# mayavi needs to be at the top
+from mayavi.api import Engine
+from mayavi import mlab
+from mayavi.sources.api import ParametricSurface
+from mayavi.modules.api import Surface
+
+
 # Local imports
 from camera import Camera
 from bcolor import bcolors
@@ -14,9 +21,9 @@ import logging
 import pathlib
 # import copy
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import matplotlib.image as mplimg
+# import matplotlib.pyplot as plt
+# import matplotlib as mpl
+# import matplotlib.image as mplimg
 import pylab
 from matplotlib.cbook import get_sample_data
 from typing import Type
@@ -170,44 +177,63 @@ class dataset():
         #"""
         conf = self._conf['3dplot']
         med,std,cov = self.analyse_feature(andarg, ['u','v'])
+        print(1)
         # First make the image
         df = self.select_data(andarg)
-        fig = plt.Figure(figsize=(15,15))
-        ax = fig.add_subplot(projection='3d')
+        # fig = plt.Figure(figsize=(15,15))
+        fig = mlab.figure()
         if conf['showimg']:
             if 'filename' in andarg.keys():
                 setdir = self.setdir
                 image_path = f"{setdir}/images/{df['filename'].iloc[0]}"
+                # Read the color image
                 img:np.ndarray = cv2.imread(image_path)
-                img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-                x,y = np.ogrid[0:img.shape[0], 0:img.shape[1]]
-                img = img.astype('float32')/255
-                ax.plot_surface(x, y,
-                        np.atleast_2d(-0.1),
-                        rstride=10,
-                        cstride=10,
-                        facecolors=img)
-                fig.savefig("../logs/temp.png")
+                print(img.shape)
+
+                # Resize the image
+                # scale_percent = conf['resize']
+                # width = int(img.shape[1] * scale_percent / 1000)
+                # height = int(img.shape[0] * scale_percent / 1000)
+                # dim = (width, height)
+                # img = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+                print(img.shape)
+                # Convert to gray scale
+                image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                print(image.shape)
+                obj=mlab.imshow(image)
+                # obj.actor.orientation = np.rad2deg(camera.w_Rt_c.euler)
+                # pp = np.array([0, 0, camera.f])[:,None]
+                # w_pp = camera.w_Rt_c.forward(pp)
+                # obj.actor.position = w_pp.ravel()
+                obj.actor.scale = [0.8, 0.8, 0.8]
             else:
                 raise IndexError("No filename was declared in andarg keys")
 
         # Drawing the NGD
+        print(4)
         if not np.linalg.det(cov) == 0 and conf['plotstd']:
             rv = multivariate_normal(med, cov)
             zscaling = conf['zscaling']
 
             sample= self.select_data(andarg,['u','v'])
             imgsize = self.select_data(andarg,['width','height'])
-            # breakpoint()
+
             # Bounds parameters
             x_abs = np.max(imgsize.iloc[:,0])
             y_abs = np.max(imgsize.iloc[:,1])
-            # x_grid, y_grid = np.mgrid[0:x_abs:.02, 0:y_abs:.02]
-            gstep = conf['gridstep']
+            try:
+                obj.actor.position = [x_abs/2,y_abs/2,0]
+            except NameError:
+                log.info("No image showed")
+            xy_abs = np.max([x_abs,y_abs])
+            ax_extent = [0,xy_abs,0,xy_abs]
+            ax_ranges = [0,x_abs,0,y_abs, 0,conf['zplotrange']]
+
+            # gstep = conf['gridstep']
+            gstep = conf['resize']
             xx = np.arange(0,x_abs,gstep)
             yy = np.arange(0,y_abs,gstep)
-            # x_grid, y_grid = np.meshgrid(xx,xx)
-            x_grid, y_grid = np.meshgrid(yy,xx)
+            x_grid, y_grid = np.meshgrid(xx.T,yy.T)
 
             pos = np.empty(x_grid.shape + (2,))
             pos[:, :, 0] = x_grid
@@ -215,40 +241,31 @@ class dataset():
 
             levels = np.linspace(0,1,40)
 
-            # The heatmap
-            ax.contourf(x_grid, y_grid, zscaling * rv.pdf(pos),
-                zdir='z', levels=0.1 * levels, alpha=conf['plotalpha'])
+            z = zscaling*rv.pdf(pos)
 
-            # The wireframe
-            ax.plot_wireframe(
-                    x_grid,
-                    y_grid,
-                    rv.pdf(pos)*zscaling,
-                    rstride=10,
-                    cstride=10,
-                    color='k',
-                    alpha=conf['plotalpha'])
+            # plot the surface
+            grid = mlab.surf(z.T,
+                    # colormap='RdY1Bu',
+                    # warp_scale=0.3,
+                    warp_scale='auto',
+                    representation='wireframe',
+                    line_width=0.5,
+                    extent=ax_ranges
+                    )
+            # Set opacity of the surface grid
+            grid.actor.property.opacity = 0.5
 
-            # The scatter. Note that the altitude is defined based on the pdf of the
-            # random variable
-            ax.scatter(sample.iloc[:, 0],
-                    sample.iloc[:, 1],
-                    1.05 * rv.pdf(sample),
-                    c='k')
-            # breakpoint()
-            ax.set_zlim3d(-0.1, 1)
-            fname = andarg['filename']
+            # Shows the outline box aruond the figure
+            mlab.outline(
+                    color=(0, 0, 0),
+                    opacity=0.8
+                    )
+            # plot the scatter for collected data:
 
-            opts = []
-            for key in andarg.keys():
-                opts.append(f"{key}:")
-                opts.append(str(andarg[key]))
-                opts.append(" ")
-            sopts = ', '.join(opts)
-            ax.set_title(f"Gausian sample opts:{sopts}")
-            # plt.axis('off')
-            fig.savefig("../logs/combo_plot.png")
-            # fig.savefig("../logs/combo_plot.svg")
+            # Showing or saving the figure
+            mlab.view(azimuth=-30, distance=1e4, roll=-90)
+            mlab.show()
+            # mlab.savefig("../logs/combo_plot_mlab.png")
 
 
 
