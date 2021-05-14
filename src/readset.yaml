@@ -4,6 +4,16 @@ sets:
   path: "../datasets/{name}"
   setfile: "set.yaml"
 
+ftest:
+  naming:
+    hm: "Human Mean"
+    hs: "Human Std"
+    hv: "Human Var"
+    hd: "Human Deg"
+    om: "Openp Mean"
+    os: "Openp Std"
+    ov: "Openp Var"
+    od: "Openp Deg"
 3dplot:
   showimg: True
   # showimg: False
@@ -13,4 +23,43 @@ sets:
   resize: 50
   zscaling: 1000000
   zplotrange: 1000
+  markersize: 100
+  view:
+    azimuth: 60
+    distance: 10000
+    roll: 210
+set_translation:
+  0:
+    - RSholder
+    - Relbow
+    - Lelbow
+    - Rwrist
+    - Lwrist
+    - Lhip
+    - NOse
+    - Reye
+    - Rhip
+    - Rknee
+    - Leye
+    - Rfoot
+    - Lfoot
+    - Lknee
+  'sv':
+    "Höger Axel": "RSholder"
+    "Vänster Axel": "LSholder"
+    "Höger Armbåge": "Relbow"
+    "Vänster Armbåge": "Lelbow"
+    "Höger Vrist": "Rwrist"
+    "Vänster Vrist": "Lwrist"
+    "Höger Höft": "Rhip"
+    "Vänster Höft": "Lhip"
+    "Näsa": "NOse"
+    "Höger Öga": "Reye"
+    "Vänster Öga": "Leye"
+    "Höger knä": "Rknee"
+    "Vänster Knä": "Lknee"
+    "Höger Fot": "Rfoot"
+    "Vänster Fot": "Lfoot"
+
+
 
