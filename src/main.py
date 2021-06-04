@@ -23,7 +23,8 @@ def test_set(name):
     print("builds the atlas")
     datap1.build_atlas()
     print('Sovle geometry')
-    datap1.geometry_solver()
+    # datap1.geometry_solver()
+    datap1.create_latex_img_table(4)
     print("end")
 
 def main():

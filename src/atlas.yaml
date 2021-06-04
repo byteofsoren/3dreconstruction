@@ -9,7 +9,7 @@ sort_aruco: False
 save:
   showmap: False
   saveimg: True
-  mapimg: '../logs/atlas.png'
+  mapimg: '../results/atlas.png'
 
 # Selecting method for calulating the epipolar geometry.
 # 0 Select a camera and the nearest camera.

@@ -1,0 +1,81 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/a3c87ab5/
+3dreconstruction	README.md	/^# 3dreconstruction$/;"	c
+__init__	src/atlas.py	/^    def __init__(self):$/;"	m	class:atlas
+__init__	src/atlas.py	/^    def __init__(self, id:int):$/;"	m	class:corner
+__init__	src/atlas.py	/^    def __init__(self, name:str, img:np.ndarray, arucodict, arucoparam):$/;"	m	class:view
+__init__	src/camera.py	/^    def __init__(self, name:str):$/;"	m	class:camera
+__init__	src/gen_aruco.py	/^    def __init__(self, idi:int, size:int=700,bgsize:int=1):$/;"	m	class:argen
+__init__	src/readset.py	/^    def __init__(self, name:str):$/;"	m	class:dataset
+__str__	src/atlas.py	/^    def __str__(self):$/;"	m	class:view
+__str__	src/camera.py	/^    def __str__(self):$/;"	m	class:camera
+__str__	src/readset.py	/^    def __str__(self):$/;"	m	class:dataset
+_aruco_origin_id	src/atlas.py	/^    _aruco_origin_id:int = 0 # origin id set in atlas.yml$/;"	v	class:atlas
+_confusion_atlas	src/atlas.py	/^    _confusion_atlas=False$/;"	v	class:atlas
+_corner_proj	src/atlas.py	/^    _corner_proj = dict()$/;"	v	class:atlas
+_origin_aruco	src/atlas.py	/^    _origin_aruco:int = 0$/;"	v	class:view
+_views	src/atlas.py	/^    _views = list()$/;"	v	class:atlas
+add_view	src/atlas.py	/^    def add_view(self, view):$/;"	m	class:atlas
+add_view	src/atlas.py	/^    def add_view(self, view):$/;"	m	class:corner
+argen	src/gen_aruco.py	/^class argen():$/;"	c
+aruco_corners	src/atlas.py	/^    aruco_corners:list = list() # Stores the aruco corners in the atlas$/;"	v	class:atlas
+atlas	src/atlas.py	/^class atlas():$/;"	c
+build	src/atlas.py	/^    def build(self):$/;"	m	class:atlas
+build_atlas	src/readset.py	/^    def build_atlas(self):$/;"	m	class:dataset
+calibrate	src/camera.py	/^    def calibrate(self):$/;"	m	class:camera
+camera	src/camera.py	/^class camera():$/;"	c
+caruco_board	src/gen_aruco.py	/^def caruco_board(retboard:bool=False,retimg:bool=True)->np.ndarray:$/;"	f
+conf	src/gen_aruco.py	/^        conf = yaml.load(f,Loader=yaml.FullLoader)$/;"	v
+confusion_atlas	src/atlas.py	/^    def confusion_atlas(self):$/;"	m	class:atlas
+corner	src/atlas.py	/^class corner():$/;"	c
+corners	src/atlas.py	/^    corners:list = list()$/;"	v	class:view
+create_views	src/readset.py	/^    def create_views(self):$/;"	m	class:dataset
+dataset	src/readset.py	/^class dataset():$/;"	c
+dectect_corners	src/atlas.py	/^    def dectect_corners(self):$/;"	m	class:view
+f_log	src/atlas.py	/^f_log = logging.FileHandler("..\/logs\/atlas.log")$/;"	v
+f_log	src/camera.py	/^f_log = logging.FileHandler("..\/logs\/camera.log")$/;"	v
+f_log	src/gen_aruco.py	/^f_log = logging.FileHandler("..\/logs\/gen_aruco.log")$/;"	v
+f_log	src/readset.py	/^f_log = logging.FileHandler("..\/logs\/readset.log")$/;"	v
+f_logformat	src/atlas.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
+f_logformat	src/camera.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
+f_logformat	src/gen_aruco.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
+f_logformat	src/readset.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
+gen	src/gen_aruco.py	/^def gen():$/;"	f
+isorigin	src/atlas.py	/^    isorigin:bool = False$/;"	v	class:view
+load_img	src/camera.py	/^    def load_img(self):$/;"	m	class:camera
+log	src/atlas.py	/^log = logging.getLogger(__name__)$/;"	v
+log	src/camera.py	/^log = logging.getLogger(__name__)$/;"	v
+log	src/gen_aruco.py	/^log = logging.getLogger(__name__)$/;"	v
+log	src/readset.py	/^log = logging.getLogger(__name__)$/;"	v
+main	src/camera.py	/^def main():$/;"	f
+main	src/gen_aruco.py	/^def main():$/;"	f
+main	src/main.py	/^def main():$/;"	f
+main	src/readset.py	/^def main():$/;"	f
+mpl	src/camera.py	/^import matplotlib as mpl$/;"	I
+mpl	src/gen_aruco.py	/^import matplotlib as mpl$/;"	I
+mpl	src/readset.py	/^import matplotlib as mpl$/;"	I
+np	src/atlas.py	/^import numpy as np$/;"	I
+np	src/camera.py	/^import numpy as np$/;"	I
+np	src/gen_aruco.py	/^import numpy as np$/;"	I
+np	src/readset.py	/^import numpy as np$/;"	I
+pd	src/atlas.py	/^import pandas as pd$/;"	I
+plt	src/camera.py	/^import matplotlib.pyplot as plt$/;"	I
+plt	src/gen_aruco.py	/^import matplotlib.pyplot as plt$/;"	I
+plt	src/readset.py	/^import matplotlib.pyplot as plt$/;"	I
+read_param	src/camera.py	/^    def read_param(self):$/;"	m	class:camera
+rectify	src/camera.py	/^    def rectify(self, img:np.ndarray):$/;"	m	class:camera
+requests	aruco/main.run.xml	/^<!DOCTYPE requests [$/;"	r
+resize_img	src/camera.py	/^def resize_img(img,scale):$/;"	f
+save	src/gen_aruco.py	/^    def save(self, fname:str):$/;"	m	class:argen
+save_param	src/camera.py	/^            def save_param(self):$/;"	f	member:camera.rectify	file:
+save_param	src/camera.py	/^    def save_param(self):$/;"	m	class:camera
+show	src/gen_aruco.py	/^    def show(self):$/;"	m	class:argen
+show_atlas	src/readset.py	/^    def show_atlas(self):$/;"	m	class:dataset
+view	src/atlas.py	/^class view():$/;"	c
+view_atlas	src/atlas.py	/^    def view_atlas(self):$/;"	m	class:atlas

@@ -262,6 +262,8 @@ class Camera():
         #                  [0, 0, 1, 0]])
         K2 = np.hstack((self._camera_matrix,np.zeros((3,1))))
         print(f"Argumented camera_matrix=\n{mxstr(K2)}")
+        print(K1.shape)
+        print(K2.shape)
         breakpoint()
         K = K1@K2
         print(f"K=\n{mxstr(K)}")

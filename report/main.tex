@@ -1,0 +1,182 @@
+\documentclass[times, 10pt]{thesisMDH}
+\addbibresource{references.bib}
+
+% --- Pacages -----
+\usepackage[ddmmyyyy]{datetime}
+\usepackage{graphicx}
+\usepackage{amsmath} % Dep mathtools
+\usepackage{amsfonts} % dep
+\usepackage[utf8]{inputenc}
+%% Maths
+\usepackage{mathtools}
+\usepackage{fancyhdr}
+\usepackage{enumerate}
+\usepackage{pdflscape}
+% \usepackage{listings}     % Do not list codes in paper use bellow.
+% \usepackage{algpseudocode} % Algorithms instead of listings
+\usepackage[noend]{algpseudocode}
+%\usepackage{algorithm,algorithmic}
+\usepackage{algorithm}
+\usepackage{ragged2e}
+% \usepackage[linesnumbered,vlined,ruled,scleft]{algorithm2e}
+% \usepackage[titletoc]{appendix}
+
+\usepackage[margin=3cm]{geometry}
+\usepackage[absolute]{textpos}
+\usepackage[section]{placeins}
+\usepackage{url}
+\usepackage{tabularx}
+\usepackage{acronym}
+\usepackage{harpoon}  % Long vector arrows. perhaps DEP
+\usepackage{gensymb}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{todonotes}
+\usepackage{multirow}
+\usepackage{titlesec}
+
+
+% Bibliography settings:
+
+% \titleformat{\subsection}
+% {\normalfont\small% Changed!
+%   \bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+
+\graphicspath{{Figures/}{Figures/}{.}{images/}{results/}} %Setting the graphicspath
+
+%%%%%%% Import tikz for a figure.
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows}
+\tikzset{
+    ->, % makes the edges directed
+    >=stealth,
+    %>=stealth’, % makes the arrow heads bold
+    node distance=3cm, % specifies the minimum distance between two nodes. Change if necessary.
+    every state/.style={thick, fill=gray!10}, % sets the properties for each ’state’ node
+    initial text=$ $, % sets the text that appears on the start arrow
+}
+\tikzset{aruco/.style={
+        rectangle, draw=black!50, fill=black!20, thick, minimum width=0.85cm, minimum height = 0.85cm,
+    }
+}
+%%%%%%%% ----------------
+%% =========={ Commando creation }==========
+% \renewcommand\thesection{\arabic{section}}
+% \newcommand{\lit}[1]{\item[\textbf{L#1}]
+%\newcommand\req[1]{%
+%    \item["\textbf{RQ#1}"]%
+%    }%
+% \newcommand\req[1]{\item[\textbf{RQ#1}]}
+% \newcommand{\rew}[1]{{\color{red}#1}
+% \newcommand{\rewc}[2]{{\color{#2}#1}
+%\newcommand{\rewdetail}[2]{{\color{red}#1\todo[color=red!40]{#2}}
+%\newcommand{\insertref}[1]{\todo[color=green!40]{#1}
+%%\newcommand{\explainindetail}[1]{\todo[color=red!40]{#1}}
+%\newcommand{\setseparation}{\setlength\itemsep{0mm}
+%\def\checkmark{\tikz\fill[scale=0.6](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+%\newcommand{\cspace}{\ensuremath{\mathcal{C}}
+
+
+% \renewcommand{\headrulewidth}{0.4pt}
+% \renewcommand{\footrulewidth}{0.4pt}
+% \newcommand\node[2]{%
+% \item[%
+% \textbf{#1}%
+% ] \textbf{#2}%
+% }
+
+% % \newcommand{\R}{\(\mathbb{R}\)}
+\newcommand*\aruco[1]{ArUco#1}
+\newcommand*\openpose[1]{OpenPose#1}
+\newcommand*\Q[1]{$Q_#1$}
+\newcommand*\R{\mathbb{R}}
+\newcommand*\defref[1]{Definition~\ref{#1}}
+% \newcommand*\NN{\mathbb{N}} % natural numbers
+\newcommand*\NN{\mathbb{N}} % natural numbers
+\newcommand*\AAA{\mathcal{A}} % automaton
+\newcommand*\WWW{\mathring{W}^2_1} % Sobolev space 2,1,o
+\newcommand*\defined[1]{\emph{#1}} % used for defining new terms
+\DeclarePairedDelimiter\abs{\lvert}{\rvert} % proper absolute value
+
+
+
+\usepackage[pdfborder={0 0 0},colorlinks=true,urlcolor=blue,citecolor=red,bookmarks=false]{hyperref}
+
+
+%%%%% Title page settings
+\fancyHeader{Valid OpenPose on laying humans}{Magnus Sörensen}
+\university{Mälardalen University}
+\department{School of Innovation Design and Engineering\\ Västerås, Sweden}
+\subject{Thesis for the Degree of Master of Science in Engineering - Robotics 30.0 credits}
+\thesisTitle{Validation of OpenPose on laying humans using statistics, Aruco corners and a novel minimal point of error}
+\authorOne{Magnus Sörensen}{msn15018@student.mdh.se}
+%\authorTwo{Student Name2}{studentEmail@student.mdh.se}
+
+
+\examiner{Martin Ekstr\"{o}m}{M\"{o}lardalen University, V\"{ä}sterås, Sweden}
+\supervisorA{Fredrik Ekstrand}{M\"{a}lardalen University, V\"{a}sterås, Sweden}
+\supervisorB{Joaqu in Ballestero}
+{University of M\'{a}laga, M\'{a}laga, Spain}
+\supervisorC{Jesus Manuel Gomez de Gabriel Ballesteros}{University of M\'{a}laga, M\'{a}laga, Spain}
+
+\theDate{\today}
+%%%%% END
+
+\begin{document}
+\titlePage
+% Begin actual text
+\frontmatter
+%\input{sections/000-guideline} % Remove 000-guideline section
+\input{sections/abstract}
+\newpage
+%%========= Tables ==========
+{\hypersetup{linkcolor=black}\tableofcontents}
+\clearpage
+{\hypersetup{linkcolor=black}\listoffigures}
+\clearpage
+{\hypersetup{linkcolor=black}\listoftables}
+
+\mainmatter
+\input{acronymes}
+% ===== Content: Modify the structure according to your needs =======
+\input{sections/01_introduction}
+\newpage
+% \input{sections/02_background} %SOTA
+\input{sections/02_initial_thougts.tex} %SOTA
+\newpage
+\input{sections/03_relatedWork}
+\newpage
+\input{sections/04_method}
+\newpage
+\input{sections/05_etics}
+\newpage
+\input{sections/06_contribs}
+\newpage
+\input{sections/07_results}
+\newpage
+\input{sections/08_discussion}
+\newpage
+\input{sections/09_conclusions}
+\newpage
+%%\input{sections/Acknowledgments}
+%% ============================= References ============================
+%%% \newpage
+\printbibliography
+\addcontentsline{toc}{section}{References}
+
+%% ============================ Appendices =============================
+\newpage
+\begin{appendices}
+    \section*{Appendices}
+    % \input(sections/99_appendix.tex)
+    text
+
+	\input{appendices/appendices1}
+	%\clearpage
+
+	%\input{appendices/appendices2}
+	%\clearpage
+
+\end{appendices}
+
+\end{document}

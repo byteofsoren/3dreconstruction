@@ -1,0 +1,85 @@
+\section{Introduction}%
+\label{sec:s3d:ntroduction}
+At \ac{uma} there is an robot intended to be used in helping elderly if they have fallen down on the floor.
+In there approach they are set on using \openpose to find and assist the elderly.
+Thus its relevant to investigate how \openpose reacts if a elderly human is laying on the ground.
+% robot is used to ether assist or pick them up.
+%In this thesis an investigation to how OpenPose
+The problem is that OpenPose only seams to be trained on datasets where humans are standing, sitting, walking and running.
+The missing data will be attempted to be solved using an inside out approach using a regular camera and ArUco conner take a set of an image.
+Several images were taken around the subject on the ground and with at least one known ArUco corner in the picture.
+In this way, the camera pose is known for each picture; consequently, that can take advantage of to triangulate a feature in each image.
+Features in this paper is a set of points of interest on a human body mostly joints, but also eyes, nose and belly.
+The 2D annotation is done by both \openpose in~\cite{qiao2017openpose} and a human operator returning a list of each feature.
+The benefit of that is that the bias in the \openpose  algorithm for humans in a particular orientation can be discovered.
+The resulting data is a point cloud of each feature, formed by a median point algorithm explained in~\ref{sec:s3d:Method}
+By investigation the divination and mean from different cameras, there is also a possibility to identify a spread if the subject in different orientations.
+
+The methods used in this paper is attempted to both compare the output data from how \opnepose with a human in the image domain of the dataset, but also 3D reconstruction for how \onpepose would react to an human laying on the floor in the global domain.
+The image domain data is compared using F-test and T-test against a human sample.
+While the 3D reconstruction uses \aruco corners to solve the Bundle Adjustment problem by using Dijkstras algorithm on the input quiver.
+% \par The expected outcome from this project presented in point in~\ref{sub:expected_outocem} show what kind of data that will be acquired and how that is supposed to be stored.
+
+
+
+
+% \subsection{Hypothesis and research questions}%
+% \label{sub:Hypothesis}
+% The hypothesis for this job is that \openpose can not correctly identify the features of humans that are laying on the floor from certain angles.
+% Thus, the hypothesis for this part of the work is:
+% \vspace{5mm}
+% \begin{itemize}
+%     \item[$\mathbf{H_0}$] The standard deviation of \openpose is on pair with a human from all angles.
+%     \item[$\mathbf{H_a}$] The standard deviation of \openpose significantly deviates at certain angles.
+% \end{itemize}
+
+% \vspace{5mm}
+% \raggedright Research questions used to prove the hypothesis above.
+% \begin{itemize}
+%     \item[$\mathbf{Q_{1}}$] How does the accuracy of \openpose change as the camera is moving to a position where the subject is upside down?
+%     \item[$\mathbf{Q_2}$] How does \aruco handle multiple fiducial markers in one image?
+%     % \item[$\mathbf{Q_3}$]
+% \end{itemize}
+
+% \def\svgwidth{\columnwidth}
+% \begin{figure}[ht]
+%     \centering
+%         % \input{Figures/validation.pdf_tex}
+%         % \input{Figures/validation.pdf_tex}
+%         \input{images/dataset.pdf_tex}
+%       \caption{
+%                       In this figure, the subject is on its back facing upward and from the for angles in the figure the two features marked as $F_{sr}$, $F_{er}$ for right shoulder and elbow respectively.
+%           In the last image, its proposed the elbow can not be found from that camera angle thus not marked.
+%           The \arucos  corner at the head is the origin for the system with corner 0.
+%           Also for the last image, the camera cannot observe the origin, but as each other \arucos  corners is observed from the other angle, the camera position can still be calculated from the other \arucos  corners.
+%       }
+%       \label{fig:intro:dataset}
+% \end{figure}
+
+
+% \subsection{Expected outcome}%
+% \label{sub:expected_outocem}
+% The expected outcome from this work is a dataset that contains the following data.
+% \begin{itemize}
+%     \item Several sets each containing images of one subject on the ground.
+%     \item In each set, there are several images from several angles.
+%     \item 2D annotated data from the photos using both a human and \openpose
+%     \item 3D pose cloud, estimated from each feature from human data and \openpose
+% \end{itemize}
+
+% % In this proposal the data is proposed to be stored as both CSV and YAML  files.
+% % The CSV data contains the 2D pose for each set of images while the YAML file contains settings for that set of data.
+
+% The figure~\ref{fig:intro:dataset} contains a supposed set of images from the dataset with two notable features in the image.
+
+
+
+
+
+
+
+
+
+
+
+

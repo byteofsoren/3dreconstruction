@@ -25,6 +25,7 @@ import pandas as pd
 # import matplotlib as mpl
 # import matplotlib.image as mplimg
 import pylab
+import re
 # from scipy.stats import f as f_test
 from scipy import stats
 from matplotlib.cbook import get_sample_data
@@ -65,6 +66,8 @@ class dataset():
     """Stores the configuration of the set it self."""
     _camera:Camera
     """is the camera object used to correct the images."""
+    indata:dict
+    """Stores the images"""
     def __init__(self, name:str):
         # load configurations from yaml file
         with open('./readset.yaml','r') as f:
@@ -105,10 +108,13 @@ class dataset():
             err = "The name was not a directory or not found."
             log.ERROR(err)
             raise Exception(err)
-        # try:
-        #     self._atlas = atlas.atlas(self.setconf)
-        # except Exception as e:
-        #     raise e
+
+        # Pattern matcher for file types used in _save_df
+        self.pattern_di = {}
+        self.pattern_di['latex'] = re.compile(r"([a-zA-Z0-9\s_\\.\-\(\):])+(.latex|.tex)$")
+        self.pattern_di['html'] = re.compile(r"([a-zA-Z0-9\s_\\.\-\(\):])+(.HTML|.htm|.html)$")
+        self.pattern_di['png'] = re.compile(r"([a-zA-Z0-9\s_\\.\-\(\):])+(.png|.PNG)$")
+        self.pattern_di['csv'] = re.compile(r"([a-zA-Z0-9\s_\\.\-\(\):])+(.csv|.CSV)$")
 
     def load_anatations(self):
         """
@@ -156,7 +162,7 @@ class dataset():
                         ) # Removed the index_col to make a merged df
                 if not csvtype == 0:
                     trans:dict = self._conf['set_translation'][csvtype]
-                    print(trans)
+                    #print(trans)
                     for lkey in trans.keys():
                         csvfile.loc[(csvfile.label == lkey),'label'] = trans[lkey]
                 data[str(csvset['path'])] = csvfile
@@ -170,9 +176,8 @@ class dataset():
         self.indata = pd.concat([data[key] for key in data.keys()], ignore_index=True)
         # print(self.indata)
         log.info(self.indata)
-        # breakpoint()
 
-    def select_data(self, andarg:dict, rest_col=[], df=None):
+    def select_data(self, andarg:dict, request_col=[], df=None):
         """
         Does a SQL like selection based on the dict argumnt
         Supose
@@ -181,31 +186,52 @@ class dataset():
             SELECT * FROM data
             WHERE filename == 092614.jpg AND User == User1
 
-        The argument rest_col select two columns form the set
+        The argument request_col select two columns form the set
         df[['filename', 'user']]
 
         :param dict andarg: Dict that selects rows in df
-        :param list rest_col: List for selecting columns
+        :param list request_col: List for selecting columns
         :param pd.DataFrame df: can be used to select data from other df
         """
         if df is None:
             df=self.indata
+        if 'label' in andarg.keys():
+            andarg['label'] =  andarg['label'].capitalize()
         ret = df.loc[np.all(df[list(andarg)] == pd.Series(andarg), axis=1)]
-        if not len(rest_col) > 0:
+        log.info(f"Length of data {len(ret)}")
+        if request_col and not len(ret) == 0:
+            return ret[request_col]
+        elif not request_col and not len(ret) == 0:
             return ret
         else:
-            return ret[rest_col]
+            log.warn(f"Length of output was low")
+            raise ValueError("Length of output was to low")
 
 
     def analyse_feature(self, andarg, rest_col=[]):
-        breakpoint()
-        dd = self.select_data(andarg, rest_col)
-        med:pd.Series    = dd.median()
-        std:pd.Series    = dd.std()
-        cov:pd.DataFrame = dd.cov()
-        n:int            = dd.shape[0]
-        log.info(f"median:\n{med}\nstd:\n{std}\ncovariance:\n{cov}")
-        return med,std,cov,n
+        try:
+            dd = self.select_data(andarg, rest_col)
+            med:pd.Series    = dd.median()
+            std:pd.Series    = dd.std()
+            cov:pd.DataFrame = dd.cov()
+            n:int            = dd.shape[0]
+            log.info(f"median:\n{med}\nstd:\n{std}\ncovariance:\n{cov}")
+            return med,std,cov,n
+        except ValueError as e:
+            raise e
+
+    def save_df(self,fname,df:pd.DataFrame):
+        p = Path(f"../results/{fname}")
+        if   re.fullmatch(self.pattern_di['latex'], fname):
+            df.to_latex(p)
+        elif re.fullmatch(self.pattern_di['csv'], fname):
+            df.to_csv(p)
+        elif re.fullmatch(self.pattern_di['html'], fname):
+            df.to_html(p)
+        elif re.fullmatch(self.pattern_di['png'], fname):
+            pass
+
+
 
     def error_calulation(self,  frac=0.5):
         """
@@ -217,7 +243,6 @@ class dataset():
         dh = self.select_data({'user':"Human"}, ['user','filename','label', 'u','v'])
 
         do_openp = self.select_data({'user':"OpenPose"}, ['user', 'filename','label', 'u','v'])
-        # breakpoint()
         labels:list = dh['label'].unique()
         fnames:list = dh['filename'].unique()
         if isinstance(labels,np.ndarray):
@@ -259,7 +284,6 @@ class dataset():
         # 6543.jpg
         openp_error_df= pd.DataFrame(columns=labels, index=fnames)
         human_error_df= pd.DataFrame(columns=labels, index=fnames)
-        # breakpoint()
         error_degdf_df = pd.DataFrame(columns=[naming['hd'],naming['od']])
 
         self.unique = {'columns':labels, 'index':fnames}
@@ -273,50 +297,50 @@ class dataset():
         # the feats wile North means form the head.
         for file in fnames:
             for label in labels:
-                log.info(f"file={file}, label={label}")
-                mean_df:pd.DataFrame = getsub(dh_human)
-                # log.info(f"mean_df shape = {mean_df.shape}")
-                log.info(f"mean_df = \n{mean_df}")
-                sampl_df:pd.DataFrame = getsub(dh_sampl)
-                # log.info(f"samp_df shape = {sampl_df.shape}")
-                log.info(f"samp_df = \n{sampl_df}")
-                # breakpoint()
-                openp_df:pd.DataFrame = getsub(do_openp)
-                thuman_mean = mean_df.mean()
-                # log.warn(f"thuman_mean shape = {thuman_mean.shape}")
-                # Store the degres of freedom
+                try:
+                    log.info(f"file={file}, label={label}")
+                    mean_df:pd.DataFrame = getsub(dh_human)
+                    # log.info(f"mean_df shape = {mean_df.shape}")
+                    log.info(f"mean_df = \n{mean_df}")
+                    sampl_df:pd.DataFrame = getsub(dh_sampl)
+                    # log.info(f"samp_df shape = {sampl_df.shape}")
+                    log.info(f"samp_df = \n{sampl_df}")
+                    openp_df:pd.DataFrame = getsub(do_openp)
+                    thuman_mean = mean_df.mean()
+                    # log.warn(f"thuman_mean shape = {thuman_mean.shape}")
+                    # Store the degres of freedom
 
-                tdefdf = list()
-                if label in error_degdf_df.index:
-                    tdef_df = error_degdf_df.loc[label]
-                else:
-                    tdef_df = [0,0]
-                tdefdf.append(mean_df.shape[0]   + tdef_df[0])
-                tdefdf.append(openp_df.shape[0] + tdef_df[1])
-                error_degdf_df.loc[label] = tdefdf
+                    tdefdf = list()
+                    if label in error_degdf_df.index:
+                        tdef_df = error_degdf_df.loc[label]
+                    else:
+                        tdef_df = [0,0]
+                    tdefdf.append(mean_df.shape[0]   + tdef_df[0])
+                    tdefdf.append(openp_df.shape[0] + tdef_df[1])
+                    error_degdf_df.loc[label] = tdefdf
 
+                    thsamp_mean = sampl_df.mean()
+                    topenp_mean = openp_df.mean()
+                    # Median calulation
+                    mux,muy = thuman_mean.values.tolist()
+                    # Our test cases.
+                    # Human sample
+                    tx,ty = thsamp_mean.values.tolist()
+                    perr=terr(mux,muy,tx,ty)
+                    human_error_df.at[file,label] = perr
+                    human_error_df.at[file,"Direction"] = imgloc [file]
+                    # log.info(f"OK human error {perr:.2f}")
+                    # OpenPose sample
+                    tx,ty = topenp_mean.values.tolist()
+                    perr=terr(mux,muy,tx,ty)
+                    openp_error_df.at[file,label] = perr
+                    openp_error_df.at[file,"Direction"] = imgloc[file]
+                    # log.info(f"OK OpenPose error {perr:.2f}")
+                except ValueError as e:
+                    pass
 
-                thsamp_mean = sampl_df.mean()
-                topenp_mean = openp_df.mean()
-                # Median calulation
-                mux,muy = thuman_mean.values.tolist()
-
-                # Our test cases.
-                # Human sample
-                tx,ty = thsamp_mean.values.tolist()
-                perr=terr(mux,muy,tx,ty)
-                human_error_df.at[file,label] = perr
-                human_error_df.at[file,"Direction"] = imgloc [file]
-                # log.info(f"OK human error {perr:.2f}")
-                # OpenPose sample
-                tx,ty = topenp_mean.values.tolist()
-                perr=terr(mux,muy,tx,ty)
-                openp_error_df.at[file,label] = perr
-                openp_error_df.at[file,"Direction"] = imgloc[file]
-                # log.info(f"OK OpenPose error {perr:.2f}")
 
         errordict = dict()
-        # breakpoint()
         print("Cumulative error for a human:")
         errordict[naming['hm']] = human_error_df.mean()
         errordict[naming['hv']] = human_error_df.var()
@@ -410,6 +434,7 @@ class dataset():
 
         ftest_pds = pd.DataFrame(columns=['f', 'p_f', 'f accept','s','p_t','t accept'],index=self.unique['columns'],dtype=np.float32)
         ftest_pds['f accept'] = ftest_pds['f accept'].astype(str)
+        ftest_pds['t accept'] = ftest_pds['t accept'].astype(str)
         # f_test.cdf(sigma,dfn,dfm)
         for row in self.unique['columns']:
             try:
@@ -433,20 +458,37 @@ class dataset():
 
 
             except KeyError as e:
-                breakpoint()
-                raise e
-        # T test
-        breakpoint()
-        temp = stats.ttest_ind(
-                a=self.human_error_df,
-                b=self.openp_error_df,
-                equal_var=True)
+                pass
+                # breakpoint()
+                # raise e
+            # T test
+        # Needs to be a foor loop to create each column t-test
+        for col in self.unique['columns']:
+            # c[~(numpy.isnan(c))]
+            c1 = self.human_error_df[col].to_numpy(dtype=np.float32)
+            c2 = self.openp_error_df[col].to_numpy(dtype=np.float32)
+            a=  c1[~(np.isnan(c1))]
+            b=  c2[~(np.isnan(c2))]
+            if len(a) > 1 and len(b) > 1:
+                temp = stats.ttest_ind(
+                        a=  a,
+                        b=  b,
+                        equal_var=True)
+                pval = temp.pvalue
+                stat = temp.statistic
+                ftest_pds.at[col,'s']=stat
+                ftest_pds.at[col,'p_t']=pval
+                ftest_pds.at[col,'t accept']= f"{'Accept' if pval <= 0.05 else 'Reject'}"
+
+
+
         ftest_pds.style.format("{:.2%}")
         print(ftest_pds)
         directions = set(self.unique['imgloc'].values())
         ftest_pos_df = pd.DataFrame(
                 index=directions,
-                columns=['f','p_f','f accept'])
+                columns=['f','p_f','f accept','s','p_t','t accept'])
+        ftest_pos_df['t accept'] = ftest_pos_df['t accept'].astype(str)
         for row in directions:
             human_mean = self.direction_error_df.at[row,naming['hm']]
             openp_mean = self.direction_error_df.at[row,naming['om']]
@@ -460,43 +502,37 @@ class dataset():
                 f = human_var/openp_var
             else:
                 f = openp_var/human_var
-            # ftest_pds.at[row,'f'] = f
             ftest_pos_df.at[row,'f'] = f
             p = 1-stats.f.cdf(f, human_deg-1,openp_deg-1)
             ftest_pos_df.at[row,'p_f'] = p
             if not np.isnan(p):
                 ftest_pos_df.at[row,'f accept'] = f"{'Reject' if p < 0.5 else 'Accepted'}"
+            # T -test for direction error:
+            human_direction = self.select_data({'Direction':row}, self.unique['columns'], df=self.human_error_df)
+            openp_direction = self.select_data({'Direction':row}, self.unique['columns'], df=self.openp_error_df)
+            c1 = human_direction.to_numpy(dtype=np.float32)
+            c2 = openp_direction.to_numpy(dtype=np.float32)
+            a=  c1[~(np.isnan(c1))]
+            b=  c2[~(np.isnan(c2))]
+            if len(a) > 1 and len(b) > 1:
+                temp = stats.ttest_ind(
+                        a=  a,
+                        b=  b,
+                        equal_var=True)
+                pval = temp.pvalue
+                stat = temp.statistic
+                ftest_pos_df.at[row,'s']=stat
+                ftest_pos_df.at[row,'p_t']=pval
+                ftest_pos_df.at[row,'t accept']= f"{'Accept' if pval <= 0.05 else 'Reject'}"
+
+
         print(ftest_pos_df)
+        self.ftest_pos_df = ftest_pos_df
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def plot3dstats(self, andarg,  alpha=0.0):
+    def plot3dstats(self, andarg,  alpha=0.0, outputfp="../results/combo_plot_mlab.png"):
         """
         plot3d plots the stastics for a given data frame.
 
@@ -505,7 +541,13 @@ class dataset():
         """
         #"""
         conf = self._conf['3dplot']
-        med,std,cov = self.analyse_feature(andarg, ['u','v'])
+        try:
+            med,std,cov,_ = self.analyse_feature(andarg, ['u','v'])
+        except ValueError as e:
+            errmsg="To few samples in output"
+            log.warn(errmsg)
+            print(errmsg)
+            return -1
         print(1)
         # First make the image
         df = self.select_data(andarg)
@@ -513,7 +555,7 @@ class dataset():
         fig = mlab.figure(bgcolor=(1,1,1))
 
         if conf['showimg']:
-            if 'filename' in andarg.keys():
+            if 'filename' in andarg.keys() and len(df) > 0:
                 setdir = self.setdir
                 image_path = f"{setdir}/images/{df['filename'].iloc[0]}"
                 # Read the color image
@@ -537,6 +579,7 @@ class dataset():
                 # obj.actor.position = w_pp.ravel()
                 # obj.actor.scale = [0.8, 0.8, 0.8]
             else:
+                log.warn(f"andarg has no filename")
                 raise IndexError("No filename was declared in andarg keys")
 
         # Drawing the NGD
@@ -552,7 +595,6 @@ class dataset():
             x_abs = np.max(imgsize.iloc[:,0])
             y_abs = np.max(imgsize.iloc[:,1])
             try:
-                # breakpoint()
                 obj.actor.rotate_z(90)
                 obj.actor.position = [x_abs/2,y_abs/2,0]
             except NameError:
@@ -609,11 +651,9 @@ class dataset():
                 yt.append(1*gt(i,1)*conf['resize'])
                 zt.append(z[gt(i,0), gt(i,1)])
 
-            # breakpoint()
             # z = zscaling*rv.pdf(zz)
             # mlab.points3d(sample['u'],sample['v'],z,value)
             pplot:mayavi.modules.glyph.Glyph = mlab.points3d(xt,yt,zt,value,scale_factor=1)
-            # breakpoint()
 
 
 
@@ -624,7 +664,9 @@ class dataset():
                     distance=cview['distance'],
                     roll=cview['roll'])
             # mlab.show()
-            mlab.savefig("../logs/combo_plot_mlab.png")
+            # mlab.savefig("../results/combo_plot_mlab.png")
+            mlab.savefig(outputfp)
+            mlab.close()
 
 
 
@@ -667,7 +709,6 @@ class dataset():
                 # v = atlas.view(img.name,rectframe, self._aruco, self._parameters, ars, cam)
                 # self._atlas.add_view(v)
                 try:
-                    # breakpoint()
                     view = View(img.name,rectframe, self._aruco, self._parameters, ars, cam)
                 except Exception as e:
                     log.info(f"view not added {e}")
@@ -683,6 +724,16 @@ class dataset():
     def geometry_solver(self):
         self._atlas.ep_solver(self._camera)
         self._atlas.gd_solver()
+
+    def create_latex_img_table(self, xcount):
+        breakpoint()
+        data = self.indata
+        latex = []
+        ycount = int(len(data)/xcount)
+        for row in np.arange(0,ycount):
+            for col in np.arange(0,xcount):
+                print(f"row{row} col{col}")
+
 
 
 
@@ -716,12 +767,12 @@ def test_stats(name):
     log.info(f"Test {name}")
     data = dataset(name)
     data.load_anatations()
-    # a = {'user':'Human','label':'Rsholder'}
-    # b = {'user':'OpenPose','label':'Rsholder'}
     data.error_calulation(0.3)
     data.error_t_test()
+    # a = {'user':'Human','label':'Rsholder'}
+    # b = {'user':'OpenPose','label':'Rsholder'}
     # data.t_test()
-    # a = {'filename':'093614.jpg','label':'Nose',' k'
+    a = {'filename':'093614.jpg','label':'Nose'}
     # b = {'filename':'093614.jpg','label':'Nose'}
     # a = {'filename':'093614.jpg'}
     # # print(data.select_data(a))
@@ -731,10 +782,29 @@ def test_stats(name):
     # print(data.select_data(a))
     # data.plot3dstats(a)
 
-
+def test_selection():
+    data = dataset('P2')
+    data.load_anatations()
+    ds = []
+    ds.append(len(data.select_data({'label':'Rsholder'})))
+    ds.append(len(data.select_data({'label':'Rsholder'},['u','v'])))
+    a = {'filename':'093614.jpg','label':'Rsholder'}
+    ds.append(len(data.select_data(a)))
+    a = {'filename':'093614.jpg','label':'Nose'}
+    ds.append(len(data.select_data(a)))
+    a = {'filename':'093614.jpg','label':'Leye'}
+    ds.append(len(data.select_data(a)))
+    try:
+        a = {'filename':'093614.jpg','label':'Rfoot'}
+        ds.append(len(data.select_data(a)))
+    except ValueError as e:
+        print("Expected to be 0 so its ok")
+        ds.append(0)
+    print(ds)
 
 
 
 if __name__ == '__main__':
     # test_set("P2")
     test_stats("P2")
+    # test_selection()
