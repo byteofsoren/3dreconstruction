@@ -1,5 +1,5 @@
 \section{Introduction}%
-\label{sec:s3d:ntroduction}
+\label{sec:intro}
 At \ac{uma} there is an robot intended to be used in helping elderly if they have fallen down on the floor.
 In there approach they are set on using \openpose to find and assist the elderly.
 Thus its relevant to investigate how \openpose reacts if a elderly human is laying on the ground.
@@ -12,12 +12,40 @@ In this way, the camera pose is known for each picture; consequently, that can t
 Features in this paper is a set of points of interest on a human body mostly joints, but also eyes, nose and belly.
 The 2D annotation is done by both \openpose in~\cite{qiao2017openpose} and a human operator returning a list of each feature.
 The benefit of that is that the bias in the \openpose  algorithm for humans in a particular orientation can be discovered.
-The resulting data is a point cloud of each feature, formed by a median point algorithm explained in~\ref{sec:s3d:Method}
+The resulting data is a point cloud of each feature, formed by a median point algorithm explained in~\ref{sec:background}
 By investigation the divination and mean from different cameras, there is also a possibility to identify a spread if the subject in different orientations.
 
 The methods used in this paper is attempted to both compare the output data from how \opnepose with a human in the image domain of the dataset, but also 3D reconstruction for how \onpepose would react to an human laying on the floor in the global domain.
 The image domain data is compared using F-test and T-test against a human sample.
-While the 3D reconstruction uses \aruco corners to solve the Bundle Adjustment problem by using Dijkstras algorithm on the input quiver.
+While the 3D reconstruction uses \aruco and Dijkstras to solve the 3D position of the camera with out solving the Bundle Adjustment problem.
+Later that was proven to be unsolvable due to a cumulative error when traversing the nodes.
+
+\subsection{Structure of this report}%
+\label{sub:Structure_of_this_report}
+
+The general structure of this document is ass follow:
+Section~\ref{sec:background} contains the initial through and general introduction to some of the subjects and math in this paper.
+After the initial concept the Related Works in\ref{sec:related_work} will discuss what others have done in this field of study.
+Method\ref{sec:method} derives the necessary steps and forms a hypothesis to solve the problem.
+There is a ethics section\ref{sec:ethics} that disuses the ethical part of this report.
+The implementation section\ref{sec:work} discusses how it was implemented.
+Results in section\ref{sec:results} shows what the results where for the implementation.
+Discussion\ref{sec:discussion} is the authors reflection on the results.
+Conclusion\ref{sec:conclusion} summarizes the findings.
+Appendices\ref{sec:appendices} contains tables and images used in thins report.
+
+
+% The resulting data is a point cloud of each feature, formed by a median point algorithm explained in~\ref{sec:background}
+% \label{sec:s3d:ntroduction}
+% \section{Results}\label{sec:results}
+% \label{sec:method}
+% \label{sec:background}
+%\label{sec:bg}
+% \label{sec:s3d:Method}
+
+
+
+
 % \par The expected outcome from this project presented in point in~\ref{sub:expected_outocem} show what kind of data that will be acquired and how that is supposed to be stored.
 
 

@@ -174,6 +174,7 @@ class dataset():
                 raise ValueError(t)
         # Create total indata table using pandas concat function.
         self.indata = pd.concat([data[key] for key in data.keys()], ignore_index=True)
+        # breakpoint()
         # print(self.indata)
         log.info(self.indata)
 
@@ -204,7 +205,9 @@ class dataset():
         elif not request_col and not len(ret) == 0:
             return ret
         else:
-            log.warn(f"Length of output was low")
+            users = df['user'].unique()
+            log.warning(f"Length of output was low {len(ret)} input: {andarg}, users: {users}")
+            # breakpoint()
             raise ValueError("Length of output was to low")
 
 
@@ -242,7 +245,9 @@ class dataset():
 
         dh = self.select_data({'user':"Human"}, ['user','filename','label', 'u','v'])
 
+        # breakpoint()
         do_openp = self.select_data({'user':"OpenPose"}, ['user', 'filename','label', 'u','v'])
+        # breakpoint()
         labels:list = dh['label'].unique()
         fnames:list = dh['filename'].unique()
         if isinstance(labels,np.ndarray):
@@ -283,6 +288,7 @@ class dataset():
         # 2343.jpg
         # 6543.jpg
         openp_error_df= pd.DataFrame(columns=labels, index=fnames)
+        # breakpoint()
         human_error_df= pd.DataFrame(columns=labels, index=fnames)
         error_degdf_df = pd.DataFrame(columns=[naming['hd'],naming['od']])
 
@@ -295,51 +301,82 @@ class dataset():
         # imgloc stores the approximated positon of where the camera is located.
         # imgloc['2543.jpg'] -> South means that the picture was taken from
         # the feats wile North means form the head.
+        counter_ok = [0,0,0]
+        counter_fail = [0,0,0]
         for file in fnames:
             for label in labels:
+                # breakpoint()
+                log.info(f"file={file}, label={label}")
+
+                # getsub can return a ValueError there fore
+                # A test is preformed on each acces.
                 try:
-                    log.info(f"file={file}, label={label}")
                     mean_df:pd.DataFrame = getsub(dh_human)
-                    # log.info(f"mean_df shape = {mean_df.shape}")
                     log.info(f"mean_df = \n{mean_df}")
-                    sampl_df:pd.DataFrame = getsub(dh_sampl)
-                    # log.info(f"samp_df shape = {sampl_df.shape}")
-                    log.info(f"samp_df = \n{sampl_df}")
-                    openp_df:pd.DataFrame = getsub(do_openp)
-                    thuman_mean = mean_df.mean()
-                    # log.warn(f"thuman_mean shape = {thuman_mean.shape}")
-                    # Store the degres of freedom
-
-                    tdefdf = list()
-                    if label in error_degdf_df.index:
-                        tdef_df = error_degdf_df.loc[label]
-                    else:
-                        tdef_df = [0,0]
-                    tdefdf.append(mean_df.shape[0]   + tdef_df[0])
-                    tdefdf.append(openp_df.shape[0] + tdef_df[1])
-                    error_degdf_df.loc[label] = tdefdf
-
-                    thsamp_mean = sampl_df.mean()
-                    topenp_mean = openp_df.mean()
-                    # Median calulation
-                    mux,muy = thuman_mean.values.tolist()
-                    # Our test cases.
-                    # Human sample
-                    tx,ty = thsamp_mean.values.tolist()
-                    perr=terr(mux,muy,tx,ty)
-                    human_error_df.at[file,label] = perr
-                    human_error_df.at[file,"Direction"] = imgloc [file]
-                    # log.info(f"OK human error {perr:.2f}")
-                    # OpenPose sample
-                    tx,ty = topenp_mean.values.tolist()
-                    perr=terr(mux,muy,tx,ty)
-                    openp_error_df.at[file,label] = perr
-                    openp_error_df.at[file,"Direction"] = imgloc[file]
-                    # log.info(f"OK OpenPose error {perr:.2f}")
+                    counter_ok[0] += 1
                 except ValueError as e:
-                    pass
+                    counter_fail[0] += 1
+                    log.warning(f"Median human: {e}")
+
+                try:
+                    sampl_df:pd.DataFrame = getsub(dh_sampl)
+                    log.info(f"samp_df = \n{sampl_df}")
+                    counter_ok[1] += 1
+                except ValueError as e:
+                    counter_fail[1] += 1
+                    log.warning(f"Sample: {e}")
+
+                try:
+                    openp_df:pd.DataFrame = getsub(do_openp)
+                    counter_ok[2] += 1
+                except ValueError as e:
+                    counter_fail[2] += 1
+                    log.warning(f"OpenPose: {e}")
+                    # breakpoint()
+
+                result_list = list()
+
+                if label in error_degdf_df.index:
+                    tdef_df = error_degdf_df.loc[label]
+                else:
+                    tdef_df = [1,0]
+
+                # If mean_df was successfully loaded
+                if 'mean_df' in locals():
+                    result_list.append(mean_df.shape[0]   + tdef_df[0])
+                    thuman_mean = mean_df.mean()
+                    mux,muy = thuman_mean.values.tolist()
+                    # If openp_df was successfully loaded
+                    try:
+                        result_list.append(openp_df.shape[0] + tdef_df[1])
+                        topenp_mean = openp_df.mean()
+                        tx,ty = topenp_mean.values.tolist() # This is NAN?
+                        openp_error_df.at[file,label] = terr(mux,muy,tx,ty)
+                    except Exception as e:
+                        result_list.append(np.nan)
+                        # topenp_mean = pd.Series({'u':np.nan, 'v':np.nan})
+
+                    try:
+                        error_degdf_df.loc[label] = result_list
+                    except ValueError as e:
+                        breakpoint()
+                        raise e
+                    # Human sample
+                    if 'sampl_df' in locals():
+                        thsamp_mean = sampl_df.mean()
+                        tx,ty = thsamp_mean.values.tolist()
+                        human_error_df.at[file,label] = terr(mux,muy,tx,ty)
+                    # else:
+                    #     thsamp_mean = pd.Series({'u':np.nan, 'v':np.nan})
+
+                openp_error_df.at[file,"Direction"] = imgloc[file]
+                human_error_df.at[file,"Direction"] = imgloc[file]
 
 
+        log.info(f"Human success = {counter_ok[0]/(counter_ok[0]+counter_fail[0])}")
+        log.info(f"Sample success = {counter_ok[1]/(counter_ok[1]+counter_fail[1])}")
+        log.info(f"OpenPose success = {counter_ok[2]/(counter_ok[2]+counter_fail[2])}")
+        # breakpoint()
         errordict = dict()
         print("Cumulative error for a human:")
         errordict[naming['hm']] = human_error_df.mean()
@@ -348,6 +385,7 @@ class dataset():
         errordict[naming['om']] = openp_error_df.mean()
         errordict[naming['ov']] = openp_error_df.var()
         errordf = pd.DataFrame(errordict)
+
 
         # Cumdict creates an row for mean
         # and variance to apply to error dict.
@@ -359,6 +397,7 @@ class dataset():
         s = pd.Series(cumdict,name='Total mean/variance:')
         self.errordf = errordf.append(s,ignore_index=False)
         print(errordf)
+        self.save_df("error_df.latex", errordf)
 
         # directional error calculation.
         # human_direction=dict()
@@ -394,6 +433,7 @@ class dataset():
 
 
         print(direction_error)
+        self.save_df("direction_error_df.latex", direction_error)
         self.direction_error_df:pd.DataFrame = direction_error
         self.error_df:pd.DataFrame  = errordf
         self.error_degdf_df:pd.DataFrame = error_degdf_df
@@ -456,7 +496,6 @@ class dataset():
                     ftest_pds.at[row,'f accept'] = f"{'Reject' if p < 0.5 else 'Accepted'}"
 
 
-
             except KeyError as e:
                 pass
                 # breakpoint()
@@ -484,6 +523,7 @@ class dataset():
 
         ftest_pds.style.format("{:.2%}")
         print(ftest_pds)
+        self.save_df("ftest_pds.latex", ftest_pds)
         directions = set(self.unique['imgloc'].values())
         ftest_pos_df = pd.DataFrame(
                 index=directions,
@@ -528,6 +568,7 @@ class dataset():
 
         print(ftest_pos_df)
         self.ftest_pos_df = ftest_pos_df
+        self.save_df("ftest_pos_df.latex", ftest_pos_df)
 
 
 
@@ -669,10 +710,6 @@ class dataset():
             mlab.close()
 
 
-
-
-
-
     def set_atlas(self, atlas_link):
         self._atlas = atlas_link
 
@@ -726,13 +763,48 @@ class dataset():
         self._atlas.gd_solver()
 
     def create_latex_img_table(self, xcount):
-        breakpoint()
-        data = self.indata
+        xwidth = 1/(xcount)
+        # breakpoint()
+        imgpath = Path(f"{str(self.setdir)}/{self.setconf['imgdir']}")
+        exists = imgpath.exists() and imgpath.is_dir()
+        log.info("imgpath {imgpath} exists {exists}")
+        images = []
+        for imgtype in self.setconf['imgtypes']:
+            for img in imgpath.glob(imgtype):
+                log.info(f"Reading image {img}")
+                # breakpoint()
+                img = str(img)
+                img = img.replace("../datasets","images/datasets")
+                images.append(img)
+                #report/images/datasets
+        ycount = int(len(images)/xcount-1)
         latex = []
-        ycount = int(len(data)/xcount)
-        for row in np.arange(0,ycount):
-            for col in np.arange(0,xcount):
-                print(f"row{row} col{col}")
+        latex.append("\\begin{figure*}\n")
+        index = 0
+        for col in np.arange(xcount):
+            latex.append("\\begin{minipage}[b]{%0.2f\\linewidth}\n"%(xwidth))
+            for row in np.arange(ycount+1):
+                latex.append("\includegraphics[width=1\linewidth]{%s}\\vspace{4pt}\n"%(images[index]))
+                index+=1
+
+            latex.append("\\end{minipage}\n")
+        latex.append("\\end{figure*}\n")
+        print(index)
+        with open("../results/datasets.latex", "w") as fp:
+            for row in latex:
+                # fp.writelines(row)
+                fp.write(row)
+
+
+
+
+        # \subfigure[Input]{
+        # \begin{minipage}[b]{0.23\linewidth}
+        # \includegraphics[width=1\linewidth]{a1.jpg}\vspace{4pt}
+        # \includegraphics[width=1\linewidth]{a2.jpg}\vspace{4pt}
+        # \includegraphics[width=1\linewidth]{a3.jpg}\vspace{4pt}
+        # \includegraphics[width=1\linewidth]{a4.jpg}
+        # \end{minipage}}
 
 
 

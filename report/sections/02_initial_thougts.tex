@@ -1,4 +1,5 @@
-\section{Initial concept and definitions}\label{sec:background}
+\section{Initial concept and definitions}
+\label{sec:background}
 
 %%I detta avsnitt redogör du för sådan kunskap som läsaren behöver för att förstå ditt arbete och ditt bidrag. Presentera fundamental kunskap som behövs för att förstå området och uppgiften. Till exempel kan du här redogöra för relevanta teorier och förklara begrepp du använder eller introducera matematisk notation. Skriv bakgrunden så att den som är väl insatt i området kan hoppa över den.
 
@@ -46,32 +47,32 @@ Calculating the midpoint on a vector that is orthogonal to each feature line.
 With images taken from several directions, a point cloud can assume ably be calculated from several lines.
 The benefit of using a multivariate Gaussian distribution is that a median that is close to the real feature can be estimated.
 
-\subsection{Homogeneous coordinates}%
-\label{sub:Homogeneous_coordinates}
-Before the 3D annotation can be done the case for homogeneous transforms is explained shortly.
-Let the point $p$ in a Cartesian system be defined in 2D and the homogeneous representation of the same point in homogeneous coordinate system be defined as:
-\begin{equation}
-    p=(x,y)\quad p\in \R^2 \qquad \tilde p=(\tilde x,\tilde y,1)\quad \tilde p\in \R^2
-\end{equation}
-To convert backward from the homogeneous system to Cartesian:
-\begin{equation}
-    % \lable{eq:homo-cart}
-    % \tilde{t}
-    \tilde{p}=(\tilde{x}, \tilde{y}, \tilde{z})\qquad p = (\frac{\tilde{x}}{\tilde{z}}, \frac{\tilde{y}}{\tilde{z}})
-\end{equation}
-Then points and lines are defined in the same way, also called duals.
-Thus a line is defined as:
-\begin{equation}
-    \tilde \ell = \tilde p_1\times\tilde p_2
-\end{equation}
-While a point can be defined as two crossing lines:
-\begin{equation}
-    \tilde p = \tilde\ell_1 \times \tilde\ell_2
-\end{equation}
-A point $\tilde{p}$ traveling along the line $\tilde{\ell}$ can be defined as:
-\begin{equation}
-    \tilde\ell^T\tilde p=0
-\end{equation}
+% \subsection{Homogeneous coordinates}%
+% \label{sub:Homogeneous_coordinates}
+% Before the 3D annotation can be done the case for homogeneous transforms is explained shortly.
+% Let the point $p$ in a Cartesian system be defined in 2D and the homogeneous representation of the same point in homogeneous coordinate system be defined as:
+% \begin{equation}
+%     p=(x,y)\quad p\in \R^2 \qquad \tilde p=(\tilde x,\tilde y,1)\quad \tilde p\in \R^2
+% \end{equation}
+% To convert backward from the homogeneous system to Cartesian:
+% \begin{equation}
+%     % \lable{eq:homo-cart}
+%     % \tilde{t}
+%     \tilde{p}=(\tilde{x}, \tilde{y}, \tilde{z})\qquad p = (\frac{\tilde{x}}{\tilde{z}}, \frac{\tilde{y}}{\tilde{z}})
+% \end{equation}
+% Then points and lines are defined in the same way, also called duals.
+% Thus a line is defined as:
+% \begin{equation}
+%     \tilde \ell = \tilde p_1\times\tilde p_2
+% \end{equation}
+% While a point can be defined as two crossing lines:
+% \begin{equation}
+%     \tilde p = \tilde\ell_1 \times \tilde\ell_2
+% \end{equation}
+% A point $\tilde{p}$ traveling along the line $\tilde{\ell}$ can be defined as:
+% \begin{equation}
+%     \tilde\ell^T\tilde p=0
+% \end{equation}
 
 
 \subsection{Pinhole camera}%
@@ -186,7 +187,7 @@ The method to solve the correspondence problem is rooted in  Epipolar Geometry a
 This implementation however mostly uses the linear algebra for vision presented by~\cite{corke2017robotics} to compute the location of the features.
 The general overview of the system is also illustrated using the graphs in~\ref{fig:method:overview} and future expanded in the last page of this report.
 These techniques are presented in the figure~\ref{fig:camera_transfer} while figure~\ref{fig:3Dhuman} shows the intended approach for the system.
-The figure~\ref{fig:UML_outline} show the stacking of the intended system using an UML diagram.
+%The figure~\ref{fig:UML_outline} show the stacking of the intended system using an UML diagram.
 \def\svgwidth{\columnwidth}
 \begin{figure}[ht]
     \centering
@@ -216,71 +217,71 @@ The figure~\ref{fig:UML_outline} show the stacking of the intended system using 
 
 
 
-%\subsection{Confusion atlas}\label{sub:implement:confusion}
-%As each \aruco corner in the scene can be observed from several camera locations its important to build what in this report is refereed as an confusion atlas.
-%This confusion atlas stores the connection from each view related to each corner in the scene as shown in figure~\ref{fig:confusion}.
+\subsection{Confusion atlas}\label{sub:implement:confusion}
+As each \aruco corner in the scene can be observed from several camera locations its important to build what in this report is refereed as an confusion atlas.
+This confusion atlas stores the connection from each view related to each corner in the scene as shown in figure~\ref{fig:confusion}.
 
-%\begin{figure}
-%    \centering
-%    \begin{tikzpicture}
-%        % Styles
-%        % Nodes
-%        \node[aruco] (A0) {A0};
-%        \node[aruco, right of =A0, yshift=1.3cm] (A1) {A1};
-%        \node[aruco, right of =A0, xshift=0.9cm, yshift=-1.3cm] (A2) {A2};
-%        \node[aruco, right of =A1, yshift=-0.3cm] (A3) {A3};
-%        \node[aruco, right of =A1, xshift=1.9cm, yshift=-1.3cm] (A4) {A4};
-%        \node[aruco, right of =A4, xshift=-0.9cm, yshift=0.2cm ] (A5) {A5};
-%        \node[state, left of =A0, yshift=0.5cm] (C0) {C0};
-%        \node[state, above of =A0, xshift=1.5cm] (C1) {C1};
-%        \node[state, below of =A0, xshift=1.7cm] (C2) {C2};
-%        \node[state, below of =A3,  yshift=-0.6cm] (C3) {C3};
-%        \node[state, above of =A4, xshift=0.5cm] (C4) {C4};
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        % Styles
+        % Nodes
+        \node[aruco] (A0) {A0};
+        \node[aruco, right of =A0, yshift=1.3cm] (A1) {A1};
+        \node[aruco, right of =A0, xshift=0.9cm, yshift=-1.3cm] (A2) {A2};
+        \node[aruco, right of =A1, yshift=-0.3cm] (A3) {A3};
+        \node[aruco, right of =A1, xshift=1.9cm, yshift=-1.3cm] (A4) {A4};
+        \node[aruco, right of =A4, xshift=-0.9cm, yshift=0.2cm ] (A5) {A5};
+        \node[state, left of =A0, yshift=0.5cm] (C0) {C0};
+        \node[state, above of =A0, xshift=1.5cm] (C1) {C1};
+        \node[state, below of =A0, xshift=1.7cm] (C2) {C2};
+        \node[state, below of =A3,  yshift=-0.6cm] (C3) {C3};
+        \node[state, above of =A4, xshift=0.5cm] (C4) {C4};
 
 
-%        % Draw lines
-%        \draw
-%            (A0) edge[above, bend left] node{} (C0)
-%            (A1) edge[above, bend right] node{} (C0)
-%            (A0) edge[above, bend left] node{} (C1)
-%            (A1) edge[above, bend right] node{} (C1)
-%            (A4) edge[above, bend left] node{} (C4)
-%            (A5) edge[above, bend right] node{} (C4)
-%            (A0) edge[above, bend right] node{} (C2)
-%            (A1) edge[above, bend right] node{} (C2)
-%            (A2) edge[above, bend left] node{} (C2)
-%            (A2) edge[above, bend right] node{} (C3)
-%            (A3) edge[above, bend left] node{} (C3)
-%            % aruco connections
-%            (A1) edge[above] node{$T_{A0}^{A1}$} (A0)
-%            (A2) edge[below] node{$T_{A0}^{A2}$} (A0)
-%            (A3) edge[below] node{$T_{A3}^{A2}$} (A2)
-%            (A5) edge[above] node{$T_{A5}^{A4}$} (A4)
+        % Draw lines
+        \draw
+            (A0) edge[above, bend left] node{} (C0)
+            (A1) edge[above, bend right] node{} (C0)
+            (A0) edge[above, bend left] node{} (C1)
+            (A1) edge[above, bend right] node{} (C1)
+            (A4) edge[above, bend left] node{} (C4)
+            (A5) edge[above, bend right] node{} (C4)
+            (A0) edge[above, bend right] node{} (C2)
+            (A1) edge[above, bend right] node{} (C2)
+            (A2) edge[above, bend left] node{} (C2)
+            (A2) edge[above, bend right] node{} (C3)
+            (A3) edge[above, bend left] node{} (C3)
+            % aruco connections
+            (A1) edge[above] node{$T_{A0}^{A1}$} (A0)
+            (A2) edge[below] node{$T_{A0}^{A2}$} (A0)
+            (A3) edge[below] node{$T_{A3}^{A2}$} (A2)
+            (A5) edge[above] node{$T_{A5}^{A4}$} (A4)
 
-%            ;
-%            % (A1) edge[above] node{$\vec{A_1A_2}$} (A2)
-%            % (A1) edge[left, bend right] node{$\vec{A_1C}$} (C)
-%            % (A2) edge[right, bend left] node{$\vec{A_1C}$} (C)
-%            %;
-%    \end{tikzpicture}
-%    \caption{
-%        Camera to \aruco\ relation where each cameras observe a set of \aruco\ corners placed around the subject. Note that camera C4 observes A4 and A5 but have no connection to A3. This means that from A4 and A5 there is no connection to the origin. In this report, corners in an camera view that do not connect to the origin is called a ghost network and is pruned from the collection when the map is being built. Also note that the connection path for A3 to A0 goes throe A2 leading to a longer path to origin. This could perhaps be fixed by adding a extra camera to the scene that records A0 and A3 in the same picture. How ever this also leads to that the scene have a multiplicity's of connections from A3 to A0, example through A1 or A2. Witch is the best connection?
-%    }
-%    \label{fig:confusion}
-%\end{figure}
+            ;
+            % (A1) edge[above] node{$\vec{A_1A_2}$} (A2)
+            % (A1) edge[left, bend right] node{$\vec{A_1C}$} (C)
+            % (A2) edge[right, bend left] node{$\vec{A_1C}$} (C)
+            %;
+    \end{tikzpicture}
+    \caption{
+        Camera to \aruco\ relation where each cameras observe a set of \aruco\ corners placed around the subject. Note that camera C4 observes A4 and A5 but have no connection to A3. This means that from A4 and A5 there is no connection to the origin. In this report, corners in an camera view that do not connect to the origin is called a ghost network and is pruned from the collection when the map is being built. Also note that the connection path for A3 to A0 goes throe A2 leading to a longer path to origin. This could perhaps be fixed by adding a extra camera to the scene that records A0 and A3 in the same picture. How ever this also leads to that the scene have a multiplicity's of connections from A3 to A0, example through A1 or A2. Witch is the best connection?
+    }
+    \label{fig:confusion}
+\end{figure}
 
 
 \subsection{Relative position of \aruco markers}%
 \label{sub:implement:relative}
-In background~\ref{sub:ArucoConers} its assumed that the transfer matrix is a homogeneous transfer matrix ass follow:
-\[
-\begin{bmatrix}
-    R_{3x3} & t_{3x1}\\
-    0 & 1
-\end{bmatrix}
-\]
-However the implemented system in the \aruco{} package returns the vectors \verb|rvec| and \verb|tvec|.
-\verb|rvec| is not the rotation $R_{3x3}$ as it is a vector rather then a matrix, while $t_{3x1}$ is equal to a transposed \verb|tvec|.
+In background~\ref{sub:ArucoConers} its assumed that the transfer matrix is a homogeneous transfer matrix ass follow.
+\begin{equation}
+    \begin{bmatrix}
+        R_{3x3} & t_{3x1}\\
+        0 & 1
+    \end{bmatrix}
+\end{equation}
+However the implemented system in the \aruco{} package returns the vectors $\vec{r}$ and $\vec{t}$.
+$\vec{r}$ is not the rotation $R_{3x3}$ as it is a vector rather then a matrix, while $t_{3x1}$ is equal to a transposed $\vec{t}$.
 This conversion and how to derive the connection $\vec{A_1A_2}$ is poorly documented the following part will discuss how that is done.
 \par
 Let's assume that the algorithms in \aruco calculated the 3D location of the corners in respect of the camera as shown in the  figure~\ref{fig:vector_transfers}.
@@ -292,7 +293,7 @@ This means that the $\vec{A_2C}$ must be inverted so that the equation becomes:
 \[
 \vec{A_1A_2} = \vec{A_1C} + (-\vec{A_2C})
 \]
-To do that the Rodrigues transform~\cite{rodriguez1840lois} is applied on the \verb|rvec| and \verb|tvec| as follow in algorithm~\ref{alg:inverse}.
+To do that the Rodrigues transform~\cite{rodriguez1840lois} is applied on the $\vec{r}$ and $\vec{t}$ as follow in algorithm~\ref{alg:inverse}.
 
 \begin{algorithm}
     \caption{Inversing tvec and rvec using Rodrigues transforms}\label{alg:inverse}
@@ -307,11 +308,10 @@ To do that the Rodrigues transform~\cite{rodriguez1840lois} is applied on the \v
         \EndProcedure
     \end{algorithmic}
 \end{algorithm}
-The resulted stored in $\vec{t}^{-1}$ and $\vec{r}^{-1}$ is te inverse for of \verb|tvec|, \verb|rvec| respectively.
+The resulted stored in $\vec{t}^{-1}$ and $\vec{r}^{-1}$ is te inverse for of $\vec{t}$, $\vec{r}$ respectively.
 The complete algorithm shown in~\ref{alg:relative} shows how the complete equation is derived using a function in \verb|opencv| called \verb|compeseRT|.
 
 \begin{algorithm}
-    % \caption{Relative position using \textbf{composeRT}, part of \textbf{OpenCV} and the \textbf{invercePrespective} algorithm proposed in Algorithm~\ref{alg:inverse}.}\label{alg:relative}
     \begin{algorithmic}[1]
         % \Procedure{relativePosition}{$\vec{t_1}$, $\vec{r_1}$, $\vec{t_2}$, $\vec{r_2}$}
         \Procedure{relativePosition}{rvec1,tvec1,rvec2,tvec2}
@@ -324,7 +324,7 @@ The complete algorithm shown in~\ref{alg:relative} shows how the complete equati
              \Comment{Inverse the second marker}
         \State $\text{comp} \gets composeRT(\vec{r_1}, \vec{r_2}, \vec{r}^{-1}, \vec{t}^{-1})$
             \Comment{Creates a composed matrix}
-        \State $\vec{r_{c}}, \vec{t_{c}} \gets \text{comp}_0, \text{comp}_1$
+            \State \( \vec{r_{c}},\vec{t_{c}}\gets\text{comp}_{0},\text{comp}_{1}\)
             \Comment{Decompose the matrix}
         \State $\vec{r_{c}} \gets reshape(\vec{r_{c}}, (3,1))$
             \Comment{Reshapes the vectors}
@@ -332,6 +332,10 @@ The complete algorithm shown in~\ref{alg:relative} shows how the complete equati
         \State \textbf{return} $\vec{r_{c}},\vec{t_{c}}$
         \EndProcedure
     \end{algorithmic}
+    \caption[Relative]{
+    Relative position using \textbf{composeRT}, part of \textbf{OpenCV} and the \textbf{invercePrespective} algorithm proposed in Algorithm~\ref{alg:inverse}%
+    }
+    \label{alg:relative}
 \end{algorithm}
 
 
@@ -370,11 +374,11 @@ The complete algorithm shown in~\ref{alg:relative} shows how the complete equati
 
 
 \subsection{Relative path to Origin}\label{sub:implement:relativepath}
-In~\ref{sub:implement:relative} the path between two \aruco\ corners in one camera was found using two algorithms~\ref{alg:inverse} and ~\ref{alg:relative}.
+In~\ref{sub:implement:relative} the path between two \aruco\ corners in one camera was found using two algorithms~\ref{alg:inverse} and~\ref{alg:relative}.
 But in this case the there is also a connection from \aruco\ corners in several cameras back to the origin \aruco\ placed above the head of the subject.
 This mean that that the path back to the \aruco\ origin from each corner on the way could go multiple paths.
 In~\ref{fig:confusion} there is only one path for to get back for each corner transfer, but in reality there is a possibility that the network becomes multi path.
-Figure ~\ref{fig:multipath} the relations between the corneas in an multi path scenario is explored in greater details.
+Figure~\ref{fig:multipath} the relations between the corneas in an multi path scenario is explored in greater details.
 
 
 \begin{figure}
@@ -420,18 +424,29 @@ Figure ~\ref{fig:multipath} the relations between the corneas in an multi path s
 
 \subsection{Change of coordinates}%
 \label{sub:motod:changeofocd}
-Changing of coordinates from pixels in the image to the feature in 3D.
-Let the 2D point in the picture be defined like this:
+Moving euclidean coordinates to homogeneous coordinates is advantageous in the case where a point in the 3D wold is mapped to the camera image.
+In the following equation a 2D vector is moved form the euclidean to the homogeneous and then back to the homogeneous system again.
 \begin{equation}
-    p=\begin{bmatrix}
+    \begin{bmatrix}
         \overline{u}\\ \overline{v}
     \end{bmatrix}
-    = \begin{bmatrix}
+    \rightarrow
+    \begin{bmatrix}
+        \overline{u}\\ \overline{v} \\ 1
+    \end{bmatrix} \sim
+    \begin{bmatrix}
+        \overline{u}\\ \overline{v} \\ \tilde w
+    \end{bmatrix}\qquad
+    \begin{bmatrix}
+        \overline{u}\\ \overline{v} \\ \tilde w
+    \end{bmatrix}
+    \rightarrow
+    \begin{bmatrix}
         \frac{\tilde u}{\tilde w}\\
         \frac{\tilde v}{\tilde w}
     \end{bmatrix}
 \end{equation}
-Then the translation from 3D to 2D can be defined like this:
+Then the translation from 3D to 2D with a camera can be defined like this:
 \begin{equation}
     \begin{bmatrix}
         \tilde u \\ \tilde v \\ \tilde w
@@ -453,20 +468,24 @@ Using that with the previous mentioned intrinsic matrix~\ref{eq:intrinsic_params
     \begin{bmatrix}
         \tilde{u} \\ \tilde{v} \\ 1
     \end{bmatrix} =
-    \begin{bmatrix}
-        \frac{1}{p_u} & 0 & u_0\\
-        0 & \frac{1}{p_v} & v_0\\
-        0 & 0 & 1
-    \end{bmatrix}_{3x3}
-    \begin{bmatrix}
-        f & 0 & 0 & 0\\
-        0 & f & 0 & 0\\
-        0 & 0 & 1 & 0\\
-    \end{bmatrix}_{3x4}
-    \begin{bmatrix}
-        \mathbf{R} & t \\
-        0_{1\times 3} & 1
-    \end{bmatrix}^{-1}_{4x4}
+    \underbrace{
+        \begin{bmatrix}
+            \frac{1}{p_u} & 0 & u_0\\
+            0 & \frac{1}{p_v} & v_0\\
+            0 & 0 & 1
+        \end{bmatrix}_{3x3}
+        \begin{bmatrix}
+            f & 0 & 0 & 0\\
+            0 & f & 0 & 0\\
+            0 & 0 & 1 & 0\\
+        \end{bmatrix}_{3x4}
+    }_K
+    \underbrace{
+        \begin{bmatrix}
+            \mathbf{R} & t \\
+            0_{1\times 3} & 1
+        \end{bmatrix}^{-1}_{4x4}
+    }_{T^{-1}}
     \begin{bmatrix}
         X \\ Y \\ Z \\ 1
     \end{bmatrix}
@@ -478,10 +497,25 @@ Thus the equation above can be written as:
 \begin{equation}
     \tilde{x}  = KT^{-1}X
 \end{equation}
-But the reverse is also true, thus the position in real world can be determined by the camera by:
-\begin{equation}\label{eq:meth:xtoX}
-    TK^{-1}\tilde{x} = X
+% Inverse the equation become
+% \begin{equation}\label{eq:meth:xtoX}
+%     TK^{-1}\tilde{x} = X
+% \end{equation}
+Inverse of that equation can't be done because the move from 3D to 2D is discarding information.
+The best option is to do a line from camera center to the pixel in the 2D image.
+\begin{equation}
+    X = X_0 + \lambda(KR)^{-1}  x
 \end{equation}
+Where $X$ is the line in 3D, $X_0$ is the camera position, $\lambda$ is the line variable, $KR$ is the direction and $x$ is the 2D feature in the image., $X_0$ is the camera position, $\lambda$ is the line variable, $KR$ is the direction and $x$ is the 2D feature in the image.
+
+
+
+% \subsection{Bundle Adjustment}%
+% \label{sub:Bundle_Adjustment}
+% % % perhaps cite hartley2000zisserman
+% The bundle adjustment problem is where the
+
+
 
 
 \subsection{Midpoint}%
@@ -589,7 +623,7 @@ Thus the assumption is:
 But how is the error calculated form quite limited set of key points.
 Each point in each image has its own correlations to what the point represents with marker such "Left Wrist", "Right Shoulder" or "Nose".
 But also each image has its own unique name.
-Thus a tables could be shown as follows in \ref{tab:impl:input}.
+Thus a tables could be shown as follows in~\ref{tab:impl:input}.
 In this case we use half of the human input to as an median to compare against.
 \begin{table}[h]
     \centering
@@ -616,19 +650,49 @@ In this case we use half of the human input to as an median to compare against.
         Left Wrist      & 645 & 332     & 54345.jpg \\
         Right Shoulder  & 223 & 33      & 54345.jpg \\
         Nose            & 242 & 924     & 54345.jpg \\
-%        Left Wrist      & 659 & 351     & 44553.jpg \\
-%        Right Shoulder  & 226 & 24      & 44553.jpg \\
-%        Nose            & 250 & 971     & 44553.jpg
+       Left Wrist      & 659 & 351     & 44553.jpg \\
+       Right Shoulder  & 226 & 24      & 44553.jpg \\
+       Nose            & 250 & 971     & 44553.jpg
     \end{tabular}
     \caption{The left one represents many human repeatedly input while the right one represents the output of open pose. Label is what part is marked, while u,v is the position and filename is the file that contains the image.}
     \label{tab:impl:input}
 \end{table}
 For simplification in the table\ref{tab:impl:input} there is only one image common to all inputs, in realty there are many images and many more labels.
+Additionally to the previously mentioned labels the general camera pose also receives a label demonstrated in figure\ref{fig:camera_pos_lables}.
+This is done to test the discrepancy for certain orientations from the \openpose{ }  system.
+
+\begin{figure}
+\begin{center}
+    \begin{minipage}[t]{0.2\textwidth}
+        \includegraphics[width=\textwidth]{images/datasets/P2/images/093311.jpg}
+        \caption*{North}
+    \end{minipage}
+    \begin{minipage}[t]{0.2\textwidth}
+        \includegraphics[width=\textwidth]{images/datasets/P2/images/093409.jpg}
+        \caption*{East}
+        % \includegraphics[width=\textwidth]{pic1}
+    \end{minipage}
+    \begin{minipage}[t]{0.2\textwidth}
+        \includegraphics[width=\textwidth]{images/datasets/P2/images/093551.jpg}
+        \caption*{South}
+        % \includegraphics[width=\textwidth]{pic1}
+    \end{minipage}
+    \begin{minipage}[t]{0.2\textwidth}
+        \includegraphics[width=\textwidth]{images/datasets/P2/images/093335.jpg}
+        % \includegraphics[width=\textwidth]{pic1}
+        \caption*{West}
+    \end{minipage}
+\end{center}
+\caption{The camera position in the input set is labeled as follow.}
+\label{fig:camera_pos_lables}
+\end{figure}
+
 \par
 
 To calculate the total error for all features in every image, first use a subset to calculate the median \(\mu_{u,v}\) for each image and each feature.
 Then use that to calculate the total error by taking the Cartesian distance between \(t_{u,v}\) and \(\mu_{u,v}\) who is a feature in an picture with the same label as the selected t variable.
 This could be described as the Error equation\ref{eq:impl:muerror}.
+
 
 
 \begin{equation}\label{eq:impl:muerror}
@@ -652,6 +716,10 @@ But for a matrix this becomes:
 \mu = \frac{1}{n\cdot m} \sum_{i=1,j=1}^{i=n,j=m}(x_{i,j})
 \]
 Then the internal \(\sum\) is just for building the matrix such that the matrix has \(n\times m\) matrix with the length from the feature to the median.
+
+
+
+
 
 \subsection{F-test}\label{sub:implemnt:ftest}
 Before any test can be done the variability of the selected method to test needs to be checked.

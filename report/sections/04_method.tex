@@ -1,9 +1,9 @@
-\section{Method} 
+\section{Method}
 \label{sec:method}
-As \openpose is only trained on humans standing, walking, running and sitting.
-The assumption in this paper is that \openpose is bad at humans on the ground.
+As \openpose{ } is only trained on humans standing, walking, running and sitting.
+The assumption in this paper is that \openpose{ } is bad at humans on the ground.
 But is that true or not?
-If openpose is as good as a human at identifying where each feature on the human is located in both 2D and 3D, then a hypothesis formed such that the median and variance of both human and open pose should be equal.
+If \openpose{ } is as good as a human at identifying where each feature on the human is located in both 2D and 3D, then a hypothesis formed such that the median and variance of both human and open pose should be equal.
 $$
 \text{H}_0\quad \mu_{human} = \mu_{OpenPose} \quad\text{AND}\quad \sigma_{human} = \sigma_{OpenPose}
 $$
@@ -12,10 +12,14 @@ $$
 $$
 
 
-The test is done in both 2D and 3D with a minimal error method using \aruco corners.
-In the end, the 3D method did not work, but sufficient validation for the hypothesis was derivable from the 2D position.
-To prove the claim that OpenPose was unable to find the human features accurately.
-A F-test for testing the variance and a T-test for testing the median is performed on data that is derived both from several collected data points from both human and OpenPose.
+% In this paper the proposed method to prove or disprove this hypothesis is to use a minimal data set of 21 images\ref{sec:appendices} each with several \aruco{ } corners.
+% Those \aruco{ } corners are then used to determine the camera position relative to the corner at the head of the subject  in the scene.
+
+
+% The test is done in both 2D and 3D with a minimal error method using \aruco corners.
+% In the end, the 3D method did not work, but sufficient validation for the hypothesis was derivable from the 2D position.
+% To prove the claim that \openpose{ } was unable to find the human features accurately.
+% A F-test for testing the variance and a T-test for testing the median is performed on data that is derived both from several collected data points from both human and OpenPose.
 
 
 

@@ -4,11 +4,11 @@
 % --- Pacages -----
 \usepackage[ddmmyyyy]{datetime}
 \usepackage{graphicx}
-\usepackage{amsmath} % Dep mathtools
+% \usepackage{amsmath} % Dep mathtools
 \usepackage{amsfonts} % dep
 \usepackage[utf8]{inputenc}
 %% Maths
-\usepackage{mathtools}
+\usepackage{mathtools} % Loads asmath
 \usepackage{fancyhdr}
 \usepackage{enumerate}
 \usepackage{pdflscape}
@@ -46,6 +46,19 @@
 
 %%%%%%% Import tikz for a figure.
 \usepackage{tikz}
+% \usepackage{plantuml}
+\usepackage{ifluatex}
+\ifluatex
+  \usepackage{pdftexcmds}
+  \makeatletter
+  \let\pdfstrcmp\pdf@strcmp
+  \let\pdffilemoddate\pdf@filemoddate
+  \makeatother
+  \fi
+\usepackage[clean]{svg}
+% \usepackage{svg}
+\svgpath{figures}
+
 \usetikzlibrary{automata, positioning, arrows}
 \tikzset{
     ->, % makes the edges directed
@@ -98,6 +111,11 @@
 \newcommand*\defined[1]{\emph{#1}} % used for defining new terms
 \DeclarePairedDelimiter\abs{\lvert}{\rvert} % proper absolute value
 
+\newcommand{\annoterel}[2]{%
+  \overset{%
+    \substack{\hidewidth\text{#1}\hidewidth\\\downarrow}%
+  }{#2}%
+}
 
 
 \usepackage[pdfborder={0 0 0},colorlinks=true,urlcolor=blue,citecolor=red,bookmarks=false]{hyperref}
@@ -168,11 +186,13 @@
 \newpage
 \begin{appendices}
     \section*{Appendices}
+    \label{sec:appendices}
     % \input(sections/99_appendix.tex)
     text
 
 	\input{appendices/appendices1}
-	%\clearpage
+	\clearpage
+    \input{results/datasets.latex}
 
 	%\input{appendices/appendices2}
 	%\clearpage

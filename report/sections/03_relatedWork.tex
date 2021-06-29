@@ -1,4 +1,5 @@
 \section{Related Work}
+\label{sec:related_work}
 In this paper an evaluation of accuracy is preformed on subjects lying on the ground is preformed from several angles with body parts partly occlusion because it remains hidden under the body.
 This can pose a problem for methods that uses a model based/top down approach mentioned by Sarafianos et al~\cite{sarafianos2016} with a pre defined skeleton as suddenly the images have a missing body part due to self occlusion.
 Future more the according to Sarafianos the top down approach takes significantly more time to compute then a generative bottom up model.
@@ -8,15 +9,17 @@ Currently at the time of writing, there exist no 3D pose dataset for humans that
 How ever late 2020 a new paper with a set of images with humans laying in bead was released by Liu et.al\cite{liu2020simultaneously}, thus laying the ground work for starting a new set where the humans aren't just walking.
 This set was named \ac{slp} with includes 109 participant S lying in a bed.
 The set then contains images taken with an \ac{rgb} camera, \ac{rgbd} camera with depth information, \ac{lwir} camera and a pressure mat.
+In the broader prospective, Erika D’Antonio et al\cite{d2021validation} evaluates the accuracy of \openpose{ } when the subject is walking by observing the joint angles between each joint.
 
 % Slam navigation.
 %To accurately re construct 3D geometry a camera pose estimation method is used.
 Camera pose estimation is commonly used in robotics and \ac{vr} to determine the 3D dimensional position of ether the player or the robot.
-To solve this problem to solve this problem according to Mu{\~n}oz-Salinas et.al\cite{munoz2018mapping} a great part of the research focus on \ac{sfm} and \ac{slam}.
+To to solve this problem according to Mu{\~n}oz-Salinas et.al\cite{munoz2018mapping} a great part of the research focus on \ac{sfm} and \ac{slam}.
 However Mu{\~n}oz-Salinas continues, keypoint matching has a rather limited invariability to scale and rotation, witch can make the method unable to find a solution.
 In there work they instead divide up the tasks in three steps, mapping the markers in the input domain, creating a pose quiver for how each marker is connected and finally calculate the global position of each marker and camera using an shortest path algorithm.
+But they refine the position by solving the bundle adjustment problem to fine calibrate the position.
 
-% aruco markers and aruco mapping
+%aruco markers and aruco mapping
 % reliable markers \cite{garrido2014automatic}
 % Mapping and localization from planar markers \cite{munoz2018mapping}
 
