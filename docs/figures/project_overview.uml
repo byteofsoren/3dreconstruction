@@ -10,7 +10,7 @@ skinparam monochrome true
 skinparam handwritten false
 
     left to right direction
-    actor "Users" as users
+    actor "1.9 Users" as users
     actor "Subject" as sub
     actor "Operator" as oper
     package validate_openpose {

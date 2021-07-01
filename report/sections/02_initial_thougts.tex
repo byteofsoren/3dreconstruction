@@ -1,5 +1,4 @@
-\section{Initial concept and definitions}
-\label{sec:background}
+\section{Initial concept and definitions}\label{sec:background}
 
 %%I detta avsnitt redogör du för sådan kunskap som läsaren behöver för att förstå ditt arbete och ditt bidrag. Presentera fundamental kunskap som behövs för att förstå området och uppgiften. Till exempel kan du här redogöra för relevanta teorier och förklara begrepp du använder eller introducera matematisk notation. Skriv bakgrunden så att den som är väl insatt i området kan hoppa över den.
 
@@ -192,7 +191,7 @@ These techniques are presented in the figure~\ref{fig:camera_transfer} while fig
 \begin{figure}[ht]
     \centering
            \input{images/3Dhuman.pdf_tex}
-           \caption{
+           \caption[3D human on ground]{
                In this figure it can be observed that a human, lying on the ground is observed with several cameras marked as $C_n$.
                The cameras position is relative to the \aruco corners marked as $A_n$ on the floor and works as long a camera has a known \aruco corner in the image.
                From the image denoted by
@@ -204,16 +203,16 @@ These techniques are presented in the figure~\ref{fig:camera_transfer} while fig
 \end{figure}
 
 
-\begin{figure*}[b]
-    \begin{center}
-        \includegraphics[scale=0.3,angle=0]{images/system_overview.pdf}
-    \end{center}
-    \caption{
-        This figure describes an overview of the project. 1.0 is how to capture the data while 2.0 and so forth describes how the data is transmuted.
-        5.0 is at this stage only partially planed while the last two are not planed at all right now, and the final page in this report contains all the planed sub-nodes of those.
-    }
-    \label{fig:method:overview}
-\end{figure*}
+% \begin{figure*}[b]
+%     \begin{center}
+%         \includegraphics[scale=0.3,angle=0]{images/system_overview.pdf}
+%     \end{center}
+%     \caption[]{
+%         This figure describes an overview of the project. 1.0 is how to capture the data while 2.0 and so forth describes how the data is transmuted.
+%         5.0 is at this stage only partially planed while the last two are not planed at all right now, and the final page in this report contains all the planed sub-nodes of those.
+%     }
+%     \label{fig:method:overview}
+% \end{figure*}
 
 
 
@@ -264,7 +263,7 @@ This confusion atlas stores the connection from each view related to each corner
             % (A2) edge[right, bend left] node{$\vec{A_1C}$} (C)
             %;
     \end{tikzpicture}
-    \caption{
+    \caption[How cameras links from aruco to aruco]{
         Camera to \aruco\ relation where each cameras observe a set of \aruco\ corners placed around the subject. Note that camera C4 observes A4 and A5 but have no connection to A3. This means that from A4 and A5 there is no connection to the origin. In this report, corners in an camera view that do not connect to the origin is called a ghost network and is pruned from the collection when the map is being built. Also note that the connection path for A3 to A0 goes throe A2 leading to a longer path to origin. This could perhaps be fixed by adding a extra camera to the scene that records A0 and A3 in the same picture. How ever this also leads to that the scene have a multiplicity's of connections from A3 to A0, example through A1 or A2. Witch is the best connection?
     }
     \label{fig:confusion}
@@ -355,7 +354,7 @@ The complete algorithm shown in~\ref{alg:relative} shows how the complete equati
             (A1) edge[left, bend right] node{$\vec{A_1C}$} (C)
             (A2) edge[right, bend left] node{$\vec{A_1C}$} (C);
     \end{tikzpicture}
-    \caption{Using vectors to calculate the transfers from each \aruco to the camera using \aruco corners and then calculate the transform from \aruco\ 1 to \aruco\ 2 using vectors.}
+    \caption[Calculate aruco transfers]{Using vectors to calculate the transfers from each \aruco to the camera using \aruco corners and then calculate the transform from \aruco\ 1 to \aruco\ 2 using vectors.}
     \label{fig:vector_transfers}
 \end{figure}
 
@@ -365,7 +364,7 @@ The complete algorithm shown in~\ref{alg:relative} shows how the complete equati
     \begin{center}
         \input{images/camera_transfer.pdf_tex}
     \end{center}
-    \caption{ This figure shows how the intended triangulation software establishes a relation between the origin from the first \aruco corner marked as Origin
+    \caption[Triangulations]{ This figure shows how the intended triangulation software establishes a relation between the origin from the first \aruco corner marked as Origin
         to the feature in 3D marked $P$ and the same feature on a 2D plane marked $p$.}
     \label{fig:camera_transfer}
 \end{figure}
@@ -406,7 +405,7 @@ Figure~\ref{fig:multipath} the relations between the corneas in an multi path sc
             (A1) edge[above] node{2} (A2)
         ;
     \end{tikzpicture}
-    \caption{
+    \caption[Transfer location]{
     When calculating the position back to origin from a corner there can be situations in image starved data sets where the transfer can not be done in just one transfer calculation.
     In those cases the transfer can have a multi stage transfer back to origin.
     Assume that the algorithm is going to calculate the location of the A4 corner in relation to A0. Then the algorithm can ether go $A4\rightarrow A2 \rightarrow A0$ or $A4\rightarrow A3\rightarrow A1\rightarrow A0$ and even $A4\rightarrow A3\rightarrow A1\rightarrow A2 \rightarrow A0$. But as each step is taken a mall amount of noise is introduced in to the calculation's due to the uncertainty of the camera parameters.
@@ -654,7 +653,7 @@ In this case we use half of the human input to as an median to compare against.
        Right Shoulder  & 226 & 24      & 44553.jpg \\
        Nose            & 250 & 971     & 44553.jpg
     \end{tabular}
-    \caption{The left one represents many human repeatedly input while the right one represents the output of open pose. Label is what part is marked, while u,v is the position and filename is the file that contains the image.}
+    \caption[Output data example]{The left one represents many human repeatedly input while the right one represents the output of open pose. Label is what part is marked, while u,v is the position and filename is the file that contains the image.}
     \label{tab:impl:input}
 \end{table}
 For simplification in the table\ref{tab:impl:input} there is only one image common to all inputs, in realty there are many images and many more labels.
@@ -683,7 +682,7 @@ This is done to test the discrepancy for certain orientations from the \openpose
         \caption*{West}
     \end{minipage}
 \end{center}
-\caption{The camera position in the input set is labeled as follow.}
+\caption[Camera quadrant position]{The camera quadrant position in the input set is labeled as follow.}
 \label{fig:camera_pos_lables}
 \end{figure}
 

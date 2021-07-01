@@ -3,13 +3,37 @@
 As \openpose{ } is only trained on humans standing, walking, running and sitting.
 The assumption in this paper is that \openpose{ } is bad at humans on the ground.
 But is that true or not?
+\subsection{Hypothesis}%
+\label{sub:Hypothesis}
+
 If \openpose{ } is as good as a human at identifying where each feature on the human is located in both 2D and 3D, then a hypothesis formed such that the median and variance of both human and open pose should be equal.
+Thus the hypothesis can be formed as follow:
 $$
 \text{H}_0\quad \mu_{human} = \mu_{OpenPose} \quad\text{AND}\quad \sigma_{human} = \sigma_{OpenPose}
 $$
 $$
 \text{H}_1\quad \mu_{human} <> \mu_{OpenPose} \quad\text{OR}\quad \sigma_{human} <> \sigma_{OpenPose}
 $$
+The $H_0$ hypothesis states that a human and \openpose{ } are statistically similar and can't be distinguished from each other.
+If that fails the $H_1$ hypotheses is the null hypothesis and represents no statistical difference.
+
+\subsection{Research questions}%
+\label{sub:method:research_questions}
+The research questions is then derived to support those hypothesis.
+\begin{itemize}
+    \item[$Q_1$] Is the input distribution sufficient to reconstruct an accurate 3D pose?
+    \item[$Q_2$] Can the method using Dijkstra to calculate the 3D position of the camera really be used?
+    % \item[$Q_3$] Is the
+    % \item[$Q_3$]
+\end{itemize}
+$Q_1$ is specified because if the input distortion is larger then expected for each image then the rest of the calculations future will increase the output error.
+The Dijkstra approach perhaps do not work thus $Q_2$ must be specified.
+
+In this report the hypothesis and research questions are investigated with by using a minimal dataset of a human laying on the ground.
+The human is laying on its side to partially hide some of the features to test how \openpose is preforming with limbs occluded.
+The system to create the 3D pose is presented in~\ref{sec:work}, but in general its tries to use Dijkstras algorithm to calculate the 3D position of the cameras and then the 3D pose of the feature from the cameras.
+Future more the system uses the equation~\ref{eq:impl:muerror} to calculate the median $\mu$ for both humans and \openpose{.}
+That then forms the basis for a statistical test.
 
 
 % In this paper the proposed method to prove or disprove this hypothesis is to use a minimal data set of 21 images\ref{sec:appendices} each with several \aruco{ } corners.
