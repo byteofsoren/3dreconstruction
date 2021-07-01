@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="1087.5px" preserveAspectRatio="none" style="width:4556px;height:1087px;" version="1.1" viewBox="0 0 4556 1087" width="4556.25px" zoomAndPan="magnify"><defs><filter height="300%" id="f1e9tkstt0ah8b" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="6.25"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="12.5" dy="12.5" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[cce1e40328b7946dcd377bfd67d39c46]
+cluster validate_openpose--><polygon fill="#FFFFFF" filter="url(#f1e9tkstt0ah8b)" points="281.25,18.75,759.375,18.75,781.25,88.4277,3871.875,88.4277,3871.875,765.625,281.25,765.625,281.25,18.75" style="stroke:#000000;stroke-width:4.6875;"/><line style="stroke:#000000;stroke-width:4.6875;" x1="281.25" x2="781.25" y1="88.4277" y2="88.4277"/><text fill="#000000" font-family="sans-serif" font-size="43.75" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="459.375" x="293.75" y="65.6097">validate_openpose</text><!--MD5=[0358e6916fe7de31431046b7955e3a6d]
+cluster preprosessing--><polygon fill="#FFFFFF" filter="url(#f1e9tkstt0ah8b)" points="356.25,196.875,734.375,196.875,756.25,266.5527,2309.375,266.5527,2309.375,690.625,356.25,690.625,356.25,196.875" style="stroke:#000000;stroke-width:4.6875;"/><line style="stroke:#000000;stroke-width:4.6875;" x1="356.25" x2="756.25" y1="266.5527" y2="266.5527"/><text fill="#000000" font-family="sans-serif" font-size="43.75" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="359.375" x="368.75" y="243.7347">preprosessing</text><!--MD5=[8ae77ada6169822435c3d3bcb01b6727]
+cluster system--><polygon fill="#FFFFFF" filter="url(#f1e9tkstt0ah8b)" points="2396.875,153.125,2593.75,153.125,2615.625,222.8027,3796.875,222.8027,3796.875,690.625,2396.875,690.625,2396.875,153.125" style="stroke:#000000;stroke-width:4.6875;"/><line style="stroke:#000000;stroke-width:4.6875;" x1="2396.875" x2="2615.625" y1="222.8027" y2="222.8027"/><text fill="#000000" font-family="sans-serif" font-size="43.75" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="178.125" x="2409.375" y="199.9847">system</text><!--MD5=[9816dc4fe7ab2d837958f67304b16567]
+cluster results--><rect fill="#FFFFFF" filter="url(#f1e9tkstt0ah8b)" height="478.125" style="stroke:#000000;stroke-width:4.6875;" width="571.875" x="3946.875" y="353.125"/><text fill="#000000" font-family="sans-serif" font-size="43.75" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="171.875" x="4146.875" y="399.9847">results</text><ellipse cx="695.5267" cy="593.5671" fill="#F8F8F8" filter="url(#f1e9tkstt0ah8b)" rx="186.1517" ry="45.1296" style="stroke:#383838;stroke-width:4.6875;"/><text fill="#000000" font-family="sans-serif" font-size="43.75" lengthAdjust="spacingAndGlyphs" textLength="250" x="570.5267" y="607.9118">1.0 Images</text><!--MD5=[7e5c0adce99df1c97459f6186cfd994d]
+entity openpose--><ellipse cx="1321.875" cy="415.625" fill="#F8F8F8" filter="url(#f1e9tkstt0ah8b)" rx="25" ry="25" style="stroke:#383838;stroke-width:4.6875;"/><path d="M1321.875,440.625 L1321.875,525 M1281.25,465.625 L1362.5,465.625 M1321.875,525 L1281.25,571.875 M1321.875,525 L1362.5,571.875 " fill="none" filter="url(#f1e9tkstt0ah8b)" style="stroke:#383838;stroke-width:4.6875;"/><text fill="#000000" font-family="sans-serif" font-size="43.75" lengthAdjust="spacingAndGlyphs" textLength="300" x="1171.875" y="630.3986">1.1 OpenPose</text><ellipse cx="695.7676" cy="371.6535" fill="#F8F8F8" filter="url(#f1e9tkstt0ah8b)" rx="289.5176" ry="65.4035" style="stroke:#383838;stroke-width:4.6875;"/><text fill="#000000" font-family="sans-serif" font-size="43.75" lengthAdjust="spacingAndGlyphs" textLength="500" x="445.7676" y="385.9983">1.2 Camera anotation</text><ellipse cx="1960.1022" cy="544.2079" fill="#F8F8F8" filter="url(#f1e9tkstt0ah8b)" rx="300.7272" ry="67.6454" style="stroke:#383838;stroke-width:4.6875;"/><text fill="#000000" font-family="sans-serif" font-size="43.75" lengthAdjust="spacingAndGlyphs" textLength="525" x="1697.6022" y="558.5527">1.6 Feture anotations</text><ellipse cx="2747.3301" cy="327.9035" fill="#F8F8F8" filter="url(#f1e9tkstt0ah8b)" rx="289.5176" ry="65.4035" style="stroke:#383838;stroke-width:4.6875;"/><text fill="#000000" font-family="sans-serif" font-size="43.75" lengthAdjust="spacingAndGlyphs" textLength="500" x="2497.3301" y="342.2483">1.3 Input statistics</text><ellipse cx="2747.6022" cy="572.3329" fill="#F8F8F8" filter="url(#f1e9tkstt0ah8b)" rx="300.7272" ry="67.6454" style="stroke:#383838;stroke-width:4.6875;"/><text fill="#000000" font-family="sans-serif" font-size="43.75" lengthAdjust="spacingAndGlyphs" textLength="525" x="2485.1022" y="586.6777">1.4 3D reconstruction</text><ellipse cx="3491.0072" cy="505.7014" fill="#F8F8F8" filter="url(#f1e9tkstt0ah8b)" rx="256.6322" ry="58.8264" style="stroke:#383838;stroke-width:4.6875;"/><text fill="#000000" font-family="sans-serif" font-size="43.75" lengthAdjust="spacingAndGlyphs" textLength="425" x="3278.5072" y="520.0462">1.5 3D statistics</text><ellipse cx="4232.3829" cy="724.9141" fill="#F8F8F8" filter="url(#f1e9tkstt0ah8b)" rx="235.5079" ry="54.6016" style="stroke:#383838;stroke-width:4.6875;"/><text fill="#000000" font-family="sans-serif" font-size="43.75" lengthAdjust="spacingAndGlyphs" textLength="375" x="4044.8829" y="739.2589">1.7 input table</text><ellipse cx="4232.1003" cy="512.6701" fill="#F8F8F8" filter="url(#f1e9tkstt0ah8b)" rx="205.5378" ry="48.6076" style="stroke:#383838;stroke-width:4.6875;"/><text fill="#000000" font-family="sans-serif" font-size="43.75" lengthAdjust="spacingAndGlyphs" textLength="300" x="4082.1003" y="527.0149">1.8 3d table</text><!--MD5=[5f2f9dbbee692058d60489180693f774]
+entity users--><ellipse cx="1321.875" cy="846.875" fill="#F8F8F8" filter="url(#f1e9tkstt0ah8b)" rx="25" ry="25" style="stroke:#383838;stroke-width:4.6875;"/><path d="M1321.875,871.875 L1321.875,956.25 M1281.25,896.875 L1362.5,896.875 M1321.875,956.25 L1281.25,1003.125 M1321.875,956.25 L1362.5,1003.125 " fill="none" filter="url(#f1e9tkstt0ah8b)" style="stroke:#383838;stroke-width:4.6875;"/><text fill="#000000" font-family="sans-serif" font-size="43.75" lengthAdjust="spacingAndGlyphs" textLength="125" x="1259.375" y="1061.6486">Users</text><!--MD5=[6f0f5a402aa03956aaa6c99d85cc3800]
+entity sub--><ellipse cx="118.75" cy="568.75" fill="#F8F8F8" filter="url(#f1e9tkstt0ah8b)" rx="25" ry="25" style="stroke:#383838;stroke-width:4.6875;"/><path d="M118.75,593.75 L118.75,678.125 M78.125,618.75 L159.375,618.75 M118.75,678.125 L78.125,725 M118.75,678.125 L159.375,725 " fill="none" filter="url(#f1e9tkstt0ah8b)" style="stroke:#383838;stroke-width:4.6875;"/><text fill="#000000" font-family="sans-serif" font-size="43.75" lengthAdjust="spacingAndGlyphs" textLength="175" x="31.25" y="783.5236">Subject</text><!--MD5=[428d8642e4312b82992bdcf23b002f7b]
+entity oper--><ellipse cx="118.75" cy="206.25" fill="#F8F8F8" filter="url(#f1e9tkstt0ah8b)" rx="25" ry="25" style="stroke:#383838;stroke-width:4.6875;"/><path d="M118.75,231.25 L118.75,315.625 M78.125,256.25 L159.375,256.25 M118.75,315.625 L78.125,362.5 M118.75,315.625 L159.375,362.5 " fill="none" filter="url(#f1e9tkstt0ah8b)" style="stroke:#383838;stroke-width:4.6875;"/><text fill="#000000" font-family="sans-serif" font-size="43.75" lengthAdjust="spacingAndGlyphs" textLength="200" x="18.75" y="421.0236">Operator</text><!--MD5=[f650bcec7f8c998a4b93e7f064463089]
+link sub to img--><path d="M207.25,654.875 C287.7813,644.7188 411,629.1875 513.0938,616.3125 " fill="none" id="sub-to-img" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="529.2813,614.2813,499.8072,605.4185,513.7804,616.2468,502.9521,630.2199,529.2813,614.2813" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[071d12c3617106bed46a78e1a0986a59]
+link users to fano--><path d="M1384.375,906.125 C1489.125,839.75 1708.3125,700.8438 1842.8438,615.625 " fill="none" id="users-to-fano" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="1856.4062,607.0313,1825.9594,611.5316,1843.2093,615.3968,1839.3442,632.6467,1856.4062,607.0313" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[580df62176527ef5120b4ee9bdd3c44a]
+link oper to cano--><path d="M219.9063,314.9375 C276.1563,321.7187 349.8125,330.5938 422.1563,339.3125 " fill="none" id="oper-to-cano" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="438.5625,341.3125,412.1379,325.5326,423.0501,339.4403,409.1424,350.3525,438.5625,341.3125" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[96f2a47b60420dbe2ea432c78856aad3]
+link img to users--><path d="M772.0313,635.2813 C891.375,702.625 1125.7813,834.875 1245.125,902.2187 " fill="none" id="img-to-users" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="1259.0938,910.0938,1240.7358,885.3905,1245.4837,902.4186,1228.4556,907.1665,1259.0938,910.0938" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[89b4272e6e50050ea8c9d9ea2add05f8]
+link img to openpose--><path d="M859.8125,572.625 C950.75,560.6875 1064.0625,545.875 1155.3438,533.9063 " fill="none" id="img-to-openpose" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="1170.9375,531.875,1141.4385,523.0958,1155.4423,533.8845,1144.6536,547.8882,1170.9375,531.875" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[0f2ff42216bfb78593dea1c555062108]
+link img to 3dcon--><path d="M820.9375,560.25 C873.2188,543.2813 933.6875,520 984.375,490.625 C1079,435.7812 1069.2188,368.9688 1171.875,331.25 C1405.1875,245.5 2020.8437,308.7188 2334.375,421.875 C2353.2188,428.6875 2353.9063,438.0625 2371.875,446.875 C2424.9688,472.9375 2484.8438,495.6875 2540.7813,514.4063 " fill="none" id="img-to-3dcon" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="2556.4375,519.5625,2533.6711,498.8512,2541.6054,514.6483,2525.8083,522.5825,2556.4375,519.5625" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[8a5d2feac2d04246dfa5129e807a681d]
+link openpose to fano--><path d="M1472.2188,519.7813 C1525.5938,522.4375 1588.0938,525.5313 1650.125,528.5938 " fill="none" id="openpose-to-fano" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="1665.8438,529.375,1638.3979,515.447,1650.2394,528.5725,1637.1139,540.414,1665.8438,529.375" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[57f6892f24b8a7019f9b13757d7e103f]
+link fano to inputstat--><path d="M2150.625,491.8125 C2269.875,458.9063 2423.9688,416.375 2545.1875,382.9375 " fill="none" id="fano-to-inputstat" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="2561.3125,378.4688,2530.8757,373.901,2546.2505,382.6253,2537.5262,398.0002,2561.3125,378.4688" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[74cc0be4c1952b0bd1da149e0f971ff4]
+link cano to inputstat--><path d="M902.375,325.75 C985.5,309.1563 1082.8125,292.5313 1171.875,284.375 C1623.6875,242.9688 2151.3438,273.7813 2465.9688,300.4688 " fill="none" id="cano-to-inputstat" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="2481.7188,301.8125,2454.7676,286.9497,2466.1512,300.4743,2452.6265,311.8578,2481.7188,301.8125" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[1ec26aa2aad30e90505fac0296d8f0fa]
+link fano to 3dcon--><path d="M2256.75,554.3438 C2314.4688,556.4063 2375.1875,558.5938 2433.4063,560.6875 " fill="none" id="fano-to-3dcon" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="2449.7813,561.2813,2422.1011,547.8249,2434.1654,560.7459,2421.2444,572.8102,2449.7813,561.2813" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[bf937bd723c6b4d51e0d34349bb0a7ce]
+link 3dcon to 3dstat--><path d="M3026.7188,547.25 C3094.8125,541.1875 3167.4063,534.7188 3234.3438,528.7813 " fill="none" id="3dcon-to-3dstat" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="3250.3437,527.3438,3221.2231,517.3812,3234.78,528.7262,3223.435,542.2831,3250.3437,527.3438" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[a339469ffbd424adb2337d659f9b0c2f]
+link inputstat to inres--><path d="M2910.5938,382.375 C2956.2188,400.8438 3004.9063,423.625 3046.875,450 C3141.7813,509.6563 3132,573.0625 3234.375,618.75 C3475.2812,726.2188 3780.4375,743.5938 3988.9375,739.9375 " fill="none" id="inputstat-to-inres" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="4005.0625,739.5938,3976.6932,727.6586,3989.4406,739.9062,3977.1931,752.6536,4005.0625,739.5938" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[d2d1a8730b204d83b6ee76295b39904a]
+link 3dstat to 3dres--><path d="M3747.0313,508.4063 C3832.375,509.125 3926.9062,509.9375 4009.5,510.625 " fill="none" id="3dstat-to-3dres" style="stroke:#383838;stroke-width:3.125;"/><polygon fill="#383838" points="4025.8438,510.7812,3997.8269,498.0406,4010.2193,510.6473,3997.6126,523.0397,4025.8438,510.7812" style="stroke:#383838;stroke-width:3.125;"/><!--MD5=[201d8ffa0b05f34920ebc0e247acbf15]
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor Black
+skinparam titleBackgroundColor Silver-WhiteSmoke
+skinparam classFontColor automatic
+skinparam classHeaderBackgroundColor WhiteSmoke
+skinparam monochrome true
+skinparam dpi 300
+skinparam handwritten false
+
+    left to right direction
+    actor "Users" as users
+    actor "Subject" as sub
+    actor "Operator" as oper
+    package validate_openpose {
+        package preprosessing {
+            usecase "1.0 Images"  as img
+            actor "1.1 OpenPose" as openpose
+            usecase "1.2 Camera anotation" as cano
+            usecase "1.6 Feture anotations" as fano
+        }
+        package system {
+            usecase "1.3 Input statistics" as inputstat
+            usecase "1.4 3D reconstruction" as 3dcon
+            usecase "1.5 3D statistics" as 3dstat
+        }
+    }
+    rectangle results {
+        usecase "1.7 input table" as inres
+        usecase "1.8 3d table" as 3dres
+    }
+    sub - -> img
+    users - -> fano
+    oper - -> cano
+    img - -> users
+    img - -> openpose
+    img - -> 3dcon
+    openpose - -> fano
+    fano - -> inputstat
+    cano - -> inputstat
+    fano - -> 3dcon
+    3dcon - -> 3dstat
+    inputstat - -> inres
+    3dstat - -> 3dres
+
+    /' actor Images as img '/
+    /' actor Camera as cam '/
+    /' package Validat_OpenPose { '/
+    /'     usecase "Camera calibration" as cam_cal '/
+    /'     usecase "readset" as read '/
+    /'     usecase "Atlas" as atlas '/
+    /'     usecase "Validate" as validate '/
+    /' } '/
+    /' usecase "results" as res '/
+    /' img - -> read '/
+    /' cam - -> cam_cal '/
+    /' read - -> atlas '/
+    /' cam_cal - -> atlas '/
+    /' atlas - -> validate '/
+    /' validate - -> res '/
+@enduml
+
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor Black
+skinparam titleBackgroundColor Silver-WhiteSmoke
+skinparam classFontColor automatic
+skinparam classHeaderBackgroundColor WhiteSmoke
+skinparam monochrome true
+skinparam dpi 300
+skinparam handwritten false
+
+    left to right direction
+    actor "Users" as users
+    actor "Subject" as sub
+    actor "Operator" as oper
+    package validate_openpose {
+        package preprosessing {
+            usecase "1.0 Images"  as img
+            actor "1.1 OpenPose" as openpose
+            usecase "1.2 Camera anotation" as cano
+            usecase "1.6 Feture anotations" as fano
+        }
+        package system {
+            usecase "1.3 Input statistics" as inputstat
+            usecase "1.4 3D reconstruction" as 3dcon
+            usecase "1.5 3D statistics" as 3dstat
+        }
+    }
+    rectangle results {
+        usecase "1.7 input table" as inres
+        usecase "1.8 3d table" as 3dres
+    }
+    sub - -> img
+    users - -> fano
+    oper - -> cano
+    img - -> users
+    img - -> openpose
+    img - -> 3dcon
+    openpose - -> fano
+    fano - -> inputstat
+    cano - -> inputstat
+    fano - -> 3dcon
+    3dcon - -> 3dstat
+    inputstat - -> inres
+    3dstat - -> 3dres
+
+@enduml
+
+PlantUML version 1.2020.22(Sun Dec 06 10:36:27 CET 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

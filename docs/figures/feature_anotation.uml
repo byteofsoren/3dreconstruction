@@ -1,0 +1,24 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor Black
+skinparam titleBackgroundColor Silver-WhiteSmoke
+skinparam classFontColor automatic
+skinparam classHeaderBackgroundColor WhiteSmoke
+skinparam monochrome true
+skinparam handwritten false
+left to right direction
+
+    package 1.6_Feture_anotations {
+        usecase "Openpose.csv" as openpose
+        usecase "User1.csv" as user1
+        usecase "Usern.csv" as usern
+        usecase "Databese" as db
+        usecase "Classebased API" as api
+    }
+    openpose --> db
+    user1 --> db
+    usern --> db
+    db --> api
+
+@enduml

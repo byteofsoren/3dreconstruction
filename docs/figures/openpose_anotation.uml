@@ -1,0 +1,25 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor Black
+skinparam titleBackgroundColor Silver-WhiteSmoke
+skinparam classFontColor automatic
+skinparam classHeaderBackgroundColor WhiteSmoke
+skinparam monochrome true
+skinparam handwritten false
+left to right direction
+
+usecase "images" as img
+    package 1.1_openpose_anotations {
+        usecase "OpenPose" as openpose
+        usecase convert as "
+        Convert
+        --
+        COCO to CSV
+        "
+        usecase "Save CSV" as save
+    }
+    img --> openpose
+    openpose --> convert
+    convert --> save
+@enduml

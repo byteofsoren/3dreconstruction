@@ -1,0 +1,25 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor Black
+skinparam titleBackgroundColor Silver-WhiteSmoke
+skinparam classFontColor automatic
+skinparam classHeaderBackgroundColor WhiteSmoke
+skinparam monochrome true
+skinparam handwritten false
+/' skinparam dpi 300 '/
+left to right direction
+skinparam linetype polyline
+/' skinparam linetype ortho '/
+
+    package "1.4.6_Projective geometry x" {
+        usecase "Projective Geometry " as projekt
+        usecase "Shortest distance" as short
+        usecase "Point cloud" as point
+        usecase "Return" as ret
+    }
+    projekt --> short
+    short --> point
+    point --|> ret
+
+@enduml

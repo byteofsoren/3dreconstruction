@@ -1,0 +1,55 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor Black
+skinparam titleBackgroundColor Silver-WhiteSmoke
+skinparam classFontColor automatic
+skinparam classHeaderBackgroundColor WhiteSmoke
+skinparam monochrome true
+skinparam handwritten false
+/' skinparam dpi 300 '/
+left to right direction
+skinparam linetype polyline
+/' skinparam linetype ortho '/
+
+    package 1.4_3D_reconstruction{
+        together {
+            usecase "1.4.1 Load Camera pose" as camera_pose
+            usecase "1.4.2 Load features" as features
+        }
+        usecase "1.4.3 Human" as human
+        usecase "1.4.4 Human Sample" as sample
+        usecase "1.4.5 OpenPose" as openpose
+        usecase "1.4.6.h Prejective geometry human" as geometryh
+        usecase "1.4.6.s Prejective geometry sample" as geometrys
+        usecase "1.4.6.o Prejective geometry openpose" as geometryo
+        usecase "1.4.8 Median" as median
+        usecase "1.4.9 Distance sample" as samp_dist
+        usecase "1.4.10 Distance OpenPose" as openpose_dist
+        usecase "1.4.11 Statistics" as stat
+    }
+    features --> human
+    features --> sample
+    features --> openpose
+    human --> geometryh
+    sample --> geometrys
+    openpose --> geometryo
+    camera_pose --> geometryh
+    camera_pose --> geometrys
+    camera_pose --> geometryo
+    sample --> geometryh
+    openpose --> geometryh
+
+    geometryh --> median
+    median --> samp_dist
+    median --> openpose_dist
+
+    geometrys --> samp_dist
+    geometryo --> openpose_dist
+    samp_dist --|> stat
+    openpose_dist --|> stat
+
+
+
+
+@enduml
