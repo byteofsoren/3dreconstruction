@@ -2,21 +2,21 @@
 \label{sec:work}
 %Efter avsnitten ovan följer nu en beskrivning av vad du gjort. Du ska inte använda rubriken ovan, utan ersätta den med lämpliga rubriker, beroende på ditt arbete. Strukturen ska göras tydlig genom avsnittsrubrikerna. Det är viktigt med en klar och tydlig logisk struktur och ett berättande flöde. Du ska ha med avancerad bakgrundskunskap som är nödvändig för att förstå hur du löst uppgiften, och definiera hypoteser och viktiga begrepp. Beskrivning av experiment ska vara sådan att det ska gå att upprepa experimenten. Om en sådan beskrivning blir väldigt lång och detaljerad kan du lägga den i en bilaga, se nedan.
 
-In this research the code was implemented using Python due to its vibrant echo system of predefined packages already available in its package database.
-The over all implementation is described in figure~\ref{fig:project_overview} that describes how users annotates the data taken from images on the subject in the scene and how that leads to the results given in~\ref{sec:results}.
-As can be observed the system is implemented  as a "one shot" static implementation that first collects images in an prepossessing step.
-% On that database of images the information on what kind of corners there are in each image.
-In the prepossessing step images is loaded in 1.0 and camera annotations 1.2.
+In this research, the code was implemented using Python due to its vibrant echo system of predefined packages already available in its package database.
+The overall implementation is described in figure~\ref{fig:project_overview} that describes how users annotate the data taken from images on the subject in the scene and how that leads to the results given in~\ref{sec:results}.
+As can be observed, the system is implemented as a "one-shot" static implementation that first collects images in a prepossessing step.
+
+In the prepossessing step, images are loaded in 1.0 and camera annotations 1.2.
 The images are annotated in 1.9 by both humans\footnote{Using \url{https://www.makesense.ai/}} and in 1.1 by \openpose{ }.
 
 Figure~\ref{fig:1.1.openpose_anotation} shows how \openpose{ } works with the system to create the annotations for the features in the image and how it is saved to disk as a \ac{csv} file.
-The figure~\ref{fig:1.6.feoture_antotation} shows how that data saved in multiple \ac{csv} files are combined in to one database accessible from a class based \ac{api}
+The figure~\ref{fig:1.6.feoture_antotation} shows how that data saved in multiple \ac{csv} files are combined in to one database accessible from a class-based \ac{api}
 This \ac{api} can be used find relations between users and \openpose{ } or even camera directions.
 
-Then after that the implemented system is explained in the system part, were 3D reconstruction 1.4 is of special interests and figure~\ref{fig:1.4.3D_reconstrution} provides a bit deeper explanation.
+Then after that, the implemented system is explained in the system part, where 3D reconstruction 1.4 is of particular interest, and figure~\ref{fig:1.4.3D_reconstrution} provides a bit deeper explanation.
 
-The figure~\ref{fig:1.3_input_statistics} shows how the input from both the camera quadrant annotation and features is annotated.
-Of specific interests is 1.3.6 and 1.3.7 they splits the data into multiple tables that for example 1.3.7 returns for tables, one for each quadrant north, east, south and west.
+Figure~\ref {fig:1.3_input_statistics} shows how the input from both the camera quadrant annotation and features is annotated.
+Of specific interests is 1.3.6 and 1.3.7, they split the data into multiple tables that, for example, 1.3.7 returns for tables, one for each quadrant north, east, south and west.
 1.3.4 (a,b) uses equation\ref{eq:impl:muerror} to calculate the median error for that feature with regards to the median of the user group.
 
 
@@ -26,7 +26,7 @@ Of specific interests is 1.3.6 and 1.3.7 they splits the data into multiple tabl
 \begin{center}
     \includegraphics[width=0.9\textwidth]{figures/project_overview.png}
 \end{center}
-\caption[Project Overview]{In this figure the overall intended implementation of the system. The subject is the person on the floor while users are the one who annotates the images. The general camera quadrant where the camera was located is annotated by the Operator who took the images. In this image \openpose is displayed as a human but that is only for clarity that the images are supposed to be annotated equally by both user and \openpose. 1.0 images are stored on the computers file system and can be accessed using Python.}
+\caption[Project Overview]{In this figure, the overall intended implementation of the system. The subject is the person on the floor while users are the one who annotates the images. The general camera quadrant where the camera was located is annotated by the Operator who took the images. In this image \openpose is displayed as a human, but that is only for clarity that the images are supposed to be annotated equally by both user and \openpose. 1.0 images are stored on the computers file system and can be accessed using Python.}
 \label{fig:project_overview}
 \end{figure}
 
@@ -88,19 +88,16 @@ Of specific interests is 1.3.6 and 1.3.7 they splits the data into multiple tabl
 
 
 
+Those corners are then identified and connected such that the corner nr 1 in image one is connected to corner nr 1 in image 2.
+This process builds a pose quiver of how each corner is connected to each image.
+With that process done, the \aruco{ } library can generate the $\vec{t}$ and $\vec{r}$ that determines the camera in relation to that corner.
 
+However, it is not as explained in\ref{sub:implement:relativepath} the path from the \aruco to the camera that is interesting.
+Instead, the pose quiver calculates the path from origin to the camera using transfer matrices.
+% This is done by using Dijkstra's algorithm for the shortest path and then the algorithm~\ref{alg:inverse},~\ref{alg:relative}
+%On the implementation side, this is done by first calculating the path from the origin to the camera using Dijkstra's algorithm.
 
-
-Those corners are then identified and connected souch that the corner nr 1 in image 1 is connected to corner nr 1 in image 2.
-This process builds a pose quiver how each corner is connected to each image.
-With that process done the \aruco{ } library can generate the $\vec{t}$ and $\vec{r}$ that determines the camera in relation to that corner.
-
-However, its not as explained in\ref{sub:implement:relativepath} the reference that is interesting.
-Instead the pose quiver is used to calculate the path from origin to the camera using transfer matrices.
-% This is done by using Dijkstras algorithm for the shortest path and then the algorithm~\ref{alg:inverse},~\ref{alg:relative}
-%On the implementation side this is done by first calculating the path from the origin to the camera using Dijkstras algorithm.
-
-On the implementation side the first step in the code is calculating the cumulative transfer matrix from origin to each corner by first setting the origin as $I$.
+On the implementation side, the first step in the code is calculating the cumulative transfer matrix from origin to each corner by first setting the origin as $I$.
 
 \input{figures/trans_calc.latex}
 
