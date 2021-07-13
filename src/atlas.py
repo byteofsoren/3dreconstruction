@@ -247,6 +247,7 @@ class Atlas():
             if type(node) is View:
                 s = self._aruco_origin_id
                 t = node.id
+                # Dijkstras algorithm to calculate the path
                 path = nx.dijkstra_path(G, s,t)
                 back = 0
                 T=np.eye(4)
@@ -264,6 +265,16 @@ class Atlas():
                         forw += 1
                         if forw >= len(path):
                             break
+
+        # ------------------------------------------------------
+        # Some were here there is an miss assumption on the position
+        # In my implementation the aruco and camera position
+        # of each object is concatenated out of the transfer
+        # matrix. That is wrong. Instead the position should be
+        # derived by multiplying the transfer train with a
+        # homogeneous vector, i.e [0,0,0,1]^T Representing the
+        # origin marker aruco 0.
+        # ------------------------------------------------------
 
         # Some nodes have not gotten the T matrix and position.
         # Calculate pos and T for those.
