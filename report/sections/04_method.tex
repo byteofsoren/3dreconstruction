@@ -1,19 +1,28 @@
-\section{Method}
-\label{sec:method}
+
+\section{Hypothesis and research questions}%
+\label{sub:Hypothesis}
 As \openpose{ } is only trained on humans standing, walking, running and sitting.
 The assumption in this paper is that \openpose{ } is bad at humans on the ground.
 However, is that true or not?
-\subsection{Hypothesis}%
-\label{sub:Hypothesis}
 
 If \openpose{ } is as good as a human at identifying where each feature on the human is located in both 2D and 3D, then a hypothesis formed such that the median and variance of both human and open pose should be equal.
 Thus the hypothesis can be formed as follow:
-$$
-\text{H}_0\quad \mu_{human} = \mu_{OpenPose} \quad\text{AND}\quad \sigma_{human} = \sigma_{OpenPose}
-$$
-$$
-\text{H}_1\quad \mu_{human} <> \mu_{OpenPose} \quad\text{OR}\quad \sigma_{human} <> \sigma_{OpenPose}
-$$
+\vspace{5mm}
+\begin{align*}
+    \text{H}_0 & \quad \bigmu_\text{H} = \bigmu_\text{O} \quad  \text{AND}\quad \bigsigma_\text{H} = \bigsigma_\text{O}\\
+    \text{H}_1 & \quad \bigmu_\text{H} <> \bigmu_\text{O} \quad  \text{OR}\quad \bigsigma_\text{H} <> \bigsigma_\text{O}
+\end{align*}
+
+Where:
+
+\begin{aligned}
+    \text{H} &= \text{Human}\\
+    \text{O} &= \text{OpenPose}\\
+    \mu      &= \text{Median} \\
+    \sigma   &= \text{Standard deviation}
+\end{aligned}
+\bigskip
+\par
 The $H_0$ hypothesis states that a human and \openpose{ } are statistically similar and cannot be distinguished from each other.
 If that fails, the $H_1$ hypothesis is the null hypothesis and represents no statistical difference.
 
@@ -22,18 +31,19 @@ If that fails, the $H_1$ hypothesis is the null hypothesis and represents no sta
 The research questions are then derived to support those hypotheses.
 \begin{itemize}
     \item[$Q_1$] Is the input distribution sufficient to reconstruct an accurate 3D pose?
-    \item[$Q_2$] Can the method using Dijkstra to calculate the 3D position of the camera be used?
+    \item[$Q_2$] Can the Dijkstra/transfer method to calculate the 3D position of the camera without solving the bundle adjustment problem?
     % \item[$Q_3$] Is the
     % \item[$Q_3$]
 \end{itemize}
 $Q_1$ is specified because the input distortion is larger than expected for each image, then the rest of the calculations future will increase the output error.
 The Dijkstra approach perhaps does not work. Thus $Q_2$ must be specified.
 
+
 In this report, the hypothesis and research questions are investigated using a minimal dataset of a human lying on the ground.
-The human is lying on its side to partially hide some of the features to test how \openpose is performing with limbs occluded.
+The human is lying on its side to partially hide some of the features to test how \openpose{ } is performing with limbs occluded.
 The system to create the 3D pose is presented in~\ref{sec:work}, but in general, it tries to use Dijkstra's algorithm to calculate the 3D position of the cameras and then the 3D pose of the feature from the cameras.
-Future more the system uses the equation~\ref{eq:impl:muerror} to calculate the median $\mu$ for both humans and \openpose{.}
-That then forms the basis for a statistical test.
+% Future more the system uses the equation~\ref{eq:impl:muerror} to calculate the median $\mu$ for both humans and \openpose{.}
+% That then forms the basis for a statistical test.
 
 
 % In this paper, the proposed method to prove or disprove this hypothesis is to use a minimal data set of 21 images\ref{sec:appendices} each with several \aruco{ } corners.
@@ -43,8 +53,15 @@ That then forms the basis for a statistical test.
 % The test is done in 2D and 3D with a minimal error method using \aruco corners.
 % In the end, the 3D method did not work, but sufficient validation for the hypothesis was derivable from the 2D position.
 % To prove the claim that \openpose{ } was unable to find the human features accurately.
-% A F-test for testing the variance and a T-test for testing the median is performed on data that is derived both from several collected data points from both human and OpenPose.
+% A F-test for testing the variance and a T-test for testing the median is performed on data that is derived both from several collected data points from both human and OpenPose.\\
 
+
+
+\section{Method}
+\label{sec:method}
+From the hypotheses of this report its clear that the focus is about the reliability of \openpose{ } on human subject that is laying on the ground.
+This is done by comparing  data from human annotations with the annotations from \operpose{} using T-test and F-test.
+The research questions also states that 3D reconstruction of a spars feature map is going to be constructed.
 
 
 

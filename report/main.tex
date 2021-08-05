@@ -111,6 +111,12 @@
 \newcommand*\defined[1]{\emph{#1}} % used for defining new terms
 \DeclarePairedDelimiter\abs{\lvert}{\rvert} % proper absolute value
 
+% Larger \mu and \sigma for hypothesis question
+\newcommand{\bigmu}{\makebox{\Large\ensuremath{\mu}}}
+\newcommand{\bigsigma}{\makebox{\Large\ensuremath{\sigma}}}
+% \newcommand{\bigmu}{\raisebox{-.20\baselineskip}{\ensuremath{\mu}}}
+% \newcommand{\bigsigma}{\raisebox{-.20\baselineskip}{\ensuremath{\sigma}}}
+
 \newcommand{\annoterel}[2]{%
   \overset{%
     \substack{\hidewidth\text{#1}\hidewidth\\\downarrow}%
@@ -166,9 +172,9 @@
 \newpage
 \input{sections/04_method}
 \newpage
-\input{sections/05_etics}
-\newpage
 \input{sections/06_contribs}
+\newpage
+\input{sections/05_etics}
 \newpage
 \input{sections/07_results}
 \newpage
@@ -195,7 +201,8 @@
     \input{results/datasets.latex}
 
 	%\input{appendices/appendices2}
-	%\clearpage
+	\clearpage
+    \input{appendices/rodrigues_algorithm.tex}
 
 \end{appendices}
 

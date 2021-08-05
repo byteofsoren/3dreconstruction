@@ -1,0 +1,20 @@
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        % Styles
+        %aruco/.style={rectangle,draw,fill=gray!20},
+        % Nodes
+        \node[aruco] (A1) {A1};
+        \node[aruco, right of=A1] (A2) {A2};
+        \node[state, below of=A2, xshift=-1.5cm] (C) {C};
+
+        % Draw lines
+        \draw
+            (A1) edge[above] node{$\vec{A_1A_2}$} (A2)
+            (A1) edge[left, bend right] node{$\vec{A_1C}$} (C)
+            (A2) edge[right, bend left] node{$\vec{A_1C}$} (C);
+    \end{tikzpicture}
+    \caption[Calculate aruco transfers]{Using vectors to calculate the transfers from each \aruco to the camera using \aruco corners and then calculate the transform from \aruco\ 1 to \aruco\ 2 using vectors.}
+    \label{fig:vector_transfers}
+\end{figure}

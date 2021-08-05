@@ -1,0 +1,49 @@
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        % Styles
+        % Nodes
+        \node[aruco] (A0) {A0};
+        \node[aruco, right of =A0, yshift=1.3cm] (A1) {A1};
+        \node[aruco, right of =A0, xshift=0.9cm, yshift=-1.3cm] (A2) {A2};
+        \node[aruco, right of =A1, yshift=-0.3cm] (A3) {A3};
+        \node[aruco, right of =A1, xshift=1.9cm, yshift=-1.3cm] (A4) {A4};
+        \node[aruco, right of =A4, xshift=-0.9cm, yshift=0.2cm ] (A5) {A5};
+        \node[state, left of =A0, yshift=0.5cm] (C0) {C0};
+        \node[state, above of =A0, xshift=1.5cm] (C1) {C1};
+        \node[state, below of =A0, xshift=1.7cm] (C2) {C2};
+        \node[state, below of =A3,  yshift=-0.6cm] (C3) {C3};
+        \node[state, above of =A4, xshift=0.5cm] (C4) {C4};
+
+
+        % Draw lines
+        \draw
+            (A0) edge[above, bend left] node{} (C0)
+            (A1) edge[above, bend right] node{} (C0)
+            (A0) edge[above, bend left] node{} (C1)
+            (A1) edge[above, bend right] node{} (C1)
+            (A4) edge[above, bend left] node{} (C4)
+            (A5) edge[above, bend right] node{} (C4)
+            (A0) edge[above, bend right] node{} (C2)
+            (A1) edge[above, bend right] node{} (C2)
+            (A2) edge[above, bend left] node{} (C2)
+            (A2) edge[above, bend right] node{} (C3)
+            (A3) edge[above, bend left] node{} (C3)
+            % aruco connections
+            (A1) edge[above] node{$T_{A0}^{A1}$} (A0)
+            (A2) edge[below] node{$T_{A0}^{A2}$} (A0)
+            (A3) edge[below] node{$T_{A3}^{A2}$} (A2)
+            (A5) edge[above] node{$T_{A5}^{A4}$} (A4)
+
+            ;
+            % (A1) edge[above] node{$\vec{A_1A_2}$} (A2)
+            % (A1) edge[left, bend right] node{$\vec{A_1C}$} (C)
+            % (A2) edge[right, bend left] node{$\vec{A_1C}$} (C)
+            %;
+    \end{tikzpicture}
+    \caption[How cameras links from aruco to aruco]{
+        Camera to \aruco\ relation where each cameras observe a set of \aruco\ corners placed around the subject. Note that camera C4 observes A4 and A5 but have no connection to A3. This means that from A4 and A5 there is no connection to the origin. In this report, corners in an camera view that do not connect to the origin is called a ghost network and is pruned from the collection when the map is being built. Also note that the connection path for A3 to A0 goes throe A2 leading to a longer path to origin. This could perhaps be fixed by adding a extra camera to the scene that records A0 and A3 in the same picture. How ever this also leads to that the scene have a multiplicity's of connections from A3 to A0, example through A1 or A2. Witch is the best connection?
+    }
+    \label{fig:confusion}
+\end{figure}

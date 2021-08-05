@@ -1,15 +1,25 @@
 \section{Related Work}
 \label{sec:related_work}
 In this paper, an evaluation of accuracy is performed on subjects lying on the ground is preformed from several angles with body parts partly occlusion because it remains hidden under the body.
-This occlusion can pose a problem for methods that uses a model-based/top-down approach mentioned by Sarafianos et al. ~\cite{sarafianos2016} with a pre-defined skeleton as suddenly the images have a missing body part due to self-occlusion.
+This occlusion can pose a problem for methods that uses a model-based/top-down approach mentioned by Sarafianos et al.~\cite{sarafianos2016} with a pre-defined skeleton as suddenly the images have a missing body part due to self-occlusion.
 Future more the according to Sarafianos, the top-down approach takes significantly more time to compute than a generative bottom-up model.
 %But the bottom line is that pose estimation from a monocular camera requires heavy computation for each frame.
 Sins machine learning is the primary method for solving this problem; a god data set is necessary.
+
+% walking
+In the broader perspective, Erika D’Antonio et al. \cite{d2021validation} evaluates the accuracy of \openpose{ } when the subject is walking or running by observing the joint angles between each joint.
+This was done by using two fixed cameras, a \ac{imu} and a linear triangulation algorithms. It was preformed on six healthy subjects.
+Among the results an significant effect of the camera positioning in relation to the subject was observed.
+Thus the results that where analysed focused on the accuracy of the hip and knee joints from one camera direction.
+To differentiate the results the authors use statistical methods to conclude that the \operpose{ } is not adequate for a complete human body kinematics analysis.
+
+% On the ground
 Currently, at the time of writing, there exist no 3D pose dataset for humans that are lying on the ground outside the lab environments \cite{yang2018, mehta2017, yasin2016, wang2019}.
 However, in late 2020, a new paper with a set of images with humans laying in beads was released by Liu et.al\cite{liu2020simultaneously}, thus laying the groundwork for starting a set where the subject is laying down.
 This set was named \ac{slp} with includes 109 participant S lying in a bed.
 The set then contains images taken with an \ac{rgb} camera, \ac{rgbd} camera with depth information, \ac{lwir} camera and a pressure mat.
-In the broader perspective, Erika D’Antonio et al. \cite{d2021validation} evaluates the accuracy of \openpose{ } when the subject is walking by observing the joint angles between each joint.
+The aim of this paper was to create a dataset with subjects lying on a bed with our without blanket.
+Thus the results from that paper aren't directly aimed to validation of the system.
 
 % Slam navigation.
 %To accurately reconstruct 3D geometry, a camera pose estimation method is used.
@@ -18,8 +28,13 @@ To to solve this problem according to Mu{\~n}oz-Salinas et.al\cite{munoz2018mapp
 However, Mu{\~n}oz-Salinas continues, keypoint matching has a somewhat limited invariability to scale and rotation, which can make the method unable to find a solution.
 In their work, they instead divide up the tasks into three steps, mapping the markers in the input domain, creating a pose quiver for how each marker is connected, and finally calculating each marker's global position and camera using the shortest path algorithm.
 Nevertheless, they refine the position by solving the bundle adjustment problem to fine calibrate the position.
+In there results it shows that they achieve better maps and localization then native \ac{slam} or \ac{sfm} under a wider range of viewports.
 
 %aruco markers and aruco mapping
 % reliable markers \cite{garrido2014automatic}
 % Mapping and localization from planar markers \cite{munoz2018mapping}
+% Camera pose estimation using aruco
+% Camera pose estimation is a common problem in many \ac{ar} applications.
+% In~\cite{garrido2014automatic} the authors Garrido-Jurado et al discusses there contributions with the freely available\footnote{Under BSD license.} \aruco{ } library they created.
+
 

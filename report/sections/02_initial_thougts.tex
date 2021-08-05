@@ -16,64 +16,6 @@ A drawback with the intended algorithm is that a few \aruco{} corners must be pr
 How that works is explained in \aruco{} Conner's section\ref{sub:ArucoConers}.
 
 
-\subsection{Aruco Coner's}%
-\label{sub:ArucoConers}
-% read https://docs.opencv.org/master/da/d13/tutorial_aruco_calibration.html
-Fiducial markers in~\cite{romero2018speeded} use \aruco corners in contrast with the previous method has several benefits due to that they are indexable.
-Future more they already have an implemented library targeting a method to derive the camera location with just one image.
-Thus, useful for finding each images related to the origin \aruco marker.
-
-This method was first derived for use in \ac{ar} as a way to acquire the position of the player.
-However, this turn proved to be useful for robotics because it would provide an easy navigation solution.
-By using multiple \aruco corners, a way of navigating the scene with just a camera~\cite{zheng2018vlocaruco}.
-
-\par To explain this in figure~\ref{fig:3Dhuman} assume that camera $C_1$ can not see the corner $A_0$ but can observe the corner $A_2$ but $C_2$ have already observed both $A_1$ and $A_2$. Then the transfer function from camera pose of $C_1$ to $A_0$ is defined as:
-\begin{equation}
-    T^{C1}_{A0} = T^{C1}_{A1} (T^{C2}_{A1})^{-1}(T^{C2}_{A0})^{-1}
-\end{equation}
-Where the $T^{C1}_{A0}$ is the transfer matrix from camera 1 to \aruco corner 0 in an homogeneous system.
-In equation~\ref{eq:camera_transfer} this is used to describe the pixel on a plane in reference to the Origin.
-% use https://aliyasineser.medium.com/calculation-relative-positions-of-aruco-markers-eee9cc4036e3
-
-\subsection{3D annotation}%
-\label{sub:3D_anotation}
-Using images taken with both a subject and one of the previously indexed corners it is possible to find a solution to the correspondence
-problem~\cite{siciliano2010robotics} where a feature (i.e.\ elbow, nose or a foot) in one image is the same feature in several other images.
-Then is used to build a sparse 3D map of each feature from several directions.
-In contrast stereo vision only uses two cameras to build a disparity map from camera one to camera two.
-The 3D triangulation presented in~\cite{zhang2006midpoint} shows that a feature in 3D can be derived from two cameras even if the feature in each image does not produce a line that intersects.
-Calculating the midpoint on a vector that is orthogonal to each feature line.
-With images taken from several directions, a point cloud can assume ably be calculated from several lines.
-The benefit of using a multivariate Gaussian distribution is that a median that is close to the real feature can be estimated.
-
-% \subsection{Homogeneous coordinates}%
-% \label{sub:Homogeneous_coordinates}
-% Before the 3D annotation can be done the case for homogeneous transforms is explained shortly.
-% Let the point $p$ in a Cartesian system be defined in 2D and the homogeneous representation of the same point in homogeneous coordinate system be defined as:
-% \begin{equation}
-%     p=(x,y)\quad p\in \R^2 \qquad \tilde p=(\tilde x,\tilde y,1)\quad \tilde p\in \R^2
-% \end{equation}
-% To convert backward from the homogeneous system to Cartesian:
-% \begin{equation}
-%     % \lable{eq:homo-cart}
-%     % \tilde{t}
-%     \tilde{p}=(\tilde{x}, \tilde{y}, \tilde{z})\qquad p = (\frac{\tilde{x}}{\tilde{z}}, \frac{\tilde{y}}{\tilde{z}})
-% \end{equation}
-% Then points and lines are defined in the same way, also called duals.
-% Thus a line is defined as:
-% \begin{equation}
-%     \tilde \ell = \tilde p_1\times\tilde p_2
-% \end{equation}
-% While a point can be defined as two crossing lines:
-% \begin{equation}
-%     \tilde p = \tilde\ell_1 \times \tilde\ell_2
-% \end{equation}
-% A point $\tilde{p}$ traveling along the line $\tilde{\ell}$ can be defined as:
-% \begin{equation}
-%     \tilde\ell^T\tilde p=0
-% \end{equation}
-
-
 \subsection{Pinhole camera}%
 \label{sub:bg:pinhole_camera}
 In this part the pinhole camera is reviewed and can then be represented in the homogeneous system:
@@ -120,306 +62,6 @@ In reality the $f$ matrix is divided in two parts like:
     \end{bmatrix}
 \end{equation}
 The left matrix is the conversion matrix that translates from 3D to 2D and the right is a matrix that tells how the camera is scaled/zoomed.
-
-
-
-\subsection{Multivariate Gaussian distributions}%
-\label{sub:Multivariate_Gaussian_distributions}
-A Gaussian normal distributed curve have the quite common formula bellow:
-\begin{equation}\label{eq:bacground_normaldist}
-    f(x,\mu, \sigma) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp{-\frac{(x-\mu)^2}{2\sigma^2}}\quad -\infty < x < \infty
-\end{equation}
-The median $\mu$ and standard divination $\sigma$ is calculated from the data like:
-\begin{equation}
-    \mu = \frac{1}{N}\sum_i{x(i)}\quad \sigma = \frac{1}{N}\sum_i{(x(i)-\mu)^2}
-\end{equation}
-Where N is the number of data points and $x(i)$ is each indexed data.
-Note that from the function in~\ref{eq:bacground_normaldist} the input is one dimensional but dimensionality of the output space in two dimensional.
-\par For Gaussian distributions in the $\R^2$ dimension where the output is in $\R^3$.
-\begin{equation}
-    \mu = \begin{pmatrix}
-        \frac{1}{N}\sum_i{x_1(i)} &
-        \frac{1}{N}\sum_i{x_2(i)} &
-    \end{pmatrix}
-    \quad
-\end{equation}
-
-\par For Gaussian distributions in the $\R^3$ dimension.
-Let:
-\begin{equation}
-    \mu = \begin{pmatrix}
-        \frac{1}{N}\sum_i{x_1(i)} &
-        \frac{1}{N}\sum_i{x_2(i)} &
-        \frac{1}{N}\sum_i{x_3(i)} &
-    \end{pmatrix}
-    \quad
-\end{equation}
-\begin{equation}
-    \Sigma = \frac{1}{N} \sum_j{(x(j) - \mu)^T(x(j) - \mu)}
-\end{equation}
-The median $\mu$ is now a row vector of length n containing the median value for each column $x(i)$ in the data with the count of $N$.
-The standard divination $\Sigma$ is a $3\times 3$ matrix.
-The $(x(j) - \mu)^T$ part is taking a row from the data $x(j)$ and remove the median from that row $\mu$, this is then a $1\times n$ matrix.
-% With a transpose it became a column vector $n \times 1$.
-But by transposing the row vector the result is a column vector $n \time 1$.
-The other $(x(j) - \mu)$ is the same but not transposed.
-Multiplying both of those returns a $3\times 3$ matrix.
-% To calculate the Gaussian for the matrix versions use:
-% \begin{equation}
-%     f(X_1,X_2,\dots X_n, \mu, \Sigma) = \big(2\pi \sqrt{|\Sigma|}\big)^{-1}\exp{-\frac{1}{2}[(X - \mu)]}
-% \end{equation}
-% Where $|\Sigma|$ is the determinant of $\Sigma$.
-% \par
-Then by analyzing the eigenvalue's from the $\Sigma$ can be used to derive an ellipsoid at the position $\mu$ using the Hotelling's T-squared
-$(T^2)$ distribution.
-\begin{equation}
-    (X - \mu)^T\Sigma^{-1}(X - \mu)=\frac{3(n-1)(n+1)}{(n-3)n} F_{inv}(1-\alpha, 3, N - 3)
-\end{equation}
-Where the $F_{inv}$ is the inverse cumulate function and the $\alpha$ is dependent on the confidence width of the ellipsoid answering $100(1-\alpha)\%$.
-
-
-
-% \section{Method}%
-% \label{sec:s3d:Method}
-\subsection{Correspondence problem}
-The method to solve the correspondence problem is rooted in  Epipolar Geometry and triangulation~\cite{siciliano2010robotics} but with a statistical twist mentioned in~\ref{sub:Multivariate_Gaussian_distributions}.
-This implementation however mostly uses the linear algebra for vision presented by~\cite{corke2017robotics} to compute the location of the features.
-The general overview of the system is also illustrated using the graphs in~\ref{fig:method:overview} and future expanded in the last page of this report.
-These techniques are presented in the figure~\ref{fig:camera_transfer} while figure~\ref{fig:3Dhuman} shows the intended approach for the system.
-%The figure~\ref{fig:UML_outline} show the stacking of the intended system using an UML diagram.
-\def\svgwidth{\columnwidth}
-\begin{figure}[ht]
-    \centering
-           \input{images/3Dhuman.pdf_tex}
-           \caption[3D human on ground]{
-               In this figure it can be observed that a human, lying on the ground is observed with several cameras marked as $C_n$.
-               The cameras position is relative to the \aruco corners marked as $A_n$ on the floor and works as long a camera has a known \aruco corner in the image.
-               From the image denoted by
-               $C_i$
-               the feature target $T$ is traced by a ray $R_n$ for each valid camera.
-               Thus using both the known location of the camera and the ray a statistical median and standard disdain can be derived on where the feature is.
-           }
-    \label{fig:3Dhuman}
-\end{figure}
-
-
-% \begin{figure*}[b]
-%     \begin{center}
-%         \includegraphics[scale=0.3,angle=0]{images/system_overview.pdf}
-%     \end{center}
-%     \caption[]{
-%         This figure describes an overview of the project. 1.0 is how to capture the data while 2.0 and so forth describes how the data is transmuted.
-%         5.0 is at this stage only partially planed while the last two are not planed at all right now, and the final page in this report contains all the planed sub-nodes of those.
-%     }
-%     \label{fig:method:overview}
-% \end{figure*}
-
-
-
-\subsection{Confusion atlas}\label{sub:implement:confusion}
-As each \aruco corner in the scene can be observed from several camera locations its important to build what in this report is refereed as an confusion atlas.
-This confusion atlas stores the connection from each view related to each corner in the scene as shown in figure~\ref{fig:confusion}.
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        % Styles
-        % Nodes
-        \node[aruco] (A0) {A0};
-        \node[aruco, right of =A0, yshift=1.3cm] (A1) {A1};
-        \node[aruco, right of =A0, xshift=0.9cm, yshift=-1.3cm] (A2) {A2};
-        \node[aruco, right of =A1, yshift=-0.3cm] (A3) {A3};
-        \node[aruco, right of =A1, xshift=1.9cm, yshift=-1.3cm] (A4) {A4};
-        \node[aruco, right of =A4, xshift=-0.9cm, yshift=0.2cm ] (A5) {A5};
-        \node[state, left of =A0, yshift=0.5cm] (C0) {C0};
-        \node[state, above of =A0, xshift=1.5cm] (C1) {C1};
-        \node[state, below of =A0, xshift=1.7cm] (C2) {C2};
-        \node[state, below of =A3,  yshift=-0.6cm] (C3) {C3};
-        \node[state, above of =A4, xshift=0.5cm] (C4) {C4};
-
-
-        % Draw lines
-        \draw
-            (A0) edge[above, bend left] node{} (C0)
-            (A1) edge[above, bend right] node{} (C0)
-            (A0) edge[above, bend left] node{} (C1)
-            (A1) edge[above, bend right] node{} (C1)
-            (A4) edge[above, bend left] node{} (C4)
-            (A5) edge[above, bend right] node{} (C4)
-            (A0) edge[above, bend right] node{} (C2)
-            (A1) edge[above, bend right] node{} (C2)
-            (A2) edge[above, bend left] node{} (C2)
-            (A2) edge[above, bend right] node{} (C3)
-            (A3) edge[above, bend left] node{} (C3)
-            % aruco connections
-            (A1) edge[above] node{$T_{A0}^{A1}$} (A0)
-            (A2) edge[below] node{$T_{A0}^{A2}$} (A0)
-            (A3) edge[below] node{$T_{A3}^{A2}$} (A2)
-            (A5) edge[above] node{$T_{A5}^{A4}$} (A4)
-
-            ;
-            % (A1) edge[above] node{$\vec{A_1A_2}$} (A2)
-            % (A1) edge[left, bend right] node{$\vec{A_1C}$} (C)
-            % (A2) edge[right, bend left] node{$\vec{A_1C}$} (C)
-            %;
-    \end{tikzpicture}
-    \caption[How cameras links from aruco to aruco]{
-        Camera to \aruco\ relation where each cameras observe a set of \aruco\ corners placed around the subject. Note that camera C4 observes A4 and A5 but have no connection to A3. This means that from A4 and A5 there is no connection to the origin. In this report, corners in an camera view that do not connect to the origin is called a ghost network and is pruned from the collection when the map is being built. Also note that the connection path for A3 to A0 goes throe A2 leading to a longer path to origin. This could perhaps be fixed by adding a extra camera to the scene that records A0 and A3 in the same picture. How ever this also leads to that the scene have a multiplicity's of connections from A3 to A0, example through A1 or A2. Witch is the best connection?
-    }
-    \label{fig:confusion}
-\end{figure}
-
-
-\subsection{Relative position of \aruco markers}%
-\label{sub:implement:relative}
-In background~\ref{sub:ArucoConers} its assumed that the transfer matrix is a homogeneous transfer matrix ass follow.
-\begin{equation}
-    \begin{bmatrix}
-        R_{3x3} & t_{3x1}\\
-        0 & 1
-    \end{bmatrix}
-\end{equation}
-However the implemented system in the \aruco{} package returns the vectors $\vec{r}$ and $\vec{t}$.
-$\vec{r}$ is not the rotation $R_{3x3}$ as it is a vector rather then a matrix, while $t_{3x1}$ is equal to a transposed $\vec{t}$.
-This conversion and how to derive the connection $\vec{A_1A_2}$ is poorly documented the following part will discuss how that is done.
-\par
-Let's assume that the algorithms in \aruco calculated the 3D location of the corners in respect of the camera as shown in the  figure~\ref{fig:vector_transfers}.
-The vector $\vec{A_1A_2}$ is the connection from \aruco 1 to \aruco 2 and can be calculated as:
-\[
-\vec{A_1A_2} = \vec{A_1C} - \vec{A_2C}
-\]
-This means that the $\vec{A_2C}$ must be inverted so that the equation becomes:
-\[
-\vec{A_1A_2} = \vec{A_1C} + (-\vec{A_2C})
-\]
-To do that the Rodrigues transform~\cite{rodriguez1840lois} is applied on the $\vec{r}$ and $\vec{t}$ as follow in algorithm~\ref{alg:inverse}.
-
-\begin{algorithm}
-    \caption{Inversing tvec and rvec using Rodrigues transforms}\label{alg:inverse}
-    \begin{algorithmic}[1]
-        \Procedure{inversePerspective}{rvec, tvec}
-        \State $\vec{t} \gets tvec$
-        \State $R \gets Rodrigues(rvec)$ \Comment{Vector to matrix}
-        \State $R \gets matrix(R)^{T}$ \Comment{Array to transposed matrix}
-        \State $\vec{t}^{-1} \gets R \cdot matrix(-\vec{t})$ \Comment{Dot product}
-        \State $\vec{r}^{-1} \gets Rodrigues(R)$ \Comment{Rodrigues again}
-        \State \textbf{return} $\vec{r}^{-1}, \vec{t}^{-1}$ \Comment{Matrix to vector}
-        \EndProcedure
-    \end{algorithmic}
-\end{algorithm}
-The resulted stored in $\vec{t}^{-1}$ and $\vec{r}^{-1}$ is te inverse for of $\vec{t}$, $\vec{r}$ respectively.
-The complete algorithm shown in~\ref{alg:relative} shows how the complete equation is derived using a function in \verb|opencv| called \verb|compeseRT|.
-
-\begin{algorithm}
-    \begin{algorithmic}[1]
-        % \Procedure{relativePosition}{$\vec{t_1}$, $\vec{r_1}$, $\vec{t_2}$, $\vec{r_2}$}
-        \Procedure{relativePosition}{rvec1,tvec1,rvec2,tvec2}
-       % \Procedure{inversePerspective}{r, t}
-        \State $\vec{r_1} \gets reshape(rvec1, (3,1))$ \Comment{Reshape the vectors}
-        \State $\vec{t_1} \gets reshape(tvec1, (3,1))$
-        \State $\vec{r_2} \gets reshape(rvec2, (3,1))$
-        \State $\vec{t_1} \gets reshape(tvec2, (3,1))$
-        \State $\vec{r}^{-1}, \vec{t}^{-1} \gets InvercePrespective(\vec{r}, \vec{t})$
-             \Comment{Inverse the second marker}
-        \State $\text{comp} \gets composeRT(\vec{r_1}, \vec{r_2}, \vec{r}^{-1}, \vec{t}^{-1})$
-            \Comment{Creates a composed matrix}
-            \State \( \vec{r_{c}},\vec{t_{c}}\gets\text{comp}_{0},\text{comp}_{1}\)
-            \Comment{Decompose the matrix}
-        \State $\vec{r_{c}} \gets reshape(\vec{r_{c}}, (3,1))$
-            \Comment{Reshapes the vectors}
-        \State $\vec{t_{c}} \gets reshape(\vec{t_{c}}, (3,1))$
-        \State \textbf{return} $\vec{r_{c}},\vec{t_{c}}$
-        \EndProcedure
-    \end{algorithmic}
-    \caption[Relative]{
-    Relative position using \textbf{composeRT}, part of \textbf{OpenCV} and the \textbf{invercePrespective} algorithm proposed in Algorithm~\ref{alg:inverse}%
-    }
-    \label{alg:relative}
-\end{algorithm}
-
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        % Styles
-        %aruco/.style={rectangle,draw,fill=gray!20},
-        % Nodes
-        \node[aruco] (A1) {A1};
-        \node[aruco, right of=A1] (A2) {A2};
-        \node[state, below of=A2, xshift=-1.5cm] (C) {C};
-
-        % Draw lines
-        \draw
-            (A1) edge[above] node{$\vec{A_1A_2}$} (A2)
-            (A1) edge[left, bend right] node{$\vec{A_1C}$} (C)
-            (A2) edge[right, bend left] node{$\vec{A_1C}$} (C);
-    \end{tikzpicture}
-    \caption[Calculate aruco transfers]{Using vectors to calculate the transfers from each \aruco to the camera using \aruco corners and then calculate the transform from \aruco\ 1 to \aruco\ 2 using vectors.}
-    \label{fig:vector_transfers}
-\end{figure}
-
-
-%\import{images}{camera_transfer.pdf_tex}
-\begin{figure}[ht]
-    \begin{center}
-        \input{images/camera_transfer.pdf_tex}
-    \end{center}
-    \caption[Triangulations]{ This figure shows how the intended triangulation software establishes a relation between the origin from the first \aruco corner marked as Origin
-        to the feature in 3D marked $P$ and the same feature on a 2D plane marked $p$.}
-    \label{fig:camera_transfer}
-\end{figure}
-
-
-
-
-\subsection{Relative path to Origin}\label{sub:implement:relativepath}
-In~\ref{sub:implement:relative} the path between two \aruco\ corners in one camera was found using two algorithms~\ref{alg:inverse} and~\ref{alg:relative}.
-But in this case the there is also a connection from \aruco\ corners in several cameras back to the origin \aruco\ placed above the head of the subject.
-This mean that that the path back to the \aruco\ origin from each corner on the way could go multiple paths.
-In~\ref{fig:confusion} there is only one path for to get back for each corner transfer, but in reality there is a possibility that the network becomes multi path.
-Figure~\ref{fig:multipath} the relations between the corneas in an multi path scenario is explored in greater details.
-
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        % Styles
-        % Nodes
-        \node[aruco] (A0) {A0};
-        \node[aruco, right of=A0, yshift=-1cm] (A1) {A1};
-        \node[aruco, right of=A0, xshift=1.5cm, yshift=1cm] (A2) {A2};
-        \node[aruco, right of=A1] (A3) {A3};
-        \node[aruco, right of=A3, yshift=1cm] (A4) {A4};
-
-
-        % Draw lines
-        \draw
-            (A4) edge[above] node{3} (A3)
-            (A4) edge[above] node{2} (A2)
-
-            (A2) edge[above] node{1} (A0)
-
-            (A3) edge[above] node{2} (A1)
-            (A1) edge[above] node{1} (A0)
-
-            (A1) edge[above] node{2} (A2)
-        ;
-    \end{tikzpicture}
-    \caption[Transfer location]{
-    When calculating the position back to origin from a corner there can be situations in image starved data sets where the transfer can not be done in just one transfer calculation.
-    In those cases the transfer can have a multi stage transfer back to origin.
-    Assume that the algorithm is going to calculate the location of the A4 corner in relation to A0. Then the algorithm can ether go $A4\rightarrow A2 \rightarrow A0$ or $A4\rightarrow A3\rightarrow A1\rightarrow A0$ and even $A4\rightarrow A3\rightarrow A1\rightarrow A2 \rightarrow A0$. But as each step is taken a mall amount of noise is introduced in to the calculation's due to the uncertainty of the camera parameters.
-    Thus keeping the jumps short is advantageous.
-    In this figure the cost of each of the jumps is denoted by the number above each arrow.
-    This is then used to calculate the transfer from A4 to A0 over A2 as its the shortest path.
-    }
-    \label{fig:multipath}
-\end{figure}
-
-
-
-
-
 
 \subsection{Change of coordinates}%
 \label{sub:motod:changeofocd}
@@ -506,6 +148,264 @@ The best option is to do a line from camera center to the pixel in the 2D image.
     X = X_0 + \lambda(KR)^{-1}  x
 \end{equation}
 Where $X$ is the line in 3D, $X_0$ is the camera position, $\lambda$ is the line variable, $KR$ is the direction and $x$ is the 2D feature in the image., $X_0$ is the camera position, $\lambda$ is the line variable, $KR$ is the direction and $x$ is the 2D feature in the image.
+
+
+\subsection{3D annotation}%
+\label{sub:3D_anotation}
+Using images taken with both a subject and one of the previously indexed corners it is possible to find a solution to the correspondence
+problem~\cite{siciliano2010robotics} where a feature (i.e.\ elbow, nose or a foot) in one image is the same feature in several other images.
+Then is used to build a sparse 3D map of each feature from several directions.
+In contrast stereo vision only uses two cameras to build a disparity map from camera one to camera two.
+The 3D triangulation presented in~\cite{zhang2006midpoint} shows that a feature in 3D can be derived from two cameras even if the feature in each image does not produce a line that intersects.
+Calculating the midpoint on a vector that is orthogonal to each feature line.
+With images taken from several directions, a point cloud can assume ably be calculated from several lines.
+The benefit of using a multivariate Gaussian distribution is that a median that is close to the real feature can be estimated.
+
+
+
+\subsection{Aruco Coner's}%
+\label{sub:ArucoConers}
+% read https://docs.opencv.org/master/da/d13/tutorial_aruco_calibration.html
+Fiducial markers in~\cite{romero2018speeded} use \aruco corners in contrast with the previous method has several benefits due to that they are indexable.
+Future more they already have an implemented library targeting a method to derive the camera location with just one image.
+Thus, useful for finding each images related to the origin \aruco marker.
+
+This method was first derived for use in \ac{ar} as a way to acquire the position of the player.
+However, this turn proved to be useful for robotics because it would provide an easy navigation solution.
+By using multiple \aruco corners, a way of navigating the scene with just a camera~\cite{zheng2018vlocaruco}.
+
+\par To explain this in figure~\ref{fig:3Dhuman} assume that camera $C_1$ can not see the corner $A_0$ but can observe the corner $A_2$ but $C_2$ have already observed both $A_1$ and $A_2$. Then the transfer function from camera pose of $C_1$ to $A_0$ is defined as:
+\begin{equation}
+    T^{C1}_{A0} = T^{C1}_{A1} (T^{C2}_{A1})^{-1}(T^{C2}_{A0})^{-1}
+\end{equation}
+Where the $T^{C1}_{A0}$ is the transfer matrix from camera 1 to \aruco corner 0 in an homogeneous system.
+In equation~\ref{eq:camera_transfer} this is used to describe the pixel on a plane in reference to the Origin.
+% use https://aliyasineser.medium.com/calculation-relative-positions-of-aruco-markers-eee9cc4036e3
+
+% \subsection{Homogeneous coordinates}%
+% \label{sub:Homogeneous_coordinates}
+% Before the 3D annotation can be done the case for homogeneous transforms is explained shortly.
+% Let the point $p$ in a Cartesian system be defined in 2D and the homogeneous representation of the same point in homogeneous coordinate system be defined as:
+% \begin{equation}
+%     p=(x,y)\quad p\in \R^2 \qquad \tilde p=(\tilde x,\tilde y,1)\quad \tilde p\in \R^2
+% \end{equation}
+% To convert backward from the homogeneous system to Cartesian:
+% \begin{equation}
+%     % \lable{eq:homo-cart}
+%     % \tilde{t}
+%     \tilde{p}=(\tilde{x}, \tilde{y}, \tilde{z})\qquad p = (\frac{\tilde{x}}{\tilde{z}}, \frac{\tilde{y}}{\tilde{z}})
+% \end{equation}
+% Then points and lines are defined in the same way, also called duals.
+% Thus a line is defined as:
+% \begin{equation}
+%     \tilde \ell = \tilde p_1\times\tilde p_2
+% \end{equation}
+% While a point can be defined as two crossing lines:
+% \begin{equation}
+%     \tilde p = \tilde\ell_1 \times \tilde\ell_2
+% \end{equation}
+% A point $\tilde{p}$ traveling along the line $\tilde{\ell}$ can be defined as:
+% \begin{equation}
+%     \tilde\ell^T\tilde p=0
+% \end{equation}
+
+
+
+
+
+% \subsection{Multivariate Gaussian distributions}%
+% \label{sub:Multivariate_Gaussian_distributions}
+% A Gaussian normal distributed curve have the quite common formula bellow:
+% \begin{equation}\label{eq:bacground_normaldist}
+%     f(x,\mu, \sigma) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp{-\frac{(x-\mu)^2}{2\sigma^2}}\quad -\infty < x < \infty
+% \end{equation}
+% The median $\mu$ and standard divination $\sigma$ is calculated from the data like:
+% \begin{equation}
+%     \mu = \frac{1}{N}\sum_i{x(i)}\quad \sigma = \frac{1}{N}\sum_i{(x(i)-\mu)^2}
+% \end{equation}
+% Where N is the number of data points and $x(i)$ is each indexed data.
+% Note that from the function in~\ref{eq:bacground_normaldist} the input is one dimensional but dimensionality of the output space in two dimensional.
+% \par For Gaussian distributions in the $\R^2$ dimension where the output is in $\R^3$.
+% \begin{equation}
+%     \mu = \begin{pmatrix}
+%         \frac{1}{N}\sum_i{x_1(i)} &
+%         \frac{1}{N}\sum_i{x_2(i)} &
+%     \end{pmatrix}
+%     \quad
+% \end{equation}
+
+% \par For Gaussian distributions in the $\R^3$ dimension.
+% Let:
+% \begin{equation}
+%     \mu = \begin{pmatrix}
+%         \frac{1}{N}\sum_i{x_1(i)} &
+%         \frac{1}{N}\sum_i{x_2(i)} &
+%         \frac{1}{N}\sum_i{x_3(i)} &
+%     \end{pmatrix}
+%     \quad
+% \end{equation}
+% \begin{equation}
+%     \Sigma = \frac{1}{N} \sum_j{(x(j) - \mu)^T(x(j) - \mu)}
+% \end{equation}
+% The median $\mu$ is now a row vector of length n containing the median value for each column $x(i)$ in the data with the count of $N$.
+% The standard divination $\Sigma$ is a $3\times 3$ matrix.
+% The $(x(j) - \mu)^T$ part is taking a row from the data $x(j)$ and remove the median from that row $\mu$, this is then a $1\times n$ matrix.
+% % With a transpose it became a column vector $n \times 1$.
+% But by transposing the row vector the result is a column vector $n \time 1$.
+% The other $(x(j) - \mu)$ is the same but not transposed.
+% Multiplying both of those returns a $3\times 3$ matrix.
+% % To calculate the Gaussian for the matrix versions use:
+% % \begin{equation}
+% %     f(X_1,X_2,\dots X_n, \mu, \Sigma) = \big(2\pi \sqrt{|\Sigma|}\big)^{-1}\exp{-\frac{1}{2}[(X - \mu)]}
+% % \end{equation}
+% % Where $|\Sigma|$ is the determinant of $\Sigma$.
+% % \par
+% Then by analyzing the eigenvalue's from the $\Sigma$ can be used to derive an ellipsoid at the position $\mu$ using the Hotelling's T-squared
+% $(T^2)$ distribution.
+% \begin{equation}
+%     (X - \mu)^T\Sigma^{-1}(X - \mu)=\frac{3(n-1)(n+1)}{(n-3)n} F_{inv}(1-\alpha, 3, N - 3)
+% \end{equation}
+% Where the $F_{inv}$ is the inverse cumulate function and the $\alpha$ is dependent on the confidence width of the ellipsoid answering $100(1-\alpha)\%$.
+
+
+
+% \section{Method}%
+% \label{sec:s3d:Method}
+\subsection{Correspondence problem}
+\todo[inline]{Several links broken due to removal of text}
+The method to solve the correspondence problem is rooted in  Epipolar Geometry and triangulation~\cite{siciliano2010robotics} with a twist that the data is not perfect thus a statistical method to derive the solution must be found.
+This implementation however mostly uses the linear algebra for vision presented by~\cite{corke2017robotics} to compute the location of the features.
+These techniques are presented in the figure~\ref{fig:camera_transfer} while figure~\ref{fig:3Dhuman} shows the intended approach for the system.
+
+\def\svgwidth{\columnwidth}
+\begin{figure}[ht]
+    \centering
+           \input{images/3Dhuman.pdf_tex}
+           \caption[3D human on ground]{
+               In this figure it can be observed that a human, lying on the ground is observed with several cameras marked as $C_n$.
+               The cameras position is relative to the \aruco corners marked as $A_n$ on the floor and works as long a camera has a known \aruco corner in the image.
+               From the image denoted by
+               $C_i$
+               the feature target $T$ is traced by a ray $R_n$ for each valid camera.
+               Thus using both the known location of the camera and the ray a statistical median and standard disdain can be derived on where the feature is.
+           }
+    \label{fig:3Dhuman}
+\end{figure}
+
+
+% \begin{figure*}[b]
+%     \begin{center}
+%         \includegraphics[scale=0.3,angle=0]{images/system_overview.pdf}
+%     \end{center}
+%     \caption[]{
+%         This figure describes an overview of the project. 1.0 is how to capture the data while 2.0 and so forth describes how the data is transmuted.
+%         5.0 is at this stage only partially planed while the last two are not planed at all right now, and the final page in this report contains all the planed sub-nodes of those.
+%     }
+%     \label{fig:method:overview}
+% \end{figure*}
+
+
+
+
+
+\subsection{Relative position of \aruco markers}%
+\label{sub:implement:relative}
+In background~\ref{sub:ArucoConers} its assumed that the transfer matrix is a homogeneous transfer matrix ass follow.
+\begin{equation}
+    \begin{bmatrix}
+        R_{3x3} & t_{3x1}\\
+        0 & 1
+    \end{bmatrix}
+\end{equation}
+However the implemented system in the \aruco{} package returns the vectors $\vec{r}$ and $\vec{t}$.
+$\vec{r}$ is not the rotation $R_{3x3}$ as it is a vector rather then a matrix, while $t_{3x1}$ is equal to a transposed $\vec{t}$.
+This conversion and how to derive the connection $\vec{A_1A_2}$ is poorly documented the following part will discuss how that is done.
+\par
+Let's assume that the algorithms in \aruco calculated the 3D location of the corners in respect of the camera as shown in the  figure~\ref{fig:vector_transfers}.
+The vector $\vec{A_1A_2}$ is the connection from \aruco 1 to \aruco 2 and can be calculated as:
+\[
+\vec{A_1A_2} = \vec{A_1C} - \vec{A_2C}
+\]
+This means that the $\vec{A_2C}$ must be inverted so that the equation becomes:
+\[
+\vec{A_1A_2} = \vec{A_1C} + (-\vec{A_2C})
+\]
+To do that the Rodrigues transform~\cite{rodriguez1840lois} is applied on the $\vec{r}$ and $\vec{t}$ as follow in algorithm~\ref{alg:inverse}.
+
+The resulted stored in $\vec{t}^{-1}$ and $\vec{r}^{-1}$ is te inverse for of $\vec{t}$, $\vec{r}$ respectively.
+The complete algorithm shown in~\ref{alg:relative} shows how the complete equation is derived using a function in \verb|opencv| called \verb|compeseRT|.
+% \input{appendices/rodrigues_algorithm.tex}
+\input{appendices/rodrigues_diargam.tex}
+
+
+
+
+%\import{images}{camera_transfer.pdf_tex}
+\begin{figure}[ht]
+    \begin{center}
+        \input{images/camera_transfer.pdf_tex}
+    \end{center}
+    \caption[Triangulations]{ This figure shows how the intended triangulation software establishes a relation between the origin from the first \aruco corner marked as Origin
+        to the feature in 3D marked $P$ and the same feature on a 2D plane marked $p$.}
+    \label{fig:camera_transfer}
+\end{figure}
+
+
+\subsection{Confusion atlas}\label{sub:implement:confusion}
+As each \aruco corner in the scene can be observed from several camera locations its important to build what in this report is refereed as an confusion atlas.
+This confusion atlas stores the connection from each view related to each corner in the scene as shown in figure~\ref{fig:confusion}.
+
+\input{appendices/confusion.tex}
+
+
+\subsection{Relative path to Origin}\label{sub:implement:relativepath}
+In~\ref{sub:implement:relative} the path between two \aruco\ corners in one camera was found using two algorithms~\ref{alg:inverse} and~\ref{alg:relative}.
+But in this case the there is also a connection from \aruco\ corners in several cameras back to the origin \aruco\ placed above the head of the subject.
+This mean that that the path back to the \aruco\ origin from each corner on the way could go multiple paths.
+In~\ref{fig:confusion} there is only one path for to get back for each corner transfer, but in reality there is a possibility that the network becomes multi path.
+Figure~\ref{fig:multipath} the relations between the corneas in an multi path scenario is explored in greater details.
+
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        % Styles
+        % Nodes
+        \node[aruco] (A0) {A0};
+        \node[aruco, right of=A0, yshift=-1cm] (A1) {A1};
+        \node[aruco, right of=A0, xshift=1.5cm, yshift=1cm] (A2) {A2};
+        \node[aruco, right of=A1] (A3) {A3};
+        \node[aruco, right of=A3, yshift=1cm] (A4) {A4};
+
+
+        % Draw lines
+        \draw
+            (A4) edge[above] node{3} (A3)
+            (A4) edge[above] node{2} (A2)
+
+            (A2) edge[above] node{1} (A0)
+
+            (A3) edge[above] node{2} (A1)
+            (A1) edge[above] node{1} (A0)
+
+            (A1) edge[above] node{2} (A2)
+        ;
+    \end{tikzpicture}
+    \caption[Transfer location]{
+    When calculating the position back to origin from a corner there can be situations in image starved data sets where the transfer can not be done in just one transfer calculation.
+    In those cases the transfer can have a multi stage transfer back to origin.
+    Assume that the algorithm is going to calculate the location of the A4 corner in relation to A0. Then the algorithm can ether go $A4\rightarrow A2 \rightarrow A0$ or $A4\rightarrow A3\rightarrow A1\rightarrow A0$ and even $A4\rightarrow A3\rightarrow A1\rightarrow A2 \rightarrow A0$. But as each step is taken a mall amount of noise is introduced in to the calculation's due to the uncertainty of the camera parameters.
+    Thus keeping the jumps short is advantageous.
+    In this figure the cost of each of the jumps is denoted by the number above each arrow.
+    This is then used to calculate the transfer from A4 to A0 over A2 as its the shortest path.
+    }
+    \label{fig:multipath}
+\end{figure}
+
+
+
+
+
 
 
 
@@ -690,17 +590,20 @@ This is done to test the discrepancy for certain orientations from the \openpose
 
 To calculate the total error for all features in every image, first use a subset to calculate the median \(\mu_{u,v}\) for each image and each feature.
 Then use that to calculate the total error by taking the Cartesian distance between \(t_{u,v}\) and \(\mu_{u,v}\) who is a feature in an picture with the same label as the selected t variable.
-This could be described as the Error equation\ref{eq:impl:muerror}.
+This could be described as the Error equation
+% \ref{eq:impl:muerror}.
+% \label{eq:impl:muerror}
 
-
-
-\begin{equation}\label{eq:impl:muerror}
-\mu_{error} = \frac{1}{n\cdot m} \sum_{i,j} \Bigg(\sum_{\text{labels},\text{images}} \bigg(\sqrt{(\mu_u - t_u)^2 + (\mu_v - t_v)^2 }\bigg)\Bigg)
+\begin{equation} %
+\mu_{error}=\frac{1}{N\cdotm}\sum_{i,j}\Bigg(\sum_{n,m}\bigg(\sqrt{(\mu_u-t_u)^2+(\mu_v-t_v)^2}\bigg)\Bigg)
 \end{equation}
+
 \begin{align*}
     \text{where:}\\
-    n &= \text{ is how many labels there are in the system}\\
-    m &= \text{ is how many pictures there are in the system}\\
+    n &= \text{ label } 1\dots N\\
+    N &= \text{ is how many labels there are in the system}\\
+    m &= \text{ image } 1\dots M\\
+    M &= \text{ is how many pictures there are in the system}\\
     \mu_{u,v} &= \parbox[t]{7cm}{\RaggedRight is the median for a particular image,label and coordinate in the system}\\
     t_{u,v} &= \text{ is one feature to be tested}
 \end{align*}
@@ -720,28 +623,30 @@ Then the internal \(\sum\) is just for building the matrix such that the matrix 
 
 
 
-\subsection{F-test}\label{sub:implemnt:ftest}
-Before any test can be done the variability of the selected method to test needs to be checked.
-This is done with a F-test and usually a table.
-The first part is using coagulating the $F_{\text{calc}}$ value that is a score using the standard deviation $\sigma$ of both samples.
-The value must be larger then 1 thus the equation becomes:
+% \subsection{F-test}\label{sub:implemnt:ftest}
+% Before any test can be done the variability of the selected method to test needs to be checked.
+% This is done with a F-test and usually a table.
+% The first part is using coagulating the ${F}_\text{calc}$
+% value that is a score using the standard deviation \sigma of both samples.
+% The value must be larger then 1 thus the equation becomes:
 
-\begin{align*}
-F_{\text{calc}} &= \frac{\sigma^2_1}{\sigma^2_2}\quad\text{if}\, \sigma^2_1 > \sigma^2_2\\
-F_{\text{calc}} &= \frac{\sigma^2_2}{\sigma^2_1}\quad\text{if}\, \sigma^2_1 =< \sigma^2_2\\
-\end{align*}
+% \begin{align*}
+% F_{\text{calc}} &= \frac{\sigma^2_1}{\sigma^2_2}\quad\text{if}\, \sigma^2_1 > \sigma^2_2\\
+% F_{\text{calc}} &= \frac{\sigma^2_2}{\sigma^2_1}\quad\text{if}\, \sigma^2_1 =< \sigma^2_2\\
+% \end{align*}
 
-Then after $F_{\text{calc}}$ is found it needs to be compared with an value
-$F_{\text{tab}}$ that is usually found in an table if the calculation is done by hand but in the case of computers this is derived from libraries, but in this paper it is still called $F_{\text{tab}}$ for simplicity.
-\par
-The value for $F_{\text{tab}}$ is derived from the dimension's of the data or how many rows rows there is in the table for each data set.
-So assume that there is for example two sets with the first set have 9 rows and the other set is 7 rows. Then the dimension for the F test is $D = (9-1, 7-1)= (8,6)$.
-Using $(8,6)$ in the table \cite[p.~488]{alm2008stokastik} it can be seen that for dimension $(8,6)$ the value is $4,147$
-That means that if our $F_{\text{calc}}$ is lower then $F_{\text{tab}}$ then the results are statistically similar to each other.
-That result can then be used to determine if the variance $\sigma$ is equal in both sets, that then determines the t-test category.
+% Then after $F_\text{calc}$ is found it needs to be compared with an value
+% $F_\text{tab}$ that is usually found in an table if the calculation is done by hand but in the case of computers this is derived from libraries, but in this paper it is still called $F_\text{tab}$ for simplicity.
+% \par
+% The value for $F_{\text{tab}}$ is derived from the dimension's of the data or how many rows rows there is in the table for each data set.
+% So assume that there is for example two sets with the first set have 9 rows and the other set is 7 rows. Then the dimension for the F test is $D = (9-1, 7-1)= (8,6)$.
+% Using $(8,6)$ in the table \cite[p.~488]{alm2008stokastik} it can be seen that for dimension $(8,6)$ the value is $4,147$
+% That means that if our $F_{\text{calc}}$ is lower then
+% $F_{\text{tab}}$ then the results are statistically similar to each other.
+% That result can then be used to determine if the variance \sigma  is equal in both sets, that then determines the t-test category.
 
-\subsection{T-test}\label{sub:implement:ttest}
-The t-test is a set of tests that will differ based on what data represents.
+% \subsection{T-test}\label{sub:implement:ttest}
+% The t-test is a set of tests that will differ based on what data represents.
 %\begin{figure}
 %    \centering
 %    \scalebox{.4}{\includegraphics{images/selecting_t_test.png}}

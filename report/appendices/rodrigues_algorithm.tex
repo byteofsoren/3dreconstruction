@@ -1,0 +1,43 @@
+
+\begin{algorithm}
+    \caption{Inversing tvec and rvec using Rodrigues transforms}\label{alg:inverse}
+    \begin{algorithmic}[1]
+        \Procedure{inversePerspective}{rvec, tvec}
+        \State $\vec{t} \gets tvec$
+        \State $R \gets Rodrigues(rvec)$ \Comment{Vector to matrix}
+        \State $R \gets matrix(R)^{T}$ \Comment{Array to transposed matrix}
+        \State $\vec{t}^{-1} \gets R \cdot matrix(-\vec{t})$ \Comment{Dot product}
+        \State $\vec{r}^{-1} \gets Rodrigues(R)$ \Comment{Rodrigues again}
+        \State \textbf{return} $\vec{r}^{-1}, \vec{t}^{-1}$ \Comment{Matrix to vector}
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+
+
+\begin{algorithm}
+    \begin{algorithmic}[1]
+        % \Procedure{relativePosition}{$\vec{t_1}$, $\vec{r_1}$, $\vec{t_2}$, $\vec{r_2}$}
+        \Procedure{relativePosition}{rvec1,tvec1,rvec2,tvec2}
+       % \Procedure{inversePerspective}{r, t}
+        \State $\vec{r_1} \gets reshape(rvec1, (3,1))$ \Comment{Reshape the vectors}
+        \State $\vec{t_1} \gets reshape(tvec1, (3,1))$
+        \State $\vec{r_2} \gets reshape(rvec2, (3,1))$
+        \State $\vec{t_1} \gets reshape(tvec2, (3,1))$
+        \State $\vec{r}^{-1}, \vec{t}^{-1} \gets InvercePrespective(\vec{r}, \vec{t})$
+             \Comment{Inverse the second marker}
+        \State $\text{comp} \gets composeRT(\vec{r_1}, \vec{r_2}, \vec{r}^{-1}, \vec{t}^{-1})$
+            \Comment{Creates a composed matrix}
+            \State \( \vec{r_{c}},\vec{t_{c}}\gets\text{comp}_{0},\text{comp}_{1}\)
+            \Comment{Decompose the matrix}
+        \State $\vec{r_{c}} \gets reshape(\vec{r_{c}}, (3,1))$
+            \Comment{Reshapes the vectors}
+        \State $\vec{t_{c}} \gets reshape(\vec{t_{c}}, (3,1))$
+        \State \textbf{return} $\vec{r_{c}},\vec{t_{c}}$
+        \EndProcedure
+    \end{algorithmic}
+    \caption[Relative]{
+    Relative position using \textbf{composeRT}, part of \textbf{OpenCV} and the \textbf{invercePrespective} algorithm proposed in Algorithm~\ref{alg:inverse}%
+    }
+    \label{alg:relative}
+\end{algorithm}
