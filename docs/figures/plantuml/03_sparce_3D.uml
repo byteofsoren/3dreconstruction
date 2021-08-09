@@ -1,0 +1,40 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor Black
+skinparam titleBackgroundColor Silver-WhiteSmoke
+/' skinparam classFontColor automatic '/
+/' skinparam classHeaderBackgroundColor WhiteSmoke '/
+skinparam monochrome true
+/' skinparam handwritten false '/
+/' /1' skinparam dpi 300 '1/ '/
+left to right direction
+/' skinparam linetype polyline '/
+/' skinparam linetype ortho '/
+
+state 3.0_Sparce_3D {
+    state data <<entryPoint>>
+    data --> 3.1_detect
+    3.1_detect --> 3.2_map
+    3.1_detect : Detects aruco
+    3.1_detect : corners in each img
+
+    3.2_map --> 3.3_epiporar_geometry
+    3.2_map : Maps the corners
+    3.2_map : in each image for
+    3.2_map : each corner
+
+    3.3_epiporar_geometry --> 3.4_statistics
+    3.3_epiporar_geometry : Linear equaiton
+    3.3_epiporar_geometry : to find mid point
+    3.3_epiporar_geometry : between each feature
+
+    3.4_statistics --> results
+    3.4_statistics : f/t test
+
+
+
+    state results <<exitPoint>>
+}
+
+@enduml

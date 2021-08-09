@@ -1,0 +1,48 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor Black
+skinparam titleBackgroundColor Silver-WhiteSmoke
+/' skinparam classFontColor automatic '/
+/' skinparam classHeaderBackgroundColor WhiteSmoke '/
+skinparam monochrome true
+/' skinparam handwritten false '/
+/' /1' skinparam dpi 300 '1/ '/
+left to right direction
+/' skinparam linetype polyline '/
+/' skinparam linetype ortho '/
+/' [*] --> 1.0_Load_data: start '/
+state 1.0_Load_data {
+    [*] --> 1.1_read_img
+    [*] --> 1.2_read_human
+    [*] --> 1.3_read_openpose
+    1.1_read_img --> 1.4_combine
+    1.1_read_img : loads images from
+    1.1_read_img : selected source
+
+    1.2_read_human --> 1.4_combine
+    1.2_read_human : Reads the human
+    1.2_read_human : responce CSV
+
+    1.3_read_openpose --> 1.4_combine
+    1.3_read_openpose : Reads the OpenPose
+    1.3_read_openpose : responce CSV
+}
+
+1.4_combine : Atlas object
+1.4_combine --> 2.0_Input_inference
+1.4_combine --> 3.0_Sparce_3D
+
+state 2.0_Input_inference {
+}
+
+
+state 3.0_Sparce_3D {
+}
+
+2.0_Input_inference --> 4.0_results
+3.0_Sparce_3D --> 4.0_results
+4.0_results : Statistics and
+4.0_results : tables
+
+@enduml

@@ -4,6 +4,8 @@
 % --- Pacages -----
 \usepackage[ddmmyyyy]{datetime}
 \usepackage{graphicx}
+% \usepackage{epsfig} % Used to load plantuml
+\usepackage{epstopdf} %converting to PDF
 % \usepackage{amsmath} % Dep mathtools
 \usepackage{amsfonts} % dep
 \usepackage[utf8]{inputenc}
@@ -35,6 +37,7 @@
 \usepackage{multirow}
 \usepackage{titlesec}
 
+\usepackage{cprotect} % Use verb in figure captions
 
 % Bibliography settings:
 
@@ -42,7 +45,7 @@
 % {\normalfont\small% Changed!
 %   \bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
 
-\graphicspath{{Figures/}{Figures/}{.}{images/}{results/}} %Setting the graphicspath
+\graphicspath{{Figures/}{figures/}{.}{images/}{results/}} %Setting the graphicspath
 
 %%%%%%% Import tikz for a figure.
 \usepackage{tikz}
@@ -172,8 +175,8 @@
 \newpage
 \input{sections/04_method}
 \newpage
-\input{sections/06_contribs}
-\newpage
+% \input{sections/06_contribs}
+% \newpage
 \input{sections/05_etics}
 \newpage
 \input{sections/07_results}

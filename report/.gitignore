@@ -448,5 +448,8 @@ Thumbs.db
 # images/datasets
 results
 
+# Generated uml output
+uml/
+
 
 

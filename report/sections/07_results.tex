@@ -5,6 +5,17 @@
 The results so far is divided up in two relevant subsections where the first handles the input inference test and the second handles the 3D reconstruction using \aruco corners.
 \subsection{OpenPose output inference results}%
 \label{sub:res:op_inference}
+Using \openpose{ } on a human subject that is located on the ground can provide diverse results dependent on the relative rotation of the body the camera.
+How well does it preform when the subject is laying such as in image North in figure~\ref{fig:camera_pos_lables}.
+And how is the preference for each label in the \operpose{ } data set against a human labler.
+
+During statistical tests with F/T-test the degrees of freedom will tell you how many data points there is behind the results.
+Thus can be shown in table~\ref{tab:results:degfreedom} the degrees of freedom for each label can be found.
+While table~\ref{lab:results:human_vs_openpose} shows the degrees of freedom dependent on direction where the camera was located.
+
+From the results in table~\ref{tab:results:human} and table~\ref{lab:results:human_lable} it can be observed that F-test is mostly rejected while the T-test is mostly reported as accept.
+This then propose that the $H_0$ hypothesis is weekly rejected as it fails on $\sigma_H = \simgma_O$ but is passed on $\mu_H = \mu_O$.
+There fore the $H_1$ hypotheses is accepted and that shows that \openpose{ } do not have same accuracy as an human label setter.
 
 
 
@@ -54,6 +65,13 @@ The results so far is divided up in two relevant subsections where the first han
 
 
 \subsection{3D reconstruction using Aruco}%
+Reconstruction of the sparce 3D map done by using \aruco{'s} in a pose quiver without solving the bundle adjustment problem was attempted to be solved.
+The method derived relied on Dijkstra algorithm and cumulative transfer poses from corner to corner to camera.
+An then by solving the epee polar geometry a point cloud is supposed to be generated.
+How ever the due to the cumulative output of the algorithms the positions of the camera is never reaching a satisfiable position.
+
+
+
 \label{sub:res:3drec}
 \begin{figure}
 \begin{center}

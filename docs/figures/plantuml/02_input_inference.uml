@@ -1,0 +1,65 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor Black
+skinparam titleBackgroundColor Silver-WhiteSmoke
+/' skinparam classFontColor automatic '/
+/' skinparam classHeaderBackgroundColor WhiteSmoke '/
+skinparam monochrome true
+/' skinparam handwritten false '/
+/' /1' skinparam dpi 300 '1/ '/
+left to right direction
+/' skinparam linetype polyline '/
+/' skinparam linetype ortho '/
+state 2.0_Input_inference {
+    state data <<entryPoint>>
+    state 2.1_label_inference {
+        data --> lab_error_calc
+        /' combine --> lab_error_calc '/
+        lab_error_calc --> lab_deg_table
+        lab_error_calc : Lable error
+        lab_error_calc : per label
+
+        lab_deg_table : Degrees of
+        lab_deg_table : freedom in
+        lab_deg_table : the results
+
+        lab_error_calc --> lab_table
+        lab_table : Results stored
+        lab_table : in a table
+
+    }
+
+    state 2.2_direction_inferrence {
+        /' combine --> dir_error_calc '/
+        data --> dir_error_calc
+        dir_error_calc --> dir_deg_table
+        dir_error_calc : Lable error
+        dir_error_calc : per label
+
+        dir_deg_table : Degrees of
+        dir_deg_table : freedom in
+        dir_deg_table : the results
+
+        dir_error_calc --> dir_table
+        dir_table : Results stored
+        dir_table : in a table
+
+    }
+
+
+    state 2.3_statistics {
+        lab_deg_table --> collect
+        lab_table --> collect
+        dir_deg_table --> collect
+        dir_table --> collect
+        collect --> f_test
+        collect --> t_test
+        f_test --> result_table
+        t_test --> result_table
+    }
+    state results <<exitPoint>>
+    result_table --> results
+
+}
+@enduml
