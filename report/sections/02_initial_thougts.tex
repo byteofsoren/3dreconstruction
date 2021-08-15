@@ -4,14 +4,14 @@
 
 %\section{Background and related works}%
 %\label{sec:bg}
-In this section the background for certain mathematical expressions are reviewed to later be used in the algorithms in method.
-%It also includes related work as the two of those in this case is closely related in the terms of math.
+In this section, the background for certain mathematical expressions is reviewed to be later used in the algorithms in the method.
+%It also includes related work as the two of those, in this case, is closely related in terms of math.
 
 
 
 \subsection{Image capture}%
 \label{sub:Image_capture}
-Using a regular camera without any specific hardware can improve the image quality that, according to~\cite{jeelani2018image} can improve the results while training a neural network.
+Using a regular camera without any specific hardware can improve the image quality that, according to to~\cite{jeelani2018image} can improve the results while training a neural network.
 A drawback with the intended algorithm is that a few \aruco{} corners must be present in the image to be able to calculate the position of the camera.
 How that works is explained in \aruco{} Conner's section\ref{sub:ArucoConers}.
 
@@ -65,7 +65,7 @@ The left matrix is the conversion matrix that translates from 3D to 2D and the r
 
 \subsection{Change of coordinates}%
 \label{sub:motod:changeofocd}
-Moving euclidean coordinates to homogeneous coordinates is advantageous in the case where a point in the 3D wold is mapped to the camera image.
+Moving euclidean coordinates to homogeneous coordinates is advantageous when a point in the 3D world is mapped to the camera image.
 In the following equation a 2D vector is moved form the euclidean to the homogeneous and then back to the homogeneous system again.
 \begin{equation}
     \begin{bmatrix}
@@ -152,23 +152,23 @@ Where $X$ is the line in 3D, $X_0$ is the camera position, $\lambda$ is the line
 
 \subsection{3D annotation}%
 \label{sub:3D_anotation}
-Using images taken with both a subject and one of the previously indexed corners it is possible to find a solution to the correspondence
+With images of the subject and one of the previously indexed \aruco corners its possible to find a solution to the correspondence
 problem~\cite{siciliano2010robotics} where a feature (i.e.\ elbow, nose or a foot) in one image is the same feature in several other images.
 Then is used to build a sparse 3D map of each feature from several directions.
-In contrast stereo vision only uses two cameras to build a disparity map from camera one to camera two.
+In contrast, stereo vision only uses two cameras to build a disparity map from camera one to camera two.
 The 3D triangulation presented in~\cite{zhang2006midpoint} shows that a feature in 3D can be derived from two cameras even if the feature in each image does not produce a line that intersects.
 Calculating the midpoint on a vector that is orthogonal to each feature line.
 With images taken from several directions, a point cloud can assume ably be calculated from several lines.
-The benefit of using a multivariate Gaussian distribution is that a median that is close to the real feature can be estimated.
+The benefit of using a multivariate Gaussian distribution is that a median close to the actual feature can be estimated.
 
 
 
 \subsection{Aruco Coner's}%
 \label{sub:ArucoConers}
 % read https://docs.opencv.org/master/da/d13/tutorial_aruco_calibration.html
-Fiducial markers in~\cite{romero2018speeded} use \aruco corners in contrast with the previous method has several benefits due to that they are indexable.
-Future more they already have an implemented library targeting a method to derive the camera location with just one image.
-Thus, useful for finding each images related to the origin \aruco marker.
+Fiducial markers in~\cite{romero2018speeded} use \aruco corners in contrast with the previous method has several benefits due to the previously mentioned method is indexable.
+Future more, the system has already an implemented library targeting a method to derive the camera location with just one image.
+Thus, helpful in finding each image related to the origin \aruco marker.
 
 This method was first derived for use in \ac{ar} as a way to acquire the position of the player.
 However, this turn proved to be useful for robotics because it would provide an easy navigation solution.
@@ -274,7 +274,7 @@ In equation~\ref{eq:camera_transfer} this is used to describe the pixel on a pla
 \subsection{Correspondence problem}
 \todo[inline]{Several links broken due to removal of text}
 The method to solve the correspondence problem is rooted in  Epipolar Geometry and triangulation~\cite{siciliano2010robotics} with a twist that the data is not perfect thus a statistical method to derive the solution must be found.
-This implementation however mostly uses the linear algebra for vision presented by~\cite{corke2017robotics} to compute the location of the features.
+This implementation, however, primarily uses the linear algebra for vision presented by~\cite{corke2017robotics} to compute the location of the features.
 These techniques are presented in the figure~\ref{fig:camera_transfer} while figure~\ref{fig:3Dhuman} shows the intended approach for the system.
 
 \def\svgwidth{\columnwidth}
@@ -282,12 +282,12 @@ These techniques are presented in the figure~\ref{fig:camera_transfer} while fig
     \centering
            \input{images/3Dhuman.pdf_tex}
            \caption[3D human on ground]{
-               In this figure it can be observed that a human, lying on the ground is observed with several cameras marked as $C_n$.
-               The cameras position is relative to the \aruco corners marked as $A_n$ on the floor and works as long a camera has a known \aruco corner in the image.
+               In this figure, it can be observed that a human lying on the ground is observed with several cameras marked as $C_n$.
+               The camera's position is relative to the \aruco corners marked as $A_n$ on the floor and works as long a camera has a known \aruco corner in the image.
                From the image denoted by
                $C_i$
-               the feature target $T$ is traced by a ray $R_n$ for each valid camera.
-               Thus using both the known location of the camera and the ray a statistical median and standard disdain can be derived on where the feature is.
+               the feature target $T$ is traced by a ray $R_n$ for each good camera.
+               Thus using both the known location of the camera and the ray, a statistical median and standard disdain can be derived on where the feature is.
            }
     \label{fig:3Dhuman}
 \end{figure}
@@ -319,14 +319,14 @@ In background~\ref{sub:ArucoConers} its assumed that the transfer matrix is a ho
 \end{equation}
 However the implemented system in the \aruco{} package returns the vectors $\vec{r}$ and $\vec{t}$.
 $\vec{r}$ is not the rotation $R_{3x3}$ as it is a vector rather then a matrix, while $t_{3x1}$ is equal to a transposed $\vec{t}$.
-This conversion and how to derive the connection $\vec{A_1A_2}$ is poorly documented the following part will discuss how that is done.
+This conversion and how to derive the connection $\vec{A_1A_2}$ is poorly documented. The following part will discuss how that is done.
 \par
-Let's assume that the algorithms in \aruco calculated the 3D location of the corners in respect of the camera as shown in the  figure~\ref{fig:vector_transfers}.
-The vector $\vec{A_1A_2}$ is the connection from \aruco 1 to \aruco 2 and can be calculated as:
+Assume that the algorithms in \aruco calculated the 3D location of the corners in respect of the camera as shown in the  figure~\ref{fig:vector_transfers}.
+The vector $\vec{A_1A_2}$ is the connection from \aruco 1 to \aruco two and can be calculated as:
 \[
 \vec{A_1A_2} = \vec{A_1C} - \vec{A_2C}
 \]
-This means that the $\vec{A_2C}$ must be inverted so that the equation becomes:
+That means that the $\vec{A_2C}$ must be inverted so that the equation becomes:
 \[
 \vec{A_1A_2} = \vec{A_1C} + (-\vec{A_2C})
 \]
@@ -352,7 +352,8 @@ The complete algorithm shown in~\ref{alg:relative} shows how the complete equati
 
 
 \subsection{Confusion atlas}\label{sub:implement:confusion}
-As each \aruco corner in the scene can be observed from several camera locations its important to build what in this report is refereed as an confusion atlas.
+As each \aruco corner in the scene can be observed from several camera locations.
+In this report, this is called a pose quiver.
 This confusion atlas stores the connection from each view related to each corner in the scene as shown in figure~\ref{fig:confusion}.
 
 \input{appendices/confusion.tex}
@@ -360,10 +361,10 @@ This confusion atlas stores the connection from each view related to each corner
 
 \subsection{Relative path to Origin}\label{sub:implement:relativepath}
 In~\ref{sub:implement:relative} the path between two \aruco\ corners in one camera was found using two algorithms~\ref{alg:inverse} and~\ref{alg:relative}.
-But in this case the there is also a connection from \aruco\ corners in several cameras back to the origin \aruco\ placed above the head of the subject.
-This mean that that the path back to the \aruco\ origin from each corner on the way could go multiple paths.
-In~\ref{fig:confusion} there is only one path for to get back for each corner transfer, but in reality there is a possibility that the network becomes multi path.
-Figure~\ref{fig:multipath} the relations between the corneas in an multi path scenario is explored in greater details.
+However, in this case, there is also a connection from \aruco\ corners in several cameras back to the origin \aruco\ placed above the subject's head.
+That means that the path back to the \aruco\ origin from each corner on the way could go multiple paths.
+In~\ref{fig:confusion} there is only one path to get back for each corner transfer, but in reality, there is a possibility that the network becomes multipath.
+Figure~\ref{fig:multipath} the relations between the corneas in a multipath scenario is explored in greater detail.
 
 
 \begin{figure}
@@ -392,12 +393,12 @@ Figure~\ref{fig:multipath} the relations between the corneas in an multi path sc
         ;
     \end{tikzpicture}
     \caption[Transfer location]{
-    When calculating the position back to origin from a corner there can be situations in image starved data sets where the transfer can not be done in just one transfer calculation.
-    In those cases the transfer can have a multi stage transfer back to origin.
-    Assume that the algorithm is going to calculate the location of the A4 corner in relation to A0. Then the algorithm can ether go $A4\rightarrow A2 \rightarrow A0$ or $A4\rightarrow A3\rightarrow A1\rightarrow A0$ and even $A4\rightarrow A3\rightarrow A1\rightarrow A2 \rightarrow A0$. But as each step is taken a mall amount of noise is introduced in to the calculation's due to the uncertainty of the camera parameters.
+    When calculating the position back to origin from a corner, there can be situations in image starved data sets where the transfer can not be done in just one transfer calculation.
+    In those cases, the transfer can have a multi-stage transfer back to origin.
+    Assume that the algorithm is going to calculate the location of the A4 corner concerning corner A0. Then the algorithm can either go $A4\rightarrow A2 \rightarrow A0$ or $A4\rightarrow A3\rightarrow A1\rightarrow A0$ and even $A4\rightarrow A3\rightarrow A1\rightarrow A2 \rightarrow A0$. Nevertheless, as each step is taken, a mall amount of noise is introduced into the calculations due to the uncertainty of the camera parameters.
     Thus keeping the jumps short is advantageous.
-    In this figure the cost of each of the jumps is denoted by the number above each arrow.
-    This is then used to calculate the transfer from A4 to A0 over A2 as its the shortest path.
+    In this figure, the cost of each of the jumps is denoted by the number above each arrow.
+    That is then used to calculate the transfer from A4 to A0 over A2 as the shortest path.
     }
     \label{fig:multipath}
 \end{figure}
@@ -419,7 +420,7 @@ Figure~\ref{fig:multipath} the relations between the corneas in an multi path sc
 
 \subsection{Midpoint}%
 \label{sub:Midpoint}
-If a line from the camera centre through the camera plane can be defined with two points and the extrinsic and intrinsic camera matrix's.
+A line from the camera centre through the camera plane can be defined with two points by using the extrinsic and intrinsic camera matrices.
 A line from two cameras not necessary intersecting the feature can be solved with a minimal distance midpoint from each vector.
 Let camera one and two be defined as:
 \begin{equation}
@@ -433,8 +434,8 @@ The line from the camera through the feature can be calculated using:
     \tilde{\ell}_{cn} = \tilde{C}_\theta \times \tilde{C}_x
 \end{equation}
 If that is done for a feature in at least two cameras, the 3D position can be derived.\\
-Assume that a feature has been detected in at least two cameras, forming two lines through the camera origin and the camera plane.
-Then the areas the point $\tilde{C}_p$ in the camera is already moving along the line the orthogonal distance between the points in camera one and two can be minimised.
+Assume that a feature has been detected in two cameras, forming two lines through the camera origin and the camera plane.
+Then the areas the point $\tilde{C}_p$ in the camera is already moving along the line the orthogonal distance between the points in cameras one and two can be minimised.
 The first step of doing this is moving the line and point back to the Cartesian space.
 \begin{equation}
     \ell_{Cn} = \big( \frac{\tilde x}{\tilde w}, \frac{\tilde y}{\tilde w}, \frac{\tilde z}{\tilde w} \big)
@@ -471,7 +472,7 @@ Then a vector $\overrightarrow {PQ}$ is formed by:
     \overrightarrow {PQ} = Q - P
 \end{equation}
 
-Now by solving the following two relations for s and t the values for where on the line $\ell_{cn}$ the minimal vector exists.
+Now by solving the following two relations for s and t, the values for where on the line $\ell_{cn}$ the minimal vector exists.
 
 \begin{equation}
     \overrightarrow{PQ}\cdot p_{c1}=0 \quad  \overrightarrow{PQ}\cdot p_{c2} = 0
@@ -492,9 +493,9 @@ Using both of those equations to for form the matrix:
     \end{bmatrix}
 \end{equation}
 
-And solve that matrix using row reduction solves the values for s and t.
+Moreover, solve that matrix using row reduction solves the values for s and t.
 Use that result and put it back in P and Q respectively to form the vector $\overrightarrow{P}$, $\overrightarrow{Q}$.
-From that the mid point between the P,Q is:
+From that, the midpoint between the P, Q is:
 
 \begin{equation}
     M = \big( \frac{x_P + x_Q}{2}, \frac{y_P + y_Q}{2}, \frac{z_P - z_Q}{2} \big)
@@ -507,21 +508,21 @@ The length perhaps is useful to check the if the feature is in the expected regi
 \end{equation}
 
 That and the length of that vector is stored.
-After all images are processed, the result should be a point cloud for each feature.
-% This can then be analyzed using several methods.
+After all, images are processed, the result should be a point cloud for each feature.
+% This can then be analysed using several methods.
 % One such method would be to move the point cloud over to a polar coordinate system.
 % Using the origin as the basis for the polar system, and while checking if the data is skew when the angle is increasing
 
-\subsection{Input data error}\label{sub:implment:inputerror}
-Assume that the mean error from a human selecting a key point on an human on an picture is equal to the mean error for OpenPose selecting the same point is equal.
-With that assumption a t-test can be done to show if that is true or not.
+\subsection{Input data error}\label{sub:implement:inputerror}
+Assume that the mean error from a human selecting a key point on a human on a picture is equal to the mean error for OpenPose selecting the same point is equal.
+With that assumption, a t-test can be done to show if that is true or not.
 Thus the assumption is:
 \[
     \mu_{Herror} = \mu_{Oerror}
 \]
-But how is the error calculated form quite limited set of key points.
-Each point in each image has its own correlations to what the point represents with marker such "Left Wrist", "Right Shoulder" or "Nose".
-But also each image has its own unique name.
+However, how is the error calculated from quite a limited set of key points?
+Each point in each image has its correlations to what the point represents with markers such as "Left Wrist", "Right Shoulder", or "Nose".
+Nevertheless, also each image has its own unique name.
 Thus a tables could be shown as follows in~\ref{tab:impl:input}.
 In this case we use half of the human input to as an median to compare against.
 \begin{table}[h]
@@ -589,7 +590,7 @@ This is done to test the discrepancy for certain orientations from the \openpose
 \par
 
 To calculate the total error for all features in every image, first use a subset to calculate the median \(\mu_{u,v}\) for each image and each feature.
-Then use that to calculate the total error by taking the Cartesian distance between \(t_{u,v}\) and \(\mu_{u,v}\) who is a feature in an picture with the same label as the selected t variable.
+Then use that to calculate the total error by taking the Cartesian distance between \(t_{u,v}\) and \(\mu_{u,v}\), who is a feature in a picture with the same label as the selected t variable.
 This could be described as the Error equation
 % \ref{eq:impl:muerror}.
 % \label{eq:impl:muerror}
@@ -614,11 +615,11 @@ This could be described as the Error equation
 \end{align*}
 \par
 Then the total error from OpenPose to a subset of the human set can be compared with the total error from the human set to its subset using a t-square test.
-This error equation is derived from that a regular median for a one dimensional input is
+This error equation is derived from that a regular median for a one-dimensional input is
 \[
 \mu = \frac{1}{n}\sum_{i=1}^n (x_i)
 \]
-But for a matrix this becomes:
+However, for a matrix, this becomes:
 \[
 \mu = \frac{1}{n\cdot m} \sum_{i=1,j=1}^{i=n,j=m}(x_{i,j})
 \]
@@ -640,15 +641,15 @@ Then the internal \(\sum\) is just for building the matrix such that the matrix 
 % F_{\text{calc}} &= \frac{\sigma^2_2}{\sigma^2_1}\quad\text{if}\, \sigma^2_1 =< \sigma^2_2\\
 % \end{align*}
 
-% Then after $F_\text{calc}$ is found it needs to be compared with an value
-% $F_\text{tab}$ that is usually found in an table if the calculation is done by hand but in the case of computers this is derived from libraries, but in this paper it is still called $F_\text{tab}$ for simplicity.
+% Then after $F_\text{calc}$ is found, it needs to be compared with a value
+% $F_\text{tab}$ that is usually found in a table if the calculation is done by hand, but in the case of computers, this is derived from libraries, but in this paper, it is still called $F_\text{tab}$ for simplicity.
 % \par
-% The value for $F_{\text{tab}}$ is derived from the dimension's of the data or how many rows rows there is in the table for each data set.
-% So assume that there is for example two sets with the first set have 9 rows and the other set is 7 rows. Then the dimension for the F test is $D = (9-1, 7-1)= (8,6)$.
+% The value for $F_{\text{tab}}$ is derived from the dimension's of the data or how many rows there is in the table for each data set.
+% So assume that there is, for example, two sets with the first set have nine rows, and the other set is seven rows. Then the dimension for the F test is $D = (9-1, 7-1)= (8,6)$.
 % Using $(8,6)$ in the table \cite[p.~488]{alm2008stokastik} it can be seen that for dimension $(8,6)$ the value is $4,147$
 % That means that if our $F_{\text{calc}}$ is lower then
 % $F_{\text{tab}}$ then the results are statistically similar to each other.
-% That result can then be used to determine if the variance \sigma  is equal in both sets, that then determines the t-test category.
+% That result can then be used to determine if the variance $\sigma$  is equal in both sets, which then determines the t-test category.
 
 % \subsection{T-test}\label{sub:implement:ttest}
 % The t-test is a set of tests that will differ based on what data represents.
@@ -662,7 +663,7 @@ Then the internal \(\sum\) is just for building the matrix such that the matrix 
 % \subsection{Verifying the algorithm}%
 % \label{sub:Verifying_the_alorithm}
 % To verify that the algorithm works as intended, a smaller set of images containing measurable features.
-% In this set, it proposed to include a large checkerboard and a few spheres of bright colours to be used as features and the camera can be mounted to a bracket to be able to intensify the exact location.
+% In this set, it proposed to include a large checkerboard and a few spheres of bright colours to be used as features, and the camera can be mounted to a bracket to be able to intensify the exact location.
 % In figure~\ref{fig:validations} a short overview of the system is shown.
 
 
@@ -675,10 +676,10 @@ Then the internal \(\sum\) is just for building the matrix such that the matrix 
 %       \caption{
 %           to be directed in different directions.
 %           Future more the tree \aruco corners in the image, scatted on the floor.
-%           Also, observe that the \aruco corner $A_0$ can not be followed by camera $C_2$ thus, the position of the camera can not be derived directly form $A_0$.
+%           Also, observe that the \aruco corner $A_0$ can not be followed by camera $C_2$; thus, the camera's position can not be derived directly from $A_0$.
 %           However, the position of $C_2$ can be derived by using transfer matrices from the other cameras.
-%           In this image two features marked as $F_g$ and $F_r$ is also present and will be used to validate the system by using the marked checkerboard floor as an indication where the features are in the real world.
-%           If then the system generates the same features in respect to $A_0$ with some scaling factor $\alpha$, the system is valid.
+%           In this image, two features marked as $F_g$ and $F_r$ are also present and will be used to validate the system by using the marked checkerboard floor to indicate where the features are in the real world.
+%           If the system generates the same features concerning $A_0$ with some scaling factor $\alpha$, the system is valid.
 %       }
 %     \label{fig:validations}
 % \end{figure}
