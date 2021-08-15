@@ -1,16 +1,18 @@
 
 \section{Hypothesis and research questions}%
 \label{sub:Hypothesis}
-As \openpose{ } is only trained on humans standing, walking, running and sitting.
+As \openpose is only trained on humans standing, walking, running and sitting.
 The assumption in this paper is that \openpose{ } is bad at humans on the ground.
 However, is that true or not?
 
-If \openpose{ } is as good as a human at identifying where each feature on the human is located in both 2D and 3D, then a hypothesis formed such that the median and variance of both human and open pose should be equal.
+If \openpose is as good as a human at identifying where each feature on the human is located in both 2D and 3D, then a hypothesis formed such that the median and variance of both human and open pose should be equal.
 Thus the hypothesis can be formed as follow:
+
+
 \vspace{5mm}
 \begin{align*}
-    \text{H}_0 & \quad \bigmu_\text{H} = \bigmu_\text{O} \quad  \text{AND}\quad \bigsigma_\text{H} = \bigsigma_\text{O}\\
-    \text{H}_1 & \quad \bigmu_\text{H} <> \bigmu_\text{O} \quad  \text{OR}\quad \bigsigma_\text{H} <> \bigsigma_\text{O}
+    \text{H}_0 & \quad \bigmu_\text{H} = \bigmu_\text{O} \quad  \text{AND}\quad \bigsigma^2_\text{H} = \bigsigma^2_\text{O}\\
+    \text{H}_1 & \quad \bigmu_\text{H} <> \bigmu_\text{O} \quad  \text{OR}\quad \bigsigma^2_\text{H} <> \bigsigma^2_\text{O}
 \end{align*}
 
 Where:
@@ -73,13 +75,24 @@ Thus the assumptions in no particular order is as follow:
 From the hypotheses of this report its clear that the focus is about the reliability of \openpose{ } on human subject that is laying on the ground.
 This is done by comparing  data from human annotations with the annotations from \operpose{} using T-test and F-test.
 
+The general overview for how the system is used is described in figure~\ref{fig:usecase} that show how data is collected and how the results are derived from that data.
 
-%Dijkstra c
-This is covered visually in figure~\ref{fig:method:overview} that shows how the system takes images and process them to become results tables covered in~\ref{sec:results} Results.
+\begin{figure}
+\begin{center}
+    \includegraphics[scale=0.4]{figures/uml/usecase.pdf}
+\end{center}
+\caption{This figure shows the use case diagram for the implemented project. \textbf{Subject} on the left is the human on the ground while the \textbf{Camera Operator} is the one taking the images.
+Those images are annotated by both \openpose{ } and the human \textbf{Image annotators}.
+Then \openpose{ } and the annotated data is combined in to a dataset with the images.
+That later are used by the implemented program to derive the \textbf{Results}}
+\label{fig:usecase}
+\end{figure}
+
+Then in figure~\ref{fig:method:overview} that shows how the program is taking images and process them to become results tables covered in~\ref{sec:results} Results in more details.
 
 By checking with F/T-test to check if the $H_0$ hypothesis holds on the input data figure~\ref{fig:method:overview} block \textbf{2.0}.
-The data can be investigated to see if the sparce 3D reconstruction could give useful results or not.
-This due to that sparce 3D reconstruction uses data from the input images and data.
+The data can be investigated to see if the sparse 3D reconstruction could give useful results or not.
+This due to that sparse 3D reconstruction uses data from the input images and data.
 Thus if id doesn't hold the reconstruction is probably not giving a accurate result.
 
 The tests that are preformed to prove the $H_0$ hypothesis uses the error equation~\ref{eq:impl:muerror} to calculate an error.
@@ -98,6 +111,10 @@ To make relative connections from each corner in each image, an pose quiver is d
 
 An additional test to see if there is any discrepancy for the rotation of the body is also done by manually annotating the images dependent of witch quadrant
 the image was taken.
+This is done as proposed in~\ref{fig:camera_pos_lables} deriving the images in to North, West, South and East.
+The annotation in this case is done by the Camera Operator~\ref{fig:usecase}.
+
+
 
 
 

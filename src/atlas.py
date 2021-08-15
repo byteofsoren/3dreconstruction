@@ -260,7 +260,7 @@ class Atlas():
                         temp:Corner = G.nodes[tid]['node']
                         T = T@tf.T
                         temp.T=T
-                        G.nodes[tid]['pos'] = list(T[:2,3])
+                        G.nodes[tid]['pos'] = list(T[:3,3])
                         back += 1
                         forw += 1
                         if forw >= len(path):
@@ -296,8 +296,8 @@ class Atlas():
                         temp:Corner = G.nodes[tid]['node']
                         T = T@tf.T
                         temp.T=T
-                        temp.pos = list(T[:2,3])
-                        G.nodes[tid]['pos'] = list(T[:2,3])
+                        temp.pos = list(T[:3,3])
+                        G.nodes[tid]['pos'] = list(T[:3,3])
                         # print(f"{sid}->{tid} => {tf.name}")
                         # print(T)
                         # breakpoint()
@@ -307,16 +307,23 @@ class Atlas():
                             break
 
 
-        G.nodes[self._aruco_origin_id]['pos']=[0,0]
+        G.nodes[self._aruco_origin_id]['pos']=[0,0,0]
         pos=nx.get_node_attributes(G,'pos')
+        self.positions = dict()
         for key in pos.keys():
             node = pos[key]
+            self.positions[key] = pos[key]
             log.info(f"{key} pos:{node[0]:.2f},{node[0]:.2f}")
+            pos[key] = pos[key][0:2] # 2D projection
         nx.draw(G,pos,node_color=colormap,with_labels=True,font_weight='bold')
         if self._conf['save']['saveimg']:
             plt.savefig(self._conf['save']['mapimg'])
         if self._conf['save']['showmap']:
             plt.show()
+        posdata = pd.DataFrame(self.positions).transpose()
+        posdata.columns = ['X','Y','Z']
+        posdata.to_csv(r'../results/posdata.csv')
+        print(posdata)
 
     def ep_solver(self, camera:Camera):
         """

@@ -12,6 +12,7 @@
 %% Maths
 \usepackage{mathtools} % Loads asmath
 \usepackage{fancyhdr}
+\usepackage{xparse} % Used to provide \NewDocumentCommand.
 \usepackage{enumerate}
 \usepackage{pdflscape}
 % \usepackage{listings}     % Do not list codes in paper use bellow.
@@ -19,7 +20,8 @@
 \usepackage[noend]{algpseudocode}
 %\usepackage{algorithm,algorithmic}
 \usepackage{algorithm}
-\usepackage{ragged2e}
+% \usepackage{ragged2e}
+\usepackage[document]{ragged2e}
 % \usepackage[linesnumbered,vlined,ruled,scleft]{algorithm2e}
 % \usepackage[titletoc]{appendix}
 
@@ -51,13 +53,13 @@
 \usepackage{tikz}
 % \usepackage{plantuml}
 \usepackage{ifluatex}
-\ifluatex
-  \usepackage{pdftexcmds}
-  \makeatletter
-  \let\pdfstrcmp\pdf@strcmp
-  \let\pdffilemoddate\pdf@filemoddate
-  \makeatother
-  \fi
+% \ifluatex
+%     \usepackage{pdftexcmds} %
+%     \makeatletter%
+%     \let\pdfstrcmp\pdf@strcmp%
+%     \let\pdffilemoddate\pdf@filemoddate%
+%     \makeatother%
+% \fi
 \usepackage[clean]{svg}
 % \usepackage{svg}
 \svgpath{figures}
@@ -102,8 +104,15 @@
 % }
 
 % % \newcommand{\R}{\(\mathbb{R}\)}
-\newcommand*\aruco[1]{ArUco#1}
-\newcommand*\openpose[1]{OpenPose#1}
+% \newcommand*\aruco[1]{ArUco#1}
+\NewDocumentCommand\aruco{}{
+    \IfNoValueTF{#1}
+        Aruco
+        Aruco#1}
+\newcommand*\arucoS{\aruco{ }}
+\NewDocumentCommand\openpose{}{OpenPose }
+% {\IfNoValueTF{#1}{No open}{OpenPose#1}}
+\newcommand*\openposeS{\openpose{ }}
 \newcommand*\Q[1]{$Q_#1$}
 \newcommand*\R{\mathbb{R}}
 \newcommand*\defref[1]{Definition~\ref{#1}}
@@ -115,12 +124,25 @@
 \DeclarePairedDelimiter\abs{\lvert}{\rvert} % proper absolute value
 
 % Larger \mu and \sigma for hypothesis question
-\newcommand{\bigmu}{\makebox{\Large\ensuremath{\mu}}}
-\newcommand{\bigsigma}{\makebox{\Large\ensuremath{\sigma}}}
+\NewDocumentCommand\bigmu{}{%
+    \makebox{%
+        \Large\ensuremath{\mu}
+    }%
+}%
+\NewDocumentCommand\bigsigma{}{%
+    \makebox{%
+        \Large\ensuremath{\sigma}%
+    }%
+}%
 % \newcommand{\bigmu}{\raisebox{-.20\baselineskip}{\ensuremath{\mu}}}
 % \newcommand{\bigsigma}{\raisebox{-.20\baselineskip}{\ensuremath{\sigma}}}
 
-\newcommand{\annoterel}[2]{%
+% \newcommand{\annoterel}[2]{%
+%   \overset{%
+%     \substack{\hidewidth\text{#1}\hidewidth\\\downarrow}%
+%   }{#2}%
+% }
+\NewDocumentCommand\annoterel{mm}{%
   \overset{%
     \substack{\hidewidth\text{#1}\hidewidth\\\downarrow}%
   }{#2}%

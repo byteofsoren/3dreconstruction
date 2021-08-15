@@ -3,6 +3,8 @@ skinparam titleBorderRoundCorner 15
 skinparam titleBorderThickness 2
 skinparam titleBorderColor Black
 skinparam titleBackgroundColor Silver-WhiteSmoke
+skinparam Minimumwidth 50
+skinparam Maximumwidth 50
 /' skinparam classFontColor automatic '/
 /' skinparam classHeaderBackgroundColor WhiteSmoke '/
 skinparam monochrome true

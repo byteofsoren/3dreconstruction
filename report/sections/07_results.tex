@@ -59,7 +59,7 @@ There fore the $H_1$ hypotheses is accepted and that shows that \openpose{ } do 
     \begin{center}
         \input{../results/ftest_pds.latex}
     \end{center}
-    \caption{Datasets}
+    \caption[F/T-test results for labels]{This table shows the result from each label using F/T-tests. The majority of the results suggests that the $H_0$ hypotheses is rejected.}
     \label{tab:results:human}
 \end{table}
 
@@ -68,17 +68,60 @@ There fore the $H_1$ hypotheses is accepted and that shows that \openpose{ } do 
 Reconstruction of the sparce 3D map done by using \aruco{'s} in a pose quiver without solving the bundle adjustment problem was attempted to be solved.
 The method derived relied on Dijkstra algorithm and cumulative transfer poses from corner to corner to camera.
 An then by solving the epee polar geometry a point cloud is supposed to be generated.
-How ever the due to the cumulative output of the algorithms the positions of the camera is never reaching a satisfiable position.
+% How ever the due to the cumulative output of the algorithms the positions of the camera is never reaching a satisfiable position.
+How ever due to a bug never resolved the exact camera position was not resolvable.
+In the figure~\ref{fig:correct_pose} an approximated result for where the camera and \aruco{ } markers is located can be found.
+Those images where produced by implementing the following transformation in to a PyGame\footnote{PyGame a python library for game development \url{www.pygame.org}} script.
+
+
+\begin{align}
+    p_{[2+1xN]} & = \lambda \cdot Y^{-1}_{2x2}\cdot D^{T}_{Nx2} \label{eq:pygame:pixelstack}\\
+    P_{[2+1xN]} & = T_{z}(0,dx,dy) \cdot T_{z}(\alpha,0,0) \cdot p_{[2+1xN]} \label{eq:pygame:tf}
+\end{align}
+The input equation~\ref{eq:pygame:pixelstack} takes the input $D$h and does a scaling and y axis invert.
+The results stored in a homogeneous matrix marked as $p_{[2+1xN]}$.
+Thus the following list covers the explanation of each term in~\ref{eq:pygame:pixelstack}:
+% \vspace{5mm}
+
+
+\begin{align*}
+    D_{Nx2}   &=       \text{is the 2D projected data with $N$ features in $[x,y]$ configuration.}\\
+    Y^{-1}    &=       \text{Is an 2 by 2 matrix for Y axis invert because of how 2D graphics works.}\\
+    \lambda   &=      \text{Is a scaling factor to scale the data to fit the image}\\
+    p_{[2+1xN]} &=      \text{Is the results formatted in a homogeneous coordinates.}
+\end{align*}
+
+% \vspace{5mm}
+And in equation~\ref{eq:pygame:tf} the results from~\ref{eq:pygame:pixelstack} is used.
+To cause with two transfer matrices to cause an homogeneous transformation of the data.
+Thus displacing it on the image.
+% \vspace{5mm}
+\begin{align*}
+    p(x,y,1) &=  \text{Is a homogeneous coordinate matrix of $3xN$ where N is number of features.}\\
+    T_{z}    &=  \text{Are a homogeneous transformations with the arguments:}\\
+             & \alpha  = \text{Rotation around Z axis.}\\
+             & dx =      \text{Movement in X axis.}\\
+             & dy =      \text{Movement in Y axis.}
+\end{align*}
+
+% \vspace{5mm}
+The first transfer from right to left is used to rotate the data around the z axis before the its transferred out to the location of choosing in the last transfer matrix.
 
 
 
-\label{sub:res:3drec}
 \begin{figure}
 \begin{center}
-    \includegraphics[scale=0.6]{results/atlas.png}
+    \includegraphics[scale=0.25]{../results/correct_pos/corners.png}
+    \hspace{1cm}
+    \includegraphics[scale=0.25]{../results/correct_pos/camera.png}
 \end{center}
-\caption[Results from camera mapping]{Reconstructing the camera pose from the images using Dijkstras algorithm  data proved to be a harder problem then initially thought. Ni this results the green numbered nodes seams to find the correct location, but the input camera view nodes in blue do not.}
-\label{fig:results:mapreconstruction}
+\caption[Approx locations of markers and cameras]{This figure is a outline trace of an approximation for how the subject is laying on the ground.
+    This is due to that no such image exists, there fore its an approximation.
+    Cameras and corners are approximately where they are placed deduced from several images.
+    On the \textbf{left} the relative position of the \aruco{ } corners are displayed in in relation to the origin corner.
+    To the \textbf{right} the relative position of the cameras is displayed in relation to the \aruco{ } origin corner.
+And as can be observed the corners have a good match, while the camera locations do not.}
+\label{fig:correct_pose}
 \end{figure}
 
 

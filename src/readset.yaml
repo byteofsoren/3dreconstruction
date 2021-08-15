@@ -14,6 +14,12 @@ ftest:
     os: "Openp Std"
     ov: "Openp Var"
     od: "Openp Deg"
+    Fr: "F-ratio"
+    Fa: "F accept"
+    Fv: "F"
+    Tr: "T-ratio"
+    Ta: "T accept"
+    Ts: "S"
 3dplot:
   showimg: True
   # showimg: False
@@ -30,7 +36,7 @@ ftest:
     roll: 210
 set_translation:
   0:
-    - RSholder
+    - Rshoulder
     - Relbow
     - Lelbow
     - Rwrist
@@ -45,8 +51,8 @@ set_translation:
     - Lfoot
     - Lknee
   'sv':
-    "Höger Axel": "RSholder"
-    "Vänster Axel": "LSholder"
+    "Höger Axel": "Rshoulder"
+    "Vänster Axel": "Lshoulder"
     "Höger Armbåge": "Relbow"
     "Vänster Armbåge": "Lelbow"
     "Höger Vrist": "Rwrist"

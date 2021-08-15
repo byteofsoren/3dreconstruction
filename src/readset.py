@@ -457,7 +457,7 @@ class dataset():
                 "2332.jpg"
                 "1323.jpg"
             "columns"
-                "Rsholder"
+                "Rshoulder"
                 "Relbow"...
             "imgloc" ie image location:
                 "123.jpg":"South"
@@ -472,9 +472,9 @@ class dataset():
 
         # raw_openp_df= self.select_data({'user':user2}, ['user','filename','label', 'u','v'])
 
-        ftest_pds = pd.DataFrame(columns=['f', 'p_f', 'f accept','s','p_t','t accept'],index=self.unique['columns'],dtype=np.float32)
-        ftest_pds['f accept'] = ftest_pds['f accept'].astype(str)
-        ftest_pds['t accept'] = ftest_pds['t accept'].astype(str)
+        ftest_pds = pd.DataFrame(columns=[naming['Fv'], naming['Fr'], naming['Fa'],'s',naming['Tr'],naming['Ta']],index=self.unique['columns'],dtype=np.float32)
+        ftest_pds[naming['Fa']] = ftest_pds[naming['Fa']].astype(str)
+        ftest_pds[naming['Ta']] = ftest_pds[naming['Ta']].astype(str)
         # f_test.cdf(sigma,dfn,dfm)
         for row in self.unique['columns']:
             try:
@@ -488,12 +488,12 @@ class dataset():
                     f = human_var/openp_var
                 else:
                     f = openp_var/human_var
-                ftest_pds.at[row,'f'] = f
+                ftest_pds.at[row,naming['Fv']] = f
                 p = 1-stats.f.cdf(f, human_deg-1,openp_deg-1)
                 log.info(f"p row={row}, f={f}, p={p},{'Reject' if p < 0.5 else 'Accepted'} ")
-                ftest_pds.at[row,'p_f'] = p
+                ftest_pds.at[row,naming['Fr']] = p
                 if not np.isnan(p):
-                    ftest_pds.at[row,'f accept'] = f"{'Reject' if p < 0.5 else 'Accepted'}"
+                    ftest_pds.at[row,naming['Fa']] = f"{'Reject' if p < 0.5 else 'Accepted'}"
 
 
             except KeyError as e:
@@ -516,8 +516,8 @@ class dataset():
                 pval = temp.pvalue
                 stat = temp.statistic
                 ftest_pds.at[col,'s']=stat
-                ftest_pds.at[col,'p_t']=pval
-                ftest_pds.at[col,'t accept']= f"{'Accept' if pval <= 0.05 else 'Reject'}"
+                ftest_pds.at[col,naming['Tr']]=pval
+                ftest_pds.at[col,naming['Ta']]= f"{'Accept' if pval <= 0.05 else 'Reject'}"
 
 
 
@@ -527,8 +527,8 @@ class dataset():
         directions = set(self.unique['imgloc'].values())
         ftest_pos_df = pd.DataFrame(
                 index=directions,
-                columns=['f','p_f','f accept','s','p_t','t accept'])
-        ftest_pos_df['t accept'] = ftest_pos_df['t accept'].astype(str)
+                columns=[naming['Fv'],naming['Fr'],naming['Fa'],'s',naming['Tr'],naming['Ta']])
+        ftest_pos_df[naming['Ta']] = ftest_pos_df[naming['Ta']].astype(str)
         for row in directions:
             human_mean = self.direction_error_df.at[row,naming['hm']]
             openp_mean = self.direction_error_df.at[row,naming['om']]
@@ -542,11 +542,11 @@ class dataset():
                 f = human_var/openp_var
             else:
                 f = openp_var/human_var
-            ftest_pos_df.at[row,'f'] = f
+            ftest_pos_df.at[row,naming['Fv']] = f
             p = 1-stats.f.cdf(f, human_deg-1,openp_deg-1)
-            ftest_pos_df.at[row,'p_f'] = p
+            ftest_pos_df.at[row,naming['Fr']] = p
             if not np.isnan(p):
-                ftest_pos_df.at[row,'f accept'] = f"{'Reject' if p < 0.5 else 'Accepted'}"
+                ftest_pos_df.at[row,naming['Fa']] = f"{'Reject' if p < 0.5 else 'Accepted'}"
             # T -test for direction error:
             human_direction = self.select_data({'Direction':row}, self.unique['columns'], df=self.human_error_df)
             openp_direction = self.select_data({'Direction':row}, self.unique['columns'], df=self.openp_error_df)
@@ -562,8 +562,8 @@ class dataset():
                 pval = temp.pvalue
                 stat = temp.statistic
                 ftest_pos_df.at[row,'s']=stat
-                ftest_pos_df.at[row,'p_t']=pval
-                ftest_pos_df.at[row,'t accept']= f"{'Accept' if pval <= 0.05 else 'Reject'}"
+                ftest_pos_df.at[row,naming['Tr']]=pval
+                ftest_pos_df.at[row,naming['Ta']]= f"{'Accept' if pval <= 0.05 else 'Reject'}"
 
 
         print(ftest_pos_df)
@@ -841,8 +841,8 @@ def test_stats(name):
     data.load_anatations()
     data.error_calulation(0.3)
     data.error_t_test()
-    # a = {'user':'Human','label':'Rsholder'}
-    # b = {'user':'OpenPose','label':'Rsholder'}
+    # a = {'user':'Human','label':'Rshoulder'}
+    # b = {'user':'OpenPose','label':'Rshoulder'}
     # data.t_test()
     a = {'filename':'093614.jpg','label':'Nose'}
     # b = {'filename':'093614.jpg','label':'Nose'}
@@ -858,9 +858,9 @@ def test_selection():
     data = dataset('P2')
     data.load_anatations()
     ds = []
-    ds.append(len(data.select_data({'label':'Rsholder'})))
-    ds.append(len(data.select_data({'label':'Rsholder'},['u','v'])))
-    a = {'filename':'093614.jpg','label':'Rsholder'}
+    ds.append(len(data.select_data({'label':'Rshoulder'})))
+    ds.append(len(data.select_data({'label':'Rshoulder'},['u','v'])))
+    a = {'filename':'093614.jpg','label':'Rshoulder'}
     ds.append(len(data.select_data(a)))
     a = {'filename':'093614.jpg','label':'Nose'}
     ds.append(len(data.select_data(a)))

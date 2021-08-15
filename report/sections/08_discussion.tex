@@ -1,4 +1,42 @@
 \section{Discussion}
 \label{sec:discussion}
+% Interpretation of results.
+In this report its discussed if \openpose{ } algorithms could be used to derive an accurate position of features to locate a human subject on the floor.
+This is done in order with the original questioning if it is accurate enough to do so.
+
+
+\par In the results~\ref{sec:results} the statistical test is shows that the $H_0$ is rejected due to that the output variance from \openpose{ } is not up to pair with a human.
+Thus if a robot attempts to just use \openpose{ } to assist a human there is a chance that the robot misses or in the worst case harms the human subject.
+The obvious remedy for that is to not just rely on \openpose{ } but to use external censors and other systems.
+
+
+\par With the large standard distribution from \openpose{ } in mind, the output from an 3D annotation could only future increase error thus leading to a even less accurate system.
+How ever perhaps with sufficient amount of cameras on the scene the median from each camera could be sufficient enough to be used for a grasping procedure.
+
+
+% Is goal reached? Yes/no why?
+\par The goal to reconstruct the point cloud was not reached due to the problem with the last transformation from last corner to to the camera.
+The results from that failure can be observed in~\ref{fig:correct_pose} where the positions for the \aruco{ } corners is largely correct while the cameras are not.
+Then can the question is can correct position of the camera be derived from just the Dijkstra algorithm or does the bundle adjustment problem need to be solved for correct positions.
+As there was no way to measure the absolute position of the camera that question is largely unsolved.
+But at least an its an god approximation method that can be used as an base feature to solve the bundle adjustment with in reasonable a time.
+
+
+% Significance
+\par This paper only contains one new data set with just 21 images displayed in Appendices~\ref{sec:appendices} future more the number of annotations of the images are quite low, just six annotations excluding \openpose{ }.
+This is also reflected in the results~\ref{sec:results} where the degrees of freedom tables~\ref{tab:results:degfreedom},\ref{lab:results:human_vs_openpose}.
+
+
+\indent  As shown in Related works~\ref{sec:related_work} there aren't that many other research activity's related to how \openposeS reacts to subjects on the ground.
+This work could then with some improvement like a larger dataset can then be used to retrain how \openposeS during such situations.
+For the 3D reconstruction part that weren't successful attained the \arucoS, Dijkstra method  cold with a correction to the final camera poses be used to attain sufficient localization to robots and \ac{uav} probably with out solving the bundle adjustment.
+On the other way the same method could perhaps be used to make a initial pose quiver to derive an initial position for the bundle adjustment.
+The idea could be if a car needs to be retrofitted with cameras that's going to make a 3D approximation of the environment.
+The calibration step could just be to throw out a bunch of \arucoS around the car, then taking sufficient amount of pictures with both the cameras in the car and external cameras.
+This then with  Dijkstra method with bundle adjustment could derive the camera locations in the set, including the position of the cameras mounted to the car.
+
+
+
+
 
 %Här presenterar du tolkning av resultaten och bedömer deras signifikans. Diskutera möjliga konsekvenser av resultaten, och presentera eventuella rekommendationer. Det är viktigt att du redogör för om du uppnått de mål du satte upp och därmed besvarat din frågeställning och uppnått syftet med arbetet. Avsnittet ska också innehålla reflektioner kring arbetet, som till exempel dess begränsningar.  Du kan också diskutera lösningar på problem som du identifierat och diskuterat tidigare, eller ta upp andra problem som arbetet inte behandlat, frågor som ej besvarats. Koppla också dina resultat till tidigare arbeten. På så sätt kan diskussionen bli ett samtal med det du skrev i tidigare avsnitt.  Slutligen ska du sätta ditt eget arbete i ett större sammanhang, bredda ditt perspektiv. Kan dina resultatet generaliseras? Kan det du gjort användas i något annat sammanhang?

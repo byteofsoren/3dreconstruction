@@ -594,19 +594,23 @@ This could be described as the Error equation
 % \ref{eq:impl:muerror}.
 % \label{eq:impl:muerror}
 
+% \begin{equation} %
+% \label{eq:impl:muerror}
+% \mu_{error}=\frac{1}{N\cdotm}\sum_{i,j}\Bigg(\sum_{n,m}\bigg(\sqrt{(\mu_i-t_i)_x^2+(\mu_i-t_i)^2}\bigg)\Bigg)
+% \end{equation}
 \begin{equation} %
 \label{eq:impl:muerror}
-\mu_{error}=\frac{1}{N\cdotm}\sum_{i,j}\Bigg(\sum_{n,m}\bigg(\sqrt{(\mu_i-t_i)^2+(\mu_i-t_i)^2}\bigg)\Bigg)
+\mu_{error}=\frac{1}{M\cdotm}\sum_{i}^M\big(|\mu_i - t_1|)\big)
 \end{equation}
 
 \begin{align*}
     \text{where:}\\
-    n &= \text{ label } 1\dots N\\
-    N &= \text{ is how many labels there are in the system}\\
-    m &= \text{ image } 1\dots M\\
+    % n &= \text{ label } 1\dots N\\
+    % N &= \text{ is how many labels there are in the system}\\
+    % m &= \text{ image } 1\dots M\\
     M &= \text{ is how many pictures there are in the system}\\
-    \mu_{u,v} &= \parbox[t]{7cm}{\RaggedRight is the median for a particular image,label and coordinate in the system}\\
-    t_{u,v} &= \text{ is one feature to be tested}
+    \mu_{i} &= \parbox[t]{7cm}{\RaggedRight is the median for a particular image,label and coordinate in the system}\\
+    t_{i} &= \text{ is one feature to be tested}
 \end{align*}
 \par
 Then the total error from OpenPose to a subset of the human set can be compared with the total error from the human set to its subset using a t-square test.
