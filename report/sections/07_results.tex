@@ -2,20 +2,20 @@
 
 %Här kan du till exempel presentera resultat av experiment, bevis, analys av data etc. Dina resultat måste beskrivas så tydligt att en läsare kan bedöma dem.  Du ska också förklara och analysera resultaten.
 
-The results so far is divided up in two relevant subsections where the first handles the input inference test and the second handles the 3D reconstruction using \aruco corners.
+The results are divided into two relevant subsections where the first handles the input inference test and the second handles the 3D reconstruction using \aruco corners.
 \subsection{OpenPose output inference results}%
 \label{sub:res:op_inference}
-Using \openpose{ } on a human subject that is located on the ground can provide diverse results dependent on the relative rotation of the body the camera.
-How well does it preform when the subject is laying such as in image North in figure~\ref{fig:camera_pos_lables}.
-And how is the preference for each label in the \operpose{ } data set against a human labler.
+Using \openpose{ } on a human subject that is located on the ground can provide mixed results depending on the relative rotation of the body of the camera.
+How well does it perform when the subject is laying, such as in image North in figure~\ref{fig:camera_pos_lables}.
+Moreover, how is the preference for each label in the \operpose{ } data set against a human labeller?
 
-During statistical tests with F/T-test the degrees of freedom will tell you how many data points there is behind the results.
+During statistical tests with F/T-test, the degrees of freedom will tell how many data points are behind the results.
 Thus can be shown in table~\ref{tab:results:degfreedom} the degrees of freedom for each label can be found.
-While table~\ref{lab:results:human_vs_openpose} shows the degrees of freedom dependent on direction where the camera was located.
+While table~\ref{lab:results:human_vs_openpose} shows the degrees of freedom depends on the direction where the camera was located.
 
-From the results in table~\ref{tab:results:human} and table~\ref{lab:results:human_lable} it can be observed that F-test is mostly rejected while the T-test is mostly reported as accept.
+From the results in table~\ref{tab:results:human},\ref{lab:results:human_lable} it can be observed that F-test is mostly rejected while the T-test is mainly reported as accept.
 This then propose that the $H_0$ hypothesis is weekly rejected as it fails on $\sigma_H = \simgma_O$ but is passed on $\mu_H = \mu_O$.
-There fore the $H_1$ hypotheses is accepted and that shows that \openpose{ } do not have same accuracy as an human label setter.
+Therefore the $H_1$ hypothesis is accepted, and that shows that \openpose{ } do not have the same accuracy as a human label setter.
 
 
 
@@ -51,7 +51,8 @@ There fore the $H_1$ hypotheses is accepted and that shows that \openpose{ } do 
     \begin{center}
         \input{../results/error_df.latex}
     \end{center}
-    \caption[Results in image domain]{The error results for the human vs \openpose in the image domain. Observe the large variance in the forth column that suggests that \openpose have problem finding the correct solution for that label. It can also be observed that the half of the data in comparison with the human is missing from \openpose columns thus indicating again that it could not find a solution to that label.}
+    \caption[Results in image domain]{The error results for the human vs \openpose in the image domain. Observe the large variance in the fourth column that suggests that \openpose have a problem finding the correct solution for that label. 
+It can also be observed that half of the data is missing in the \openpose column. Thus indicating again that it could not find a solution to that label.}
     \label{lab:results:human_vs_openpose}
 \end{table}
 %----------------------------
@@ -65,21 +66,21 @@ There fore the $H_1$ hypotheses is accepted and that shows that \openpose{ } do 
 
 
 \subsection{3D reconstruction using Aruco}%
-Reconstruction of the sparce 3D map done by using \aruco{'s} in a pose quiver without solving the bundle adjustment problem was attempted to be solved.
-The method derived relied on Dijkstra algorithm and cumulative transfer poses from corner to corner to camera.
-An then by solving the epee polar geometry a point cloud is supposed to be generated.
-% How ever the due to the cumulative output of the algorithms the positions of the camera is never reaching a satisfiable position.
-How ever due to a bug never resolved the exact camera position was not resolvable.
-In the figure~\ref{fig:correct_pose} an approximated result for where the camera and \aruco{ } markers is located can be found.
-Those images where produced by implementing the following transformation in to a PyGame\footnote{PyGame a python library for game development \url{www.pygame.org}} script.
+Reconstruction of the sparse 3D map done by using \aruco{'s} in a pose quiver without solving the bundle adjustment problem was attempted to be solved.
+The method derived relied on the Dijkstra algorithm, and cumulative transfer poses from corner to corner to camera.
+And then, by solving the epee polar geometry, a point cloud is supposed to be generated.
+% However, due to the algorithms' cumulative output, the positions of the camera are never reaching a satisfiable position.
+However, due to a bug never being resolved, the exact camera position was not resolvable.
+In the figure~\ref{fig:correct_pose} an approximated result for where the camera and \aruco{ } markers are located can be found.
+Those images were produced by implementing the following transformation into a PyGame\footnote{PyGame a python library for game development \url{www.pygame.org}} script.
 
 
 \begin{align}
     p_{[2+1xN]} & = \lambda \cdot Y^{-1}_{2x2}\cdot D^{T}_{Nx2} \label{eq:pygame:pixelstack}\\
     P_{[2+1xN]} & = T_{z}(0,dx,dy) \cdot T_{z}(\alpha,0,0) \cdot p_{[2+1xN]} \label{eq:pygame:tf}
 \end{align}
-The input equation~\ref{eq:pygame:pixelstack} takes the input $D$h and does a scaling and y axis invert.
-The results stored in a homogeneous matrix marked as $p_{[2+1xN]}$.
+The input equation~\ref{eq:pygame:pixelstack} takes the input $D$h and does a scaling and y-axis invert.
+The results are stored in a homogeneous matrix marked as $p_{[2+1xN]}$.
 Thus the following list covers the explanation of each term in~\ref{eq:pygame:pixelstack}:
 % \vspace{5mm}
 
@@ -105,7 +106,7 @@ Thus displacing it on the image.
 \end{align*}
 
 % \vspace{5mm}
-The first transfer from right to left is used to rotate the data around the z axis before the its transferred out to the location of choosing in the last transfer matrix.
+The first transfer from right to left is used to rotate the data around the z-axis before transferring it out to the location of choice in the last transfer matrix.
 
 
 
@@ -116,11 +117,11 @@ The first transfer from right to left is used to rotate the data around the z ax
     \includegraphics[scale=0.25]{../results/correct_pos/camera.png}
 \end{center}
 \caption[Approx locations of markers and cameras]{This figure is a outline trace of an approximation for how the subject is laying on the ground.
-    This is due to that no such image exists, there fore its an approximation.
-    Cameras and corners are approximately where they are placed deduced from several images.
+    That is due to that no such image exists; therefore its an approximation.
+Cameras and corner position is deduced from several images, therefore an approximation.
     On the \textbf{left} the relative position of the \aruco{ } corners are displayed in in relation to the origin corner.
     To the \textbf{right} the relative position of the cameras is displayed in relation to the \aruco{ } origin corner.
-And as can be observed the corners have a good match, while the camera locations do not.}
+Moreover, as can be observed, the corners have a good match, while the camera locations do not.}
 \label{fig:correct_pose}
 \end{figure}
 
