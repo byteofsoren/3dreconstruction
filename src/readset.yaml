@@ -16,10 +16,19 @@ ftest:
     od: "Openp Deg"
     Fr: "F-ratio"
     Fa: "F accept"
-    Fv: "F"
+    Fv: "F value"
     Tr: "T-ratio"
     Ta: "T accept"
     Ts: "S"
+    Pv: "P value"
+    pp: "Probobility density"
+    cp: "Cumelative dist"
+    crit: "Critical value"
+
+directional_selftest:
+  save_boxplot: False
+  show_boxplot: False
+  accuracy: 0.05
 3dplot:
   showimg: True
   # showimg: False

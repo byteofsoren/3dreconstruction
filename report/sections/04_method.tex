@@ -12,22 +12,42 @@ Thus the hypothesis can be formed as follow:
 
 \vspace{5mm}
 \begin{align*}
-    \text{H}_0 & \quad \bigmu_\text{H} = \bigmu_\text{O} \quad  \text{AND}\quad \bigsigma^2_\text{H} = \bigsigma^2_\text{O}\\
-    \text{H}_1 & \quad \bigmu_\text{H} <> \bigmu_\text{O} \quad  \text{OR}\quad \bigsigma^2_\text{H} <> \bigsigma^2_\text{O}
+    \text{H}_0: & \quad \bigmu_\text{H} = \bigmu_\text{O} \quad  \text{AND}\quad \bigsigma^2_\text{H} = \bigsigma^2_\text{O}\\
+    \text{H}_1: & \quad \bigmu_\text{H} \neq \bigmu_\text{O} \quad  \text{OR}\quad \bigsigma^2_\text{H} \neq \bigsigma^2_\text{O}
 \end{align*}
 
 Where:
-
-\begin{aligned}
-    \text{H} &= \text{Human}\\
-    \text{O} &= \text{OpenPose}\\
-    \mu      &= \text{Median} \\
-    \sigma   &= \text{Standard deviation}
-\end{aligned}
+\begin{center}
+    \begin{aligned}
+        \text{H} &= \text{Human}\\
+        \text{O} &= \text{OpenPose}\\
+        \mu      &= \text{Median} \\
+        \sigma   &= \text{Standard deviation}
+    \end{aligned}
+\end{center}
 \bigskip
 \par
 The $H_0$ hypothesis states that a human and \openpose{ } are statistically similar and cannot be distinguished from each other.
 If that fails, the $H_1$ hypothesis is the null hypothesis and represents no statistical difference.
+But there are also a case for directional invariance between each camera location shown in~\ref{fig:camera_pos_lables}.
+This can thus form an extra hypothesis that $\mu_{North}=\mu_{South}=\mu_{East}=\mu_{West}$.
+Thus the hypothesis is formed such:
+\vspace{5mm}
+\begin{align*}
+    \text{h}_0: &\quad \bigmu_\text{North}=\bigmu_\text{South} \quad\text{AND}\quad \bigmu_\text{North}=\bigmu_\text{West}\quad\text{AND}\dots\\
+    \text{h}_1: &\quad \bigmu_\text{North}\neq\bigmu_\text{South} \quad\text{OR}\quad \bigmu_\text{North}\neq\bigmu_\text{West}\quad\text{OR}\dots\\
+\end{align*}
+In this hypothesis the $h_0$ states that the error should have a equal median value independent of rotation.
+Thus if not the $h_1$ states that if that isn't the case, \openpose is not rotational invariant.
+
+The rejection of a hypothesis is done by comparing the p-value with $\alpha=0.05$ such:
+\begin{align*}
+    \text{Reject H}_0 & \quad\text{if}\quad p \leq \frac{\alpha /2}{m}, \text{or}\\
+    \text{Reject H}_0 & \quad\text{if}\quad 2mp \leq \alpha
+\end{align*}
+That last one $2mp$ is an adjusted $p$-value called a $q$-value.
+Both should be less then 1 if the rejection cant be done.
+But that also leads to the situation where $2mp > 1$ if $p>\alpha/m$.
 
 \subsection{Research questions}%
 \label{sub:method:research_questions}
@@ -35,7 +55,7 @@ The research questions are then derived to support those hypotheses.
 \begin{itemize}
     \item[$Q_1$] Is the input distribution sufficient to reconstruct an accurate 3D pose?
     \item[$Q_2$] Can the Dijkstra/transfer method calculate the 3D position of the camera without solving the bundle adjustment problem?
-    % \item[$Q_3$] Is the
+    \item[$Q_3$] Is the \openpose algorithm rotational invariant around a subject on the floor.
     % \item[$Q_3$]
 \end{itemize}
 $Q_1$ is specified because the input distortion is larger than expected for each image, then the rest of the calculations future will increase the output error.
@@ -43,8 +63,8 @@ The Dijkstra approach perhaps does not work. Thus $Q_2$ must be specified.
 
 
 In this report, the hypothesis and research questions are investigated using a minimal dataset of a human lying on the ground.
-The human is lying on its side to partially hide some of the features to test how \openpose{ } is performing with limbs occluded.
-The system to create the 3D pose is presented in~\ref{sec:work}, but in general, it tries to use Dijkstra's algorithm to calculate the 3D position of the cameras and then the 3D pose of the feature from the cameras.
+The human is lying on its side to partially hide some of the features to test how \openpose is performing with limbs occluded.
+The system to create the 3D pose is presented in~\ref{sec:related_work}, but in general, it tries to use Dijkstra's algorithm to calculate the 3D position of the cameras and then the 3D pose of the feature from the cameras.
 % Future more, the system uses the equation~\ref{eq:impl:muerror} to calculate the median $\mu$ for both humans and \openpose{.}
 % That then forms the basis for a statistical test.
 
@@ -61,13 +81,12 @@ The system to create the 3D pose is presented in~\ref{sec:work}, but in general,
 \subsection{Assumptions}%
 \label{sub:assumptions}
 The implementation uses a few assumptions to make things work.
-Especially the equation~\ref{eq:impl:muerror} uses an assumption derived from $H_0$ that $\mu_O$ is equal to $\mu_H$ and
-thus a portion of the human-provided data is used to derive the error of \openpose{.}
+Especially the equation~\ref{eq:impl:muerror} uses an assumption that a sample of the human population has the correct position for each label.
 
 \noindent
 Thus the assumptions in no particular order is as follow:
 \begin{itemize}
-    \item Its assumed that $\mu_O == \mu_H$ thus $\mu_H$ is used as ground through in the error calculations.
+    \itemize A sample of humans provide the correct position for each label, thus $\mu$ in~\ref{eq:impl:muerror} is a human sample.
 \end{itemize}
 
 

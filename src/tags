@@ -1,0 +1,260 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/r00tr4t/xjob/work/src/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210110.0/
+Atlas	atlas.py	/^class Atlas():$/;"	c
+BOLD	atlasCL/bcolor.py	/^    BOLD = '\\033[1m'$/;"	v	class:bcolors
+BOLD	bcolor.py	/^    BOLD = '\\033[1m'$/;"	v	class:bcolors
+C	show_pos.py	/^from numpy import cos as C$/;"	x	nameref:unknown:cos
+Camera	camera.py	/^class Camera():$/;"	c
+Corner	atlasCL/Cornermod.py	/^class Corner(Linkable):$/;"	c
+Corner	atlasCL/Transfermod.py	/^    Corner = None$/;"	v	class:Linkable
+END	atlasCL/bcolor.py	/^    END = '\\033[0m'$/;"	v	class:bcolors
+END	bcolor.py	/^    END = '\\033[0m'$/;"	v	class:bcolors
+ERR	atlasCL/bcolor.py	/^    ERR = '\\033[38;5;9m'$/;"	v	class:bcolors
+ERR	bcolor.py	/^    ERR = '\\033[38;5;9m'$/;"	v	class:bcolors
+FAIL	atlasCL/bcolor.py	/^        FAIL = "\\033[91m[FAIL]\\033[0m"$/;"	v	class:bcolors.SIGN
+FAIL	bcolor.py	/^        FAIL = "\\033[91m[FAIL]\\033[0m"$/;"	v	class:bcolors.SIGN
+FIXED	atlasCL/bcolor.py	/^        FIXED  = "\\033[96m[FIXED]\\033[0m"$/;"	v	class:bcolors.SIGN
+FIXED	bcolor.py	/^        FIXED  = "\\033[96m[FIXED]\\033[0m"$/;"	v	class:bcolors.SIGN
+HEADER	atlasCL/bcolor.py	/^    HEADER = '\\033[95m'$/;"	v	class:bcolors
+HEADER	bcolor.py	/^    HEADER = '\\033[95m'$/;"	v	class:bcolors
+INF	atlasCL/bcolor.py	/^    INF = '\\033[38;5;81m'$/;"	v	class:bcolors
+INF	bcolor.py	/^    INF = '\\033[38;5;81m'$/;"	v	class:bcolors
+Linkable	atlasCL/Transfermod.py	/^class Linkable():$/;"	c
+NO	atlasCL/bcolor.py	/^        NO = "\\033[93m[NO]\\033[0m"$/;"	v	class:bcolors.SIGN
+NO	bcolor.py	/^        NO = "\\033[93m[NO]\\033[0m"$/;"	v	class:bcolors.SIGN
+OK	atlasCL/bcolor.py	/^        OK = "\\033[92m[OK]\\033[0m"$/;"	v	class:bcolors.SIGN
+OK	atlasCL/bcolor.py	/^    OK = '\\033[92m'$/;"	v	class:bcolors
+OK	bcolor.py	/^        OK = "\\033[92m[OK]\\033[0m"$/;"	v	class:bcolors.SIGN
+OK	bcolor.py	/^    OK = '\\033[92m'$/;"	v	class:bcolors
+OKBLUE	atlasCL/bcolor.py	/^    OKBLUE = '\\033[94m'$/;"	v	class:bcolors
+OKBLUE	bcolor.py	/^    OKBLUE = '\\033[94m'$/;"	v	class:bcolors
+OKCYAN	atlasCL/bcolor.py	/^    OKCYAN = '\\033[96m'$/;"	v	class:bcolors
+OKCYAN	bcolor.py	/^    OKCYAN = '\\033[96m'$/;"	v	class:bcolors
+S	show_pos.py	/^from numpy import sin as S$/;"	x	nameref:unknown:sin
+SIGN	atlasCL/bcolor.py	/^    class SIGN:$/;"	c	class:bcolors
+SIGN	bcolor.py	/^    class SIGN:$/;"	c	class:bcolors
+T	atlasCL/Transfermod.py	/^    T:np.ndarray = None$/;"	v	class:Linkable	typeref:typename:np.ndarray
+Tinv	atlasCL/Transfermod.py	/^    def Tinv(self):$/;"	m	class:Transfer
+Transfer	atlasCL/Transfermod.py	/^class Transfer():$/;"	c
+UND	atlasCL/bcolor.py	/^    UND = '\\033[4m'$/;"	v	class:bcolors
+UND	bcolor.py	/^    UND = '\\033[4m'$/;"	v	class:bcolors
+View	atlasCL/Transfermod.py	/^    View   = None$/;"	v	class:Linkable
+View	atlasCL/Viewmod.py	/^class View(Linkable):$/;"	c
+WARN	atlasCL/bcolor.py	/^    WARN = '\\033[93m'$/;"	v	class:bcolors
+WARN	bcolor.py	/^    WARN = '\\033[93m'$/;"	v	class:bcolors
+__init__	atlas.py	/^    def __init__(self, setconf):$/;"	m	class:Atlas
+__init__	atlasCL/Cornermod.py	/^    def __init__(self, id:int, back_atlas):$/;"	m	class:Corner
+__init__	atlasCL/Transfermod.py	/^    def __init__(self, name:str)->None:$/;"	m	class:Linkable	typeref:typename:None
+__init__	atlasCL/Transfermod.py	/^    def __init__(self, source:Type[Linkable], target:Type[Linkable], tvec=None, rvec=None):$/;"	m	class:Transfer
+__init__	atlasCL/Viewmod.py	/^    def __init__(self, name:str, img:np.ndarray, arucodict, arucoparam, corner_size,camera):$/;"	m	class:View
+__init__	camera.py	/^    def __init__(self, name:str):$/;"	m	class:Camera
+__init__	gen_aruco.py	/^    def __init__(self, idi:int, size:int=700,bgsize:int=1):$/;"	m	class:argen
+__init__	mvp.py	/^    def __init__(self, initial_value):$/;"	m	class:test_atrib
+__init__	readset.py	/^    def __init__(self, name:str):$/;"	m	class:dataset
+__init__	show_pos.py	/^    def __init__(self, bgfname:str):$/;"	m	class:imgs
+__init__	show_pos.py	/^    def __init__(self, filename:str):$/;"	m	class:posdata
+__init__	show_pos.py	/^    def __init__(self, imgobj:imgs):$/;"	m	class:window
+__str__	atlasCL/Transfermod.py	/^    def __str__(self):$/;"	m	class:Transfer
+__str__	atlasCL/Viewmod.py	/^    def __str__(self):$/;"	m	class:View
+__str__	camera.py	/^    def __str__(self):$/;"	m	class:Camera
+__str__	readset.py	/^    def __str__(self):$/;"	m	class:dataset
+__sub__	atlasCL/Transfermod.py	/^    def __sub__(self, other):$/;"	m	class:Transfer
+_aruco_origin	atlas.py	/^    _aruco_origin=None$/;"	v	class:Atlas
+_aruco_origin_id	atlas.py	/^    _aruco_origin_id:int = 0$/;"	v	class:Atlas	typeref:typename:int
+_aruco_size	show_pos.py	/^    _aruco_size = 1.0$/;"	v	class:imgs
+_camera_matrix	camera.py	/^    _camera_matrix = None$/;"	v	class:Camera
+_confusion_atlas	atlas.py	/^    _confusion_atlas=False$/;"	v	class:Atlas
+_corner_proj	atlas.py	/^    _corner_proj = dict()$/;"	v	class:Atlas
+_inversePerspective	atlasCL/Transfermod.py	/^    def _inversePerspective(self):$/;"	m	class:Transfer
+_ttype	atlasCL/Transfermod.py	/^    _ttype = None$/;"	v	class:Linkable
+_val	mvp.py	/^    _val = 0$/;"	v	class:test_atrib
+_view_file_select	atlas.py	/^def _view_file_select():$/;"	f
+_view_test	atlas.py	/^def _view_test():$/;"	f
+_wheighting	atlasCL/Transfermod.py	/^    def _wheighting(self)-> float:$/;"	m	class:Transfer	typeref:typename:float
+adapter	.vimspector.json	/^      "adapter": "debugpy",$/;"	s	object:configurations.main: Launch
+add_View	atlas.py	/^    def add_View(self, view):$/;"	m	class:Atlas
+add_aruco	show_pos.py	/^    def add_aruco(self, nr:int, fname:str):$/;"	m	class:imgs
+add_camera	show_pos.py	/^    def add_camera(self,fname:str):$/;"	m	class:imgs
+add_transfer	atlasCL/Transfermod.py	/^    def add_transfer(self, tf:Type[Transfer]):$/;"	m	class:Linkable
+alpha	show_pos.py	/^    alpha = lambda self, a: a*(np.pi\/180)$/;"	m	class:posdata
+analyse_feature	readset.py	/^    def analyse_feature(self, andarg, rest_col=[]):$/;"	m	class:dataset
+angle	show_pos.py	/^    angle = 37               # Angle of the data$/;"	v	class:window
+argen	gen_aruco.py	/^class argen():$/;"	c
+aruco_imgs	show_pos.py	/^    aruco_imgs = dict()$/;"	v	class:imgs
+aruco_value	atlasCL/Cornermod.py	/^    aruco_value:int = 10e6 #$/;"	v	class:Corner	typeref:typename:int
+auto_aruco	show_pos.py	/^    def auto_aruco(self, path, data:posdata):$/;"	m	class:imgs
+bc	readset.py	/^        bc = lambda x: f"{bcolors.INF}{x}{bcolors.END}"$/;"	f	member:dataset.load_anatations	file:
+bcolors	atlasCL/bcolor.py	/^class bcolors:$/;"	c
+bcolors	bcolor.py	/^class bcolors:$/;"	c
+build	atlas.py	/^    def build(self):$/;"	m	class:Atlas
+build_atlas	readset.py	/^    def build_atlas(self):$/;"	m	class:dataset
+calibrate	camera.py	/^    def calibrate(self):$/;"	m	class:Camera
+camera_scale	show_pos.py	/^    camera_scale = 1.0      # Image size of the camera marker$/;"	v	class:window
+caruco_board	gen_aruco.py	/^def caruco_board(retboard:bool=False,retimg:bool=True)->np.ndarray:$/;"	f	typeref:typename:np.ndarray
+check_transfer	atlasCL/Cornermod.py	/^    def check_transfer(self)->bool:$/;"	m	class:Corner	typeref:typename:bool
+check_transfer	atlasCL/Transfermod.py	/^    def check_transfer(self)->bool:$/;"	m	class:Linkable	typeref:typename:bool
+check_transfer	atlasCL/Viewmod.py	/^    def check_transfer(self)->bool:$/;"	m	class:View	typeref:typename:bool
+cnode	atlas.py	/^        cnode = lambda id:  G.add_node(id,  node=Corner(id,self))$/;"	f	member:Atlas.build	file:
+conf	gen_aruco.py	/^        conf = yaml.load(f,Loader=yaml.FullLoader)$/;"	v
+configuration	.vimspector.json	/^      "configuration": {$/;"	o	object:configurations.main: Launch
+configurations	.vimspector.json	/^  "configurations": {$/;"	o
+confusion_atlas	atlas.py	/^    def confusion_atlas(self):$/;"	m	class:Atlas
+connect_data	show_pos.py	/^    def connect_data(self,pdata:posdata):$/;"	m	class:window
+console	.vimspector.json	/^        "console": "externalTerminal",$/;"	s	object:configurations.main: Launch.configuration
+count	atlas.py	/^    def count(self):$/;"	m	class:Atlas
+count	readset.py	/^    def count(self):$/;"	m	class:dataset
+create3d	plot3d.py	/^def create3d(name):$/;"	f
+create_latex_img_table	readset.py	/^    def create_latex_img_table(self, xcount):$/;"	m	class:dataset
+create_views	readset.py	/^    def create_views(self):$/;"	m	class:dataset
+cross	show_pos.py	/^    def cross(self, pos, color, label=""):$/;"	m	class:window
+cross_length	show_pos.py	/^    cross_length = 30$/;"	v	class:window
+cross_width	show_pos.py	/^    cross_width  = 50$/;"	v	class:window
+cwd	.vimspector.json	/^        "cwd": "\/home\/r00tr4t\/xjob\/work\/src",$/;"	s	object:configurations.main: Launch.configuration
+dataset	readset.py	/^class dataset():$/;"	c
+debugOptions	.vimspector.json	/^        "debugOptions": [],$/;"	a	object:configurations.main: Launch.configuration
+dist	atlasCL/Transfermod.py	/^    def dist(self):$/;"	m	class:Transfer
+dist	camera.py	/^    def dist(self):$/;"	m	class:Camera
+dist	camera.py	/^    def dist(self,matrix):$/;"	m	class:Camera
+edge	atlas.py	/^        edge = lambda s,t,tvec,rvec: G.add_edge(s.id,t.id,transfer=Transfer(s,t,tvec,rvec))$/;"	f	member:Atlas.build	file:
+ep_solver	atlas.py	/^    def ep_solver(self, camera:Camera):$/;"	m	class:Atlas
+error_calulation	readset.py	/^    def error_calulation(self,  frac=0.5):$/;"	m	class:dataset
+error_t_test	readset.py	/^    def error_t_test(self, user1:str='Human',user2='OpenPose'):$/;"	m	class:dataset
+exit	show_pos.py	/^    def exit(self):$/;"	m	class:window
+ext_convert	camera.py	/^    def ext_convert(self, T:np.ndarray, u:int,v:int)->np.ndarray:$/;"	m	class:Camera	typeref:typename:np.ndarray
+f_log	atlas.py	/^f_log = logging.FileHandler("..\/logs\/atlas.log")$/;"	v
+f_log	atlasCL/Cornermod.py	/^f_log = logging.FileHandler("..\/logs\/atlasCL_Corner.log")$/;"	v
+f_log	atlasCL/Transfermod.py	/^f_log = logging.FileHandler("..\/logs\/atlasCL_Transfer.log")$/;"	v
+f_log	atlasCL/Viewmod.py	/^f_log = logging.FileHandler("..\/logs\/atlasCL_view.log")$/;"	v
+f_log	camera.py	/^f_log = logging.FileHandler("..\/logs\/camera.log")$/;"	v
+f_log	gen_aruco.py	/^f_log = logging.FileHandler("..\/logs\/gen_aruco.log")$/;"	v
+f_log	readset.py	/^f_log = logging.FileHandler("..\/logs\/readset.log")$/;"	v
+f_logformat	atlas.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
+f_logformat	atlasCL/Cornermod.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
+f_logformat	atlasCL/Transfermod.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
+f_logformat	atlasCL/Viewmod.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
+f_logformat	camera.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
+f_logformat	gen_aruco.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
+f_logformat	readset.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
+fname	atlasCL/Viewmod.py	/^    fname:str=None$/;"	v	class:View	typeref:typename:str
+gd_solver	atlas.py	/^    def gd_solver(self):$/;"	m	class:Atlas
+gen	gen_aruco.py	/^def gen():$/;"	f
+geometry_solver	readset.py	/^    def geometry_solver(self):$/;"	m	class:dataset
+get_TRvec	atlasCL/Viewmod.py	/^    def get_TRvec(self, id:int):$/;"	m	class:View
+getsub	readset.py	/^        getsub = lambda df: self.select_data({'filename':file,'label':label},['u','v'],df=df)$/;"	f	member:dataset.error_calulation	file:
+gt	readset.py	/^            gt = lambda i,j: int(tt.iloc[i][j])$/;"	f	member:dataset.plot3dstats	file:
+id	atlasCL/Cornermod.py	/^    id:int = -1$/;"	v	class:Corner	typeref:typename:int
+imgs	show_pos.py	/^class imgs:$/;"	c
+input_analysis	main.py	/^def input_analysis(name:str,test:list):$/;"	f
+inversePerspective	mvp.py	/^def inversePerspective(rvec, tvec):$/;"	f
+len_transfers	atlasCL/Transfermod.py	/^    def len_transfers(self)->int:$/;"	m	class:Linkable	typeref:typename:int
+load_anatations	readset.py	/^    def load_anatations(self):$/;"	m	class:dataset
+load_img	camera.py	/^    def load_img(self):$/;"	m	class:Camera
+log	atlas.py	/^log = logging.getLogger(__name__)$/;"	v
+log	atlasCL/Cornermod.py	/^log = logging.getLogger(__name__)$/;"	v
+log	atlasCL/Transfermod.py	/^log = logging.getLogger(__name__)$/;"	v
+log	atlasCL/Viewmod.py	/^log = logging.getLogger(__name__)$/;"	v
+log	camera.py	/^log = logging.getLogger(__name__)$/;"	v
+log	gen_aruco.py	/^log = logging.getLogger(__name__)$/;"	v
+log	readset.py	/^log = logging.getLogger(__name__)$/;"	v
+main	camera.py	/^def main():$/;"	f
+main	gen_aruco.py	/^def main():$/;"	f
+main	main.py	/^def main():$/;"	f
+main	mvp.py	/^def main():$/;"	f
+main	show_pos.py	/^def main():$/;"	f
+main: Launch	.vimspector.json	/^    "main: Launch": {$/;"	o	object:configurations
+marker_ovrelay	show_pos.py	/^    def marker_ovrelay(self):$/;"	m	class:window
+marker_scale	show_pos.py	/^    marker_scale = 1.0      # Image size of the markers$/;"	v	class:window
+mpl	camera.py	/^import matplotlib as mpl$/;"	I	nameref:module:matplotlib
+mpl	gen_aruco.py	/^import matplotlib as mpl$/;"	I	nameref:module:matplotlib
+mtx	camera.py	/^    def mtx(self):$/;"	m	class:Camera
+mtx	camera.py	/^    def mtx(self,matrix):$/;"	m	class:Camera
+mxstr	camera.py	/^mxstr =lambda cell: np.array2string(cell, precision=2, separator=',', suppress_small=True)$/;"	f
+name	.vimspector.json	/^        "name": "main: Launch",$/;"	s	object:configurations.main: Launch.configuration
+name	atlasCL/Transfermod.py	/^    name:str = "None given"$/;"	v	class:Linkable	typeref:typename:str
+np	atlas.py	/^import numpy as np$/;"	I	nameref:module:numpy
+np	atlasCL/Cornermod.py	/^import numpy as np$/;"	I	nameref:module:numpy
+np	atlasCL/Transfermod.py	/^import numpy as np$/;"	I	nameref:module:numpy
+np	atlasCL/Viewmod.py	/^import numpy as np$/;"	I	nameref:module:numpy
+np	camera.py	/^import numpy as np$/;"	I	nameref:module:numpy
+np	gen_aruco.py	/^import numpy as np$/;"	I	nameref:module:numpy
+np	mvp.py	/^import numpy as np$/;"	I	nameref:module:numpy
+np	readset.py	/^import numpy as np$/;"	I	nameref:module:numpy
+np	show_pos.py	/^import numpy as np$/;"	I	nameref:module:numpy
+nx	atlas.py	/^import networkx as nx$/;"	I	nameref:module:networkx
+origin_aruco	atlasCL/Viewmod.py	/^    origin_aruco:int = 0$/;"	v	class:View	typeref:typename:int
+overlay_camera	show_pos.py	/^    def overlay_camera(self, id):$/;"	m	class:window
+overlay_marker	show_pos.py	/^    def overlay_marker(self, id):$/;"	m	class:window
+pd	atlas.py	/^import pandas as pd$/;"	I	nameref:module:pandas
+pd	atlasCL/Cornermod.py	/^import pandas as pd$/;"	I	nameref:module:pandas
+pd	atlasCL/Transfermod.py	/^import pandas as pd$/;"	I	nameref:module:pandas
+pd	atlasCL/Viewmod.py	/^import pandas as pd$/;"	I	nameref:module:pandas
+pd	readset.py	/^import pandas as pd$/;"	I	nameref:module:pandas
+pd	show_pos.py	/^import pandas as pd$/;"	I	nameref:module:pandas
+pdata	show_pos.py	/^    pdata = None            # connection tho the input data$/;"	v	class:window
+plot3dstats	readset.py	/^    def plot3dstats(self, andarg,  alpha=0.0, outputfp="..\/results\/combo_plot_mlab.png"):$/;"	m	class:dataset
+plt	atlas.py	/^import matplotlib.pyplot as plt$/;"	I	nameref:module:matplotlib.pyplot
+plt	camera.py	/^import matplotlib.pyplot as plt$/;"	I	nameref:module:matplotlib.pyplot
+plt	gen_aruco.py	/^import matplotlib.pyplot as plt$/;"	I	nameref:module:matplotlib.pyplot
+pos	atlasCL/Transfermod.py	/^    def pos(self):$/;"	m	class:Linkable
+pos	atlasCL/Transfermod.py	/^    def pos(self, pos):$/;"	m	class:Linkable
+pos	show_pos.py	/^    pos = [452,330]         # Position of the data$/;"	v	class:window
+posdata	show_pos.py	/^class posdata:$/;"	c
+print_screen	show_pos.py	/^    def print_screen(self):$/;"	m	class:window
+program	.vimspector.json	/^        "program": "main.py"$/;"	s	object:configurations.main: Launch.configuration
+python	.vimspector.json	/^        "python": "\/usr\/bin\/python",$/;"	s	object:configurations.main: Launch.configuration
+read_param	camera.py	/^    def read_param(self):$/;"	m	class:Camera
+rectify	camera.py	/^    def rectify(self, img:np.ndarray):$/;"	m	class:Camera
+relativePosition	mvp.py	/^def relativePosition(rvec1, tvec1, rvec2, tvec2):$/;"	f
+report	report_create.py	/^def report(name):$/;"	f
+request	.vimspector.json	/^        "request": "launch",$/;"	s	object:configurations.main: Launch.configuration
+resize_img	camera.py	/^def resize_img(img,scale):$/;"	f
+save	gen_aruco.py	/^    def save(self, fname:str):$/;"	m	class:argen
+savePrint	show_pos.py	/^    savePrint = False$/;"	v	class:window
+save_df	readset.py	/^    def save_df(self,fname,df:pd.DataFrame):$/;"	m	class:dataset
+save_param	camera.py	/^            def save_param(self):$/;"	f	member:Camera.rectify	file:
+save_param	camera.py	/^    def save_param(self):$/;"	m	class:Camera
+savedir	show_pos.py	/^    savedir = Path("..\/results\/correct_pos\/")$/;"	v	class:window
+select_data	readset.py	/^    def select_data(self, andarg:dict, request_col=[], df=None):$/;"	m	class:dataset
+set_TRvec	atlasCL/Viewmod.py	/^    def set_TRvec(self,id:int, tvec,rvec,corners2d):$/;"	m	class:View
+set_atlas	readset.py	/^    def set_atlas(self, atlas_link):$/;"	m	class:dataset
+shape_scale	show_pos.py	/^    shape_scale = 250.0     # Scaling of the data$/;"	v	class:window
+show	gen_aruco.py	/^    def show(self):$/;"	m	class:argen
+show_atlas	readset.py	/^    def show_atlas(self):$/;"	m	class:dataset
+show_bg	show_pos.py	/^    def show_bg(self):$/;"	m	class:window
+start	show_pos.py	/^    def start(self):$/;"	m	class:window
+stopOnEntry	.vimspector.json	/^        "stopOnEntry": true,$/;"	b	object:configurations.main: Launch.configuration
+temp_transfer	atlasCL/Transfermod.py	/^    temp_transfer:Transfer = None$/;"	v	class:Linkable	typeref:typename:Transfer
+terr	readset.py	/^        terr = lambda mux,muy,tx,ty : np.sqrt((mux-tx)**2 + (muy-ty)**2)$/;"	f	member:dataset.error_calulation	file:
+test_atrib	mvp.py	/^class test_atrib:$/;"	c
+test_selection	readset.py	/^def test_selection():$/;"	f
+test_set	main.py	/^def test_set(name):$/;"	f
+test_set	readset.py	/^def test_set(name):$/;"	f
+test_stats	hyptest.py	/^def test_stats(name, sample_cut=0.3):$/;"	f
+test_stats	readset.py	/^def test_stats(name):$/;"	f
+tf_2D	show_pos.py	/^    tf_2D = lambda self, a,dx,dy: np.array([[C(a),-S(a),dx],[S(a),C(a),dy],[0,0,1]])$/;"	m	class:posdata
+tf_length	atlasCL/Transfermod.py	/^    tf_length:int = 10e10$/;"	v	class:Transfer	typeref:typename:int
+tf_z	show_pos.py	/^    tf_z = lambda self, a,dx,dy,dz: np.array([[C(a),-S(a),0,dx],[S(a),C(a),0,dy],[0,0,1,0],[0,0,/;"	m	class:posdata
+tfcolor	atlasCL/bcolor.py	/^    def tfcolor(t):$/;"	m	class:bcolors
+tfcolor	bcolor.py	/^    def tfcolor(t):$/;"	m	class:bcolors
+togle_camera	show_pos.py	/^    togle_camera = True$/;"	v	class:window
+togle_marker	show_pos.py	/^    togle_marker = True$/;"	v	class:window
+transform	show_pos.py	/^    def transform(self,scale,a,dx,dy,dz):$/;"	m	class:posdata
+transform2D	show_pos.py	/^    def transform2D(self,scale,a,dx,dy):$/;"	m	class:posdata
+type	.vimspector.json	/^        "type": "python",$/;"	s	object:configurations.main: Launch.configuration
+update	show_pos.py	/^    def update(self):$/;"	m	class:window
+value	mvp.py	/^    def value(self):$/;"	m	class:test_atrib
+value	mvp.py	/^    def value(self, val):$/;"	m	class:test_atrib
+view_atlas	atlas.py	/^    def view_atlas(self):$/;"	m	class:Atlas
+vnode	atlas.py	/^        vnode = lambda obj: G.add_node(obj.id, node=obj)$/;"	f	member:Atlas.build	file:
+wheight	atlasCL/Transfermod.py	/^    wheight:float = 0$/;"	v	class:Transfer	typeref:typename:float
+window	show_pos.py	/^class window:$/;"	c
+window_scale	show_pos.py	/^    window_scale = 0.4      # Scaling factor for the window$/;"	v	class:window

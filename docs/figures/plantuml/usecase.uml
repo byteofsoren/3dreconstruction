@@ -1,0 +1,43 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor Black
+skinparam titleBackgroundColor Silver-WhiteSmoke
+/' skinparam classFontColor automatic '/
+/' skinparam classHeaderBackgroundColor WhiteSmoke '/
+skinparam monochrome true
+/' skinparam handwritten false '/
+/' /1' skinparam dpi 300 '1/ '/
+left to right direction
+/' skinparam linetype polyline '/
+/' skinparam linetype ortho '/
+/' [*] --> 1.0_Load_data: start '/
+
+
+actor "Subject" as sub
+actor "Camera operator" as camop
+actor "Image annotators" as imano
+
+package Preprocessing {
+    usecase "OpenPose" as openpose
+    usecase "Annotations" as ano
+}
+
+package System {
+    usecase "Dataset"  as data
+    usecase "Python prog" as python
+    usecase "Statistic data" as stat
+    usecase "Position data" as pos
+}
+
+sub --> camop
+camop --> openpose
+camop --> ano
+imano --> ano
+ano --> data
+openpose --> data
+data --> python
+python --> stat
+python --> pos
+
+@enduml

@@ -7,15 +7,27 @@ The results are divided into two relevant subsections where the first handles th
 \label{sub:res:op_inference}
 Using \openpose{ } on a human subject that is located on the ground can provide mixed results depending on the relative rotation of the body of the camera.
 How well does it perform when the subject is laying, such as in image North in figure~\ref{fig:camera_pos_lables}.
-Moreover, how is the preference for each label in the \operpose{ } data set against a human labeller?
+Moreover, how is the preference for each label in the \operpose data set against a human labeller?
 
 During statistical tests with F/T-test, the degrees of freedom will tell how many data points are behind the results.
 Thus can be shown in table~\ref{tab:results:degfreedom} the degrees of freedom for each label can be found.
 While table~\ref{lab:results:human_vs_openpose} shows the degrees of freedom depends on the direction where the camera was located.
 
-From the results in table~\ref{tab:results:human},\ref{lab:results:human_lable} it can be observed that F-test is mostly rejected while the T-test is mainly reported as accept.
+From the results in table~\ref{tab:results:human}, it can be observed that F-test is mostly rejected while the T-test is mainly reported as accept.
 This then propose that the $H_0$ hypothesis is weekly rejected as it fails on $\sigma_H = \simgma_O$ but is passed on $\mu_H = \mu_O$.
 Therefore the $H_1$ hypothesis is accepted, and that shows that \openpose{ } do not have the same accuracy as a human label setter.
+
+The directional error shown as a box plot in figure~\ref{fig:results:dirbox} shows how South provides the smaller error compared to the quadrants.
+But is that significant enough to be a problem?
+According the p-value in table~\ref{lab:results:dir_stats} that is not the case as the p-value is higher then 0.05 in all cases except East - North.
+
+\begin{figure}
+\begin{center}
+    \includegraphics[scale=0.4]{../results/ftest_againstself_boxplot.pdf}
+\end{center}
+\caption{In this figure the individual error for each direction is plotted. Observe that the error from South has a smaller footprint then the rest of the boxes. Could this be a part of the problem \openpose faces when the subject is laying on the ground? }
+\label{fig:results:dirbox}
+\end{figure}
 
 
 
@@ -41,17 +53,18 @@ Therefore the $H_1$ hypothesis is accepted, and that shows that \openpose{ } do 
 %----------------------------
 \begin{table}[htb]
     \begin{center}
-        \input{../results/ftest_pos_df.latex}
+        % \input{../results/ftest_pos_df.latex}
+        \input{../results/direction_error_df.latex}
     \end{center}
-    \caption{The directional results from F-test and T-test}
-    \label{lab:results:human_lable}
+    \caption{Testing \openpose directional invariance against its own data provides the following results for the F-test based on ANOVA\@. The p-values indicate that the $\text{h}_0$ holds for the most parts except in the case East to North, where $p=0.018$ is $p<\alpha$ for a $\alpha=0.05$\@. However the large q-value points to that this low p-value is a false positive.}
+    \label{tab:results:dir_stats}
 \end{table}
 %----------------------------
 \begin{table}[htb]
     \begin{center}
         \input{../results/error_df.latex}
     \end{center}
-    \caption[Results in image domain]{The error results for the human vs \openpose in the image domain. Observe the large variance in the fourth column that suggests that \openpose have a problem finding the correct solution for that label. 
+    \caption[Results in image domain]{The error results for the human vs \openpose in the image domain. Observe the large variance in the fourth column that suggests that \openpose have a problem finding the correct solution for that label.
 It can also be observed that half of the data is missing in the \openpose column. Thus indicating again that it could not find a solution to that label.}
     \label{lab:results:human_vs_openpose}
 \end{table}

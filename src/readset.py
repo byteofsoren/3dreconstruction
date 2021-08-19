@@ -21,11 +21,13 @@ import logging
 import pathlib
 # import copy
 import pandas as pd
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 # import matplotlib as mpl
 # import matplotlib.image as mplimg
 import pylab
 import re
+import seaborn as sns
+import scipy
 # from scipy.stats import f as f_test
 from scipy import stats
 from matplotlib.cbook import get_sample_data
@@ -35,7 +37,12 @@ from pathlib import Path
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from scipy.stats import multivariate_normal
+from itertools import combinations
 
+# import statsmodels.api as sm
+# from statsmodels.formula.api import ols
+from bioinfokit.analys import stat as binstat
+from bioinfokit import analys
 
 
 # == Logging basic setup ===
@@ -569,6 +576,127 @@ class dataset():
         print(ftest_pos_df)
         self.ftest_pos_df = ftest_pos_df
         self.save_df("ftest_pos_df.latex", ftest_pos_df)
+
+    def direction_selftest(self):
+        """Directional self test attempts to test if median of south, west, north and east is equal.
+
+        @param param:  Self
+        @type  param:  Self
+
+        @return:  None
+        @rtype :  None
+
+        @raise e:  Description
+        """
+        # breakpoint()
+        conf = self._conf['directional_selftest']
+        naming=self._conf['ftest']['naming']
+        acc = conf['accuracy']
+        directions_li = set(self.unique['imgloc'].values())
+        dirdata_df = pd.DataFrame(columns=directions_li,index=self.unique['columns'],dtype=np.float32)
+        # dirdata_df_std= pd.DataFrame(columns=directions,index=self.unique['columns'],dtype=np.float32)
+        # dirdata_df_deg_df = pd.DataFrame(columns=['Deg'], index=directions)
+        dirdata_deg_se = pd.Series(index=directions_li, dtype=int)
+
+        # populate data frame.
+        for row in directions_li:
+            rowdata:pd.DataFrame = self.select_data({'Direction':row}, self.unique['columns'], df=self.openp_error_df)
+            rowsum = rowdata.sum()
+            update_df = pd.DataFrame({row:rowsum})
+            dirdata_df.update(update_df)
+            dirdata_deg_se.loc[row] = rowdata.count().sum()
+
+        # Meld the data in to new fame
+        # print(dirdata_df.reset_index())
+        melt_df = pd.melt(dirdata_df.reset_index(), id_vars=['index'], value_vars=directions_li)
+        melt_df.columns = ['index', 'directions', 'value']
+
+        # Observe that the last column from the data set is an object if you
+        # try running melt_df.info().
+        # To remmidy that apply pd.to_numeric on that column.
+
+        melt_df['value'] =  melt_df['value'].apply(pd.to_numeric)
+
+        print(melt_df)
+        res = binstat()
+        # breakpoint()
+        res.tukey_hsd(melt_df,res_var='value', xfac_var='directions', anova_model='value ~ C(directions)')
+        summary_df:pd.DataFrame = res.tukey_summary
+        # Store the results
+        with open("../results/direction_error_df.latex","w") as fp:
+            fp.write(summary_df.to_latex())
+
+
+
+
+
+
+        # res = binstat()
+        # res.tukey_hsd(df=dirself,res_var="value",xfac_var='treatments', anova_model='value ~ C(treatments)')
+        # # res.tukey_hsd(df=dirself, anova_model='value ~ C(treatments)')
+        # print(res.tukey_summary)
+        # print(dirself)
+        # print(dirself_deg_se)
+        # breakpoint()
+        # dirlist = list(directions)
+        # fval, pval = stats.f_oneway(
+        #         dirself[dirlist[0]],
+        #         dirself[dirlist[1]],
+        #         dirself[dirlist[2]],
+        #         dirself[dirlist[3]],
+        #         )
+        # print(dirself.std())
+        # print(dirself.mean())
+        # print(dirself.shape)
+        # print(f"f value={fval}, p value={pval}")
+        # if conf['save_boxplot'] or conf['show_boxplot']:
+        #     print("Make box plot")
+        #     ax = sns.boxplot(   data=dirself, color='#99c2a2')
+        #     ax = sns.swarmplot( data=dirself, color='#7d0013')
+        #     if conf['show_boxplot']:
+        #         plt.show()
+        #     if conf['save_boxplot']:
+        #         plt.savefig("../results/ftest_againstself_boxplot.pdf", format="pdf")
+        # critical value of f
+        # dfn = number of groups - 1
+        # dfd = number of labels - number of groups
+        # dfn = dirself.shape[1]-1  # wrong shape it should be the shape of the data
+        # dfd = dirself.shape[0]-dirself.shape[1]
+        #
+        # dfn = .shape[1]-1
+        # dfd = dirself.shape[0]-dirself.shape[1]
+        # crit = scipy.stats.f.ppf(q=1-acc, dfn=dfn, dfd=dfd)
+        # cdf  = scipy.stats.f.cdf(crit,     dfn=dfn, dfd=dfd)
+        # print(f"Probability density={crit}, Cumulative distribution={cdf}")
+        # comb_fn = lambda x: f"{x[0]}-{x[1]}"
+        # comb_li = list(map(comb_fn, combinations(directions,2)))
+        # comb_raw = combinations(directions,2)
+        # comb_df = pd.DataFrame(columns=[naming['Fv'],naming['Pv'],naming['crit'],naming['pp'],naming['cp']],index=comb_li,dtype=float)
+        # breakpoint()
+        # for comb_it in comb_raw:
+        #     print(comb_it)
+        #     co = comb_fn(comb_it)
+        #     col0 = dirself[comb_it[0]]
+        #     col1 = dirself[comb_it[1]]
+        #     fval, pval = stats.f_oneway(
+        #             col0,col1
+        #             )
+        #     comb_df.loc[co,naming['Fv']]  = fval
+        #     comb_df.loc[co,naming['Pv']]  = pval
+        #     crit = scipy.stats.f.ppf(q=1-acc, dfn=dfn, dfd=dfd)
+        #     cdf  = scipy.stats.f.cdf(crit,     dfn=dfn, dfd=dfd)
+        #     # print(f"f val = {fval} p val = {pval}")
+
+        # # print(combination_df)
+
+
+
+
+
+
+
+
+
 
 
 
