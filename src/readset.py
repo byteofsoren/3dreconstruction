@@ -601,9 +601,11 @@ class dataset():
         # populate data frame.
         for row in directions_li:
             rowdata:pd.DataFrame = self.select_data({'Direction':row}, self.unique['columns'], df=self.openp_error_df)
+            # Cumulative update for all images of row=[north,south,west,east], labels are kept.
             rowsum = rowdata.sum()
             update_df = pd.DataFrame({row:rowsum})
             dirdata_df.update(update_df)
+            # Degrees of freedom
             dirdata_deg_se.loc[row] = rowdata.count().sum()
 
         # Meld the data in to new fame
@@ -625,6 +627,35 @@ class dataset():
         # Store the results
         with open("../results/direction_error_df.latex","w") as fp:
             fp.write(summary_df.to_latex())
+
+        # Box plots
+        box_plot_conf = conf['box_plot']
+        if box_plot_conf['save'] or box_plot_conf['show']:
+            x = sns.boxplot(   x='directions', y='value',    data=melt_df, color='#99c2a2')
+            ax = sns.swarmplot(x="directions", y="value",    data=melt_df, color='#7d0013')
+            if box_plot_conf['save']:
+                plt.savefig("../results/ftest_againstself_boxplot.pdf")
+            if box_plot_conf['show']:
+                plt.show()
+
+        hist_plot_conf = conf['hist_plot']
+        if hist_plot_conf['save'] or hist_plot_conf['show']:
+            fig, axes = plt.subplots(2, 2)
+            fig.suptitle('1 row x 2 columns axes with no data')
+            subindex=0
+            # breakpoint()
+            for d in directions_li:
+                are = hist_plot_conf['arrangement'][d]
+                sns.histplot(dirdata_df,x=d,kde=hist_plot_conf['kde'],ax=axes[are[0],are[1]])
+                axes[are[0],are[1]].set_title(f"{d}")
+            if hist_plot_conf['save']:
+                plt.savefig("../results/direction_hist_plot.pdf")
+            if hist_plot_conf['show']:
+                plt.show()
+            pass
+
+
+        # T-test for the melt_df dataframe.
 
 
 

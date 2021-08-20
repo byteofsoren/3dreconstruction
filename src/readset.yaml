@@ -26,8 +26,18 @@ ftest:
     crit: "Critical value"
 
 directional_selftest:
-  save_boxplot: False
-  show_boxplot: False
+  box_plot:
+    save: False
+    show: False
+  hist_plot:
+    save: True
+    show: False
+    kde: False
+    arrangement:
+      East:  [0,0]
+      West:  [1,0]
+      North: [0,1]
+      South: [1,1]
   accuracy: 0.05
 3dplot:
   showimg: True

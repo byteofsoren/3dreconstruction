@@ -24,8 +24,9 @@ According the p-value in table~\ref{lab:results:dir_stats} that is not the case 
 \begin{figure}
 \begin{center}
     \includegraphics[scale=0.4]{../results/ftest_againstself_boxplot.pdf}
+    \includegraphics[scale=0.4]{../results/direction_hist_plot.pdf}
 \end{center}
-\caption{In this figure the individual error for each direction is plotted. Observe that the error from South has a smaller footprint then the rest of the boxes. Could this be a part of the problem \openpose faces when the subject is laying on the ground? }
+\caption{In this figure the individual error for each direction is plotted. Observe that the error from South has a smaller footprint then the rest of the boxes. Could this be a part of the problem \openpose faces when the subject is laying on the ground?. However by inspecting the histograms on the left the data is clearly not normally distributed. }
 \label{fig:results:dirbox}
 \end{figure}
 
@@ -56,7 +57,7 @@ According the p-value in table~\ref{lab:results:dir_stats} that is not the case 
         % \input{../results/ftest_pos_df.latex}
         \input{../results/direction_error_df.latex}
     \end{center}
-    \caption{Testing \openpose directional invariance against its own data provides the following results for the F-test based on ANOVA\@. The p-values indicate that the $\text{h}_0$ holds for the most parts except in the case East to North, where $p=0.018$ is $p<\alpha$ for a $\alpha=0.05$\@. However the large q-value points to that this low p-value is a false positive.}
+    \caption{Testing \openpose directional invariance against its own data provides the following results for the F-test based on ANOVA\@. The p-values indicate that the $\text{h}_0$ holds for the most parts except in the case East to North, where $p=0.018$ is $p<\alpha$ for a $\alpha=0.05$\@. However the large q-value points to that this low p-value is a false positive or as shown in~\ref{fig:results:dirbox} a non normal distributed data.}
     \label{tab:results:dir_stats}
 \end{table}
 %----------------------------
