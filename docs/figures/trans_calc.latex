@@ -6,7 +6,7 @@
             % Styles
             %aruco/.style={rectangle,draw,fill=gray!20},
             % Nodes fig 1
-            \node[aruco] (A1) {$I$};
+            \node[aruco] (A1) {O};
             \node[aruco, right of=A1,xshift=-0.6cm, yshift=0.5cm] (A2) {A2};
             \node[aruco, right of=A2,xshift=-0.6cm,yshift=-1cm] (A3) {A3};
             \node[aruco, below of=A1,xshift=1cm, yshift=0.6cm] (A4) {A4};
@@ -28,7 +28,7 @@
             % Styles
             %aruco/.style={rectangle,draw,fill=gray!20},
             % Nodes fig 3
-            \node[aruco] (A1) {$I$};
+            \node[aruco] (A1) {O};
             \node[aruco, right of=A1,xshift=-0.6cm, yshift=0.5cm] (A2) {$T^{A1}_{A2}$};
             \node[aruco, right of=A2,xshift=-0.6cm,yshift=-1cm] (A3) {$T^{A1}_{A3}$};
             \node[aruco, below of=A1,xshift=1cm, yshift=0.6cm] (A4) {$T^{A1}_{A4}$};
@@ -55,7 +55,7 @@
             % Styles
             %aruco/.style={rectangle,draw,fill=gray!20},
             % Nodes fig 2
-            \node[aruco] (A1) {$I$};
+            \node[aruco] (A1) {O};
             \node[aruco, right of=A1,xshift=-0.6cm, yshift=0.5cm] (A2) {$T^{A1}_{A2}$};
             \node[aruco, right of=A2,xshift=-0.6cm,yshift=-1cm] (A3) {A3};
             \node[aruco, below of=A1,xshift=1cm, yshift=0.6cm] (A4) {$T^{A1}_{A4}$};
@@ -78,7 +78,7 @@
             %aruco/.style={rectangle,draw,fill=gray!20},
             % Nodes fig 4
 
-            \node[aruco] (A1) {$I$};
+            \node[aruco] (A1) {O};
             \node[aruco, right of=A1,xshift=-0.6cm, yshift=0.5cm] (A2) {$T^{A1}_{A2}$};
             \node[aruco, right of=A2,xshift=-0.6cm,yshift=-1cm] (A3) {$T^{A1}_{A3}$};
             \node[aruco, below of=A1,xshift=1cm, yshift=0.6cm] (A4) {$T^{A1}_{A4}$};
@@ -98,6 +98,6 @@
         \end{tikzpicture}
     \end{minipage}
     \end{center}
-    \caption[Path algorithm]{This figure shows how the transfer is calculated using Dijkstras algorithm. In \textbf{Top left} the origin corner A1 is set to origin of the system, thus its transfer matrix is a identity matrix. Note that the transfer from A1$\rightarrow$A2 and A1$\rightarrow$A4 has a transfer matrix. Those are stored in A2 and A4 respectively in \textbf{top right}. Where also there are a transfer from A2$\lefwarrow$A3 but the transfer to store in A3 is a product of the transfers of the previous corners. In \textbf{bottom left} the same thing can be observed as the aruco A5 get the transfer product from A1$\rightarrow$A5. Lastly in \textbf{bottom right}, the transfer from A5$\rightarrow$A2 is ignored due to the longer path.}
+    \caption[Path algorithm]{This figure shows how the transfer is calculated using Dijkstras algorithm. In \textbf{Top left} the origin corner A1 is set to origin (annotated as an O) of the system, thus its transfer matrix is a identity matrix. Note that the transfer from A1$\rightarrow$A2 and A1$\rightarrow$A4 has a transfer matrix. Those are stored in A2 and A4 respectively in \textbf{top right}. Where also there are a transfer from A2$\lefwarrow$A3 but the transfer to store in A3 is a product of the transfers of the previous corners. In \textbf{bottom left} the same thing can be observed as the aruco A5 get the transfer product from A1$\rightarrow$A5. Lastly in \textbf{bottom right}, the transfer from A5$\rightarrow$A2 is ignored due to the longer path.}
     \label{fig:trans_calc}
 \end{figure}

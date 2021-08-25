@@ -1,38 +1,81 @@
 \section{Introduction}%
 \label{sec:intro}
-At \ac{uma} there is a robot intended to be used in helping the elderly if they have fallen on the floor.
-In their approach, they are set on using \openpose to find and assist the elderly.
-Thus it is relevant to investigate how \openpose reacts if an elderly human is lying on the ground.
+The motivation for this report the constant aging population in the western and eaten world.
+This aging going up is a sign that the world are a bit more piece full, with out any major wars, hunger and general destruction.
+According to OECD~\cite{oecd2018oecd}, the elderly population in Europe is about 20\% of population and Japan is on 27\%.
+The increasing elderly population requires an increasing part of the younger population to take care of the elderly.
+This could led to a downward spiral where as the numerous elderly increases more and more resources is needed to maintain a good living standard for the elderly, while less and less resources is created due to the younger generation is more and more occupied with taking care of the elders.
+
+To counteract that future many companies is looking toward robotics and automations to find a solution.
+Just searching for "Elderly" in a data base for technical research papers would give you over 7000 papers on the subject.
+The authors Soren Tranberg et,al~\cite{Hansen2010evalrobot} also evaluated the use of robotics in healthcare already in 2010.
+They conclude that the acceptance for robotics is high but considered that the products where unstable or complicated the concluding benefits was vague.
+
+What drew the author to this subject is the challenging nature of creating such assist system.
+Questions like how can that be done with out creating a system that are more expensive then a car.
+Can sparse reconstruction really be done safely or is there any hidden limitations in the question it self.
+But also soft questions like, would elderly trust the robot enough to dare to use it for its intended purpose?
+
+The \ac{uma} is creating a robot that would have the task to to assist the elderly.
+In this case the assist is to help an elderly subject on the flour to stand back up again with out calling for extra personal.
+This is also not purl for economical reasons but also for a sens of self and a way to respect privacy of the subject.
+
+% In their approach, they are set on using \openpose in a single camera configuration to find and assist the elderly.
+\ac{uma}'s approach uses a robot arm with a single camera mounted on the gripper of the robot.
+As this robot only have one camera mounted on the robot arm the 3D reconstruction of the subject needs to be completed by other methods then using binocular stereo vision as the robot in the paper~\cite{borangiu2010robot}.
+One such solution is tho simply move the robot arm to two different position and the use same technique.
+The draw back of that is the computational load for reconstructing the entire scene.
+That is expensive and slow.
+
+At \ac{uma} instead the approach is to use a preprocessing step to reduce the features in the image to a approximated skeleton of the subject.
+Thus the expected outcome is to reduce several images in to its core components, the skeleton.
+Then if each image contains its own skeleton the spars 3D reconstruction of the skeleton can be derived from those images.
+However the above assumes that the camera position for each image is known and in this work that is not the case.
+Instead this paper uses fiducial markers to identify the camera position for each image.
+
+The question then is can a system that uses a single camera be used to do a sparse 3D reconstruction of the subject at hand and can that be done from all directions and angles?
+
+The related works~\ref{sec:related_work} explore the \openpose algorithm for a way to do the sparse 2D reconstruction that later is used to do the space 3D reconstruction by using fiducial markers for the camera position is covered in Method~\ref{sec:method}.
+
+% One such system that can be used to generate the skeleton of the subject is \opnpose algorithm.
+% \openpose is a OpenSource product that uses part affinity fields with a \ac{cnn} to generate the skeleton from the subject in the image.
+% To then reconstruction the sparse representation of the 3D skeleton using \openpose the intended system will use \aruco corners to determine the position of the camera in relation to the skeleton in the figure to generate the sparse 3D representation of the skeleton.
+
+% This paper aims to answer if such system could be used to correctly classify the subjects limbs from all angles and what will happen if the spatial position derived by just using the input images.
+
+% But in order to get an accurate description of the skeleton the input from the 2D skeleton needs to be sufficient.
+
+% And the main problem with the approach of using \openpose is that it is trained on subjects that is standing, walking/running and sitting but the subjects in that \ac{uma} tries to assist are on the ground.
+% This then is also covered by this report by using statistics on the results from the \openpose algorithm.
+
+
+
+
+
+
+
+
+
+
+% Thus it is relevant to investigate how \openpose reacts if an elderly human is lying on the ground.
 % robot is used to either assist or pick them up.
 %In this thesis, an investigation to how OpenPose
-The problem is that OpenPose only seems to be trained on datasets where humans are standing, sitting, walking and running.
-The missing data will be attempted to be solved using an inside out approach using a regular camera and ArUco conner take an image set.
-Several images were taken around the subject on the ground and with at least one known ArUco corner in the picture.
-In this way, the camera pose is known for each picture; consequently, that can triangulate a feature in each image.
-Features in this paper are a set of points of interest on a human body, primarily joints, eyes, nose, and belly.
-The 2D annotation is done by both \openpose in~\cite{qiao2017openpose} and a human operator returning a list of each feature.
-The benefit of that is that the bias in the \openpose  algorithm for humans in a particular orientation can be discovered.
-The resulting data is a point cloud of each feature, formed by a median point algorithm explained in~\ref{sec:background}
-By investigating the divination and mean from different cameras, there is also a possibility of identifying a spread if the subject is in different orientations.
+% The problem is that OpenPose only seems to be trained on datasets where humans are standing, sitting, walking and running.
 
-The methods used in this paper attempt to compare the output data from how \opnepose with a human in the image domain of the dataset and 3D reconstruction for how \onpepose would react to a human laying on the floor in the global domain.
-The image domain data is compared using F-test and T-test against a human sample.
-While the 3D reconstruction uses \aruco and Dijkstra's to algorithm solve the 3D position of the camera without solving the Bundle Adjustment problem.
 % Later, that was proven to be unsolvable due to a cumulative error when traversing the nodes.
 
-\subsection{Structure of this report}%
-\label{sub:Structure_of_this_report}
 
+% \subsection{Structure of this report}%
+% \label{sub:Structure_of_this_report}
+\textbf{Structure of the report}\\
 The general structure of this document is as follows:
-Section~\ref{sec:background} contains the initial thorough and general introduction to some of the subjects and math in this paper.
-After the initial concept, the Related Works in\ref{sec:related_work} will discuss what others have done in this field of study.
-Method\ref{sec:method} derives the necessary steps and forms a hypothesis to solve the problem.
-There is an ethics section\ref{sec:ethics} that discusses the ethical part of this report.
-The implementation section\ref{sec:work} discusses how it was implemented.
-Results in section\ref{sec:results} show what the results were for the implementation.
-Discussion\ref{sec:discussion} is the authors reflection on the results.
-Conclusion\ref{sec:conclusion} summarizes the findings.
-Appendices\ref{sec:appendices} contains tables and images used in this report.
+The Related Works in~\ref{sec:related_work} will discuss what others have done in this field of study.
+Method~\ref{sec:method} derives the necessary steps and forms a hypothesis to solve the problem.
+There is an ethics section~\ref{sec:ethics} that discusses the ethical part of this report and the licenses of the figures in the report.
+Results~\ref{sec:results} show the results from the experiments and systems.
+Discussion~\ref{sec:discussion} is the authors reflection on the results.
+Conclusion~\ref{sec:conclusion} summarizes the findings of the report.
+Appendices~\ref{sec:appendices} contains tables and images used in this report.
 
 
 % The resulting data is a point cloud of each feature, formed by a median point algorithm explained in~\ref{sec:background}

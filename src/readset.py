@@ -212,8 +212,8 @@ class dataset():
         elif not request_col and not len(ret) == 0:
             return ret
         else:
-            users = df['user'].unique()
-            log.warning(f"Length of output was low {len(ret)} input: {andarg}, users: {users}")
+            # users = df['user'].unique()
+            # log.warning(f"Length of output was low {len(ret)} input: {andarg}, users: {users}")
             # breakpoint()
             raise ValueError("Length of output was to low")
 
@@ -268,6 +268,9 @@ class dataset():
             else:
                 log.info(f"label {l} was in {bcolors.SIGN.OK} ")
         for f in do_openp['filename'].unique():
+            if f == "filename":
+                print("Remove first line from openpose csv data file")
+                raise(KeyError)
             if not f in fnames:
                 fnames.append(f)
                 log.info(f"filename {f} not in {bcolors.SIGN.FIXED}")
@@ -294,9 +297,10 @@ class dataset():
         #           foot | head | arm |
         # 2343.jpg
         # 6543.jpg
-        openp_error_df= pd.DataFrame(columns=labels, index=fnames)
-        # breakpoint()
-        human_error_df= pd.DataFrame(columns=labels, index=fnames)
+        col_lab = labels.copy()
+        col_lab.append("Direction")
+        openp_error_df= pd.DataFrame(columns=col_lab, index=fnames)
+        human_error_df= pd.DataFrame(columns=col_lab, index=fnames)
         error_degdf_df = pd.DataFrame(columns=[naming['hd'],naming['od']])
 
         self.unique = {'columns':labels, 'index':fnames}
@@ -339,7 +343,6 @@ class dataset():
                 except ValueError as e:
                     counter_fail[2] += 1
                     log.warning(f"OpenPose: {e}")
-                    # breakpoint()
 
                 result_list = list()
 
@@ -376,14 +379,18 @@ class dataset():
                     # else:
                     #     thsamp_mean = pd.Series({'u':np.nan, 'v':np.nan})
 
-                openp_error_df.at[file,"Direction"] = imgloc[file]
-                human_error_df.at[file,"Direction"] = imgloc[file]
+                # breakpoint()
+                try:
+                    openp_error_df.at[file,"Direction"] = imgloc[file]
+                    human_error_df.at[file,"Direction"] = imgloc[file]
+                except KeyError as e:
+                    print(f"file={file}")
+                    breakpoint()
 
 
         log.info(f"Human success = {counter_ok[0]/(counter_ok[0]+counter_fail[0])}")
         log.info(f"Sample success = {counter_ok[1]/(counter_ok[1]+counter_fail[1])}")
         log.info(f"OpenPose success = {counter_ok[2]/(counter_ok[2]+counter_fail[2])}")
-        # breakpoint()
         errordict = dict()
         print("Cumulative error for a human:")
         errordict[naming['hm']] = human_error_df.mean()
@@ -440,7 +447,7 @@ class dataset():
 
 
         print(direction_error)
-        self.save_df("direction_error_df.latex", direction_error)
+        self.save_df("direction_error_mean.latex", direction_error)
         self.direction_error_df:pd.DataFrame = direction_error
         self.error_df:pd.DataFrame  = errordf
         self.error_degdf_df:pd.DataFrame = error_degdf_df
@@ -453,6 +460,7 @@ class dataset():
 
     def error_t_test(self, user1:str='Human',user2='OpenPose'):
         """
+        DEPRECATED
         Error t-test does both a f-test and t-test on the given data in
         the pandas frames:
             self.direction_error_df
@@ -577,62 +585,58 @@ class dataset():
         self.ftest_pos_df = ftest_pos_df
         self.save_df("ftest_pos_df.latex", ftest_pos_df)
 
+    def label_selftest(self):
+        naming=self._conf['ftest']['naming']
+        # data_df = self.indat[['label','u','v','user']]
+        human_err_df = self.human_error_df.copy()
+        openp_err_df = self.openp_error_df.copy()
+        human_err_df["labeller"] = ["human" for x in human_err_df.index]
+        openp_err_df["labeller"] = ["opnep" for x in openp_err_df.index]
+        data_df = human_err_df.append(openp_err_df)
+        # terr = terr[[*self.unique['columns'], "labeller"]]
+        cols = self.unique['columns'] # Remove direction from data.
+        data_df = data_df[[*cols, "labeller"]]
+        data_df = data_df.set_index("labeller")
+        # data_df = data_df.T
+        melt_df = pd.melt(data_df.reset_index(), id_vars=['labeller'], value_vars=cols)
+        melt_df['value'] = melt_df['value'].apply(pd.to_numeric)
+        melt_df.columns=["labeller","label","value"]
+
+        res = binstat()
+        breakpoint()
+        res.tukey_hsd(melt_df,res_var='value', xfac_var=['labeller','label'], anova_model='value ~ C(label)')
+        summary_df:pd.DataFrame = res.tukey_summary
+        print(summary_df)
+
+
+
     def direction_selftest(self):
         """Directional self test attempts to test if median of south, west, north and east is equal.
 
-        @param param:  Self
-        @type  param:  Self
-
-        @return:  None
-        @rtype :  None
-
-        @raise e:  Description
         """
         # breakpoint()
         conf = self._conf['directional_selftest']
         naming=self._conf['ftest']['naming']
         acc = conf['accuracy']
-        directions_li = set(self.unique['imgloc'].values())
-        dirdata_df = pd.DataFrame(columns=directions_li,index=self.unique['columns'],dtype=np.float32)
-        # dirdata_df_std= pd.DataFrame(columns=directions,index=self.unique['columns'],dtype=np.float32)
-        # dirdata_df_deg_df = pd.DataFrame(columns=['Deg'], index=directions)
-        dirdata_deg_se = pd.Series(index=directions_li, dtype=int)
 
         # populate data frame.
-        for row in directions_li:
-            rowdata:pd.DataFrame = self.select_data({'Direction':row}, self.unique['columns'], df=self.openp_error_df)
-            # Cumulative update for all images of row=[north,south,west,east], labels are kept.
-            rowsum = rowdata.sum()
-            update_df = pd.DataFrame({row:rowsum})
-            dirdata_df.update(update_df)
-            # Degrees of freedom
-            dirdata_deg_se.loc[row] = rowdata.count().sum()
+        melt_df = pd.melt(self.openp_error_df, id_vars=['Direction'], value_vars=self.unique['columns'])
+        melt_df['value'] = melt_df['value'].apply(pd.to_numeric)
 
-        # Meld the data in to new fame
-        # print(dirdata_df.reset_index())
-        melt_df = pd.melt(dirdata_df.reset_index(), id_vars=['index'], value_vars=directions_li)
-        melt_df.columns = ['index', 'directions', 'value']
-
-        # Observe that the last column from the data set is an object if you
-        # try running melt_df.info().
-        # To remmidy that apply pd.to_numeric on that column.
-
-        melt_df['value'] =  melt_df['value'].apply(pd.to_numeric)
-
-        print(melt_df)
+        # Binstat is doing the statistics.
         res = binstat()
-        # breakpoint()
-        res.tukey_hsd(melt_df,res_var='value', xfac_var='directions', anova_model='value ~ C(directions)')
+        res.tukey_hsd(melt_df,res_var='value', xfac_var='Direction', anova_model='value ~ C(Direction)')
         summary_df:pd.DataFrame = res.tukey_summary
-        # Store the results
+
+        # Store the results in a LaTeX table
         with open("../results/direction_error_df.latex","w") as fp:
             fp.write(summary_df.to_latex())
 
         # Box plots
         box_plot_conf = conf['box_plot']
         if box_plot_conf['save'] or box_plot_conf['show']:
-            x = sns.boxplot(   x='directions', y='value',    data=melt_df, color='#99c2a2')
-            ax = sns.swarmplot(x="directions", y="value",    data=melt_df, color='#7d0013')
+            x = sns.boxplot(   x='Direction', y='value',    data=melt_df, color='#99c2a2')
+            ax = sns.swarmplot(x="Direction", y="value",    data=melt_df, color='#7d0013')
             if box_plot_conf['save']:
                 plt.savefig("../results/ftest_againstself_boxplot.pdf")
             if box_plot_conf['show']:
@@ -644,15 +648,19 @@ class dataset():
             fig.suptitle('1 row x 2 columns axes with no data')
             subindex=0
             # breakpoint()
-            for d in directions_li:
+            #
+            # breakpoint()
+            for d in melt_df['Direction'].unique():
                 are = hist_plot_conf['arrangement'][d]
-                sns.histplot(dirdata_df,x=d,kde=hist_plot_conf['kde'],ax=axes[are[0],are[1]])
+                # sns.histplot(melt_df[melt_df == d], x='value',  kde=hist_plot_conf['kde'], ax=axes[are[0],are[1]])
+                dd = melt_df[melt_df['Direction'] == d]
+                # breakpoint()
+                sns.histplot(dd , x='value',  kde=hist_plot_conf['kde'], ax=axes[are[0],are[1]])
                 axes[are[0],are[1]].set_title(f"{d}")
             if hist_plot_conf['save']:
                 plt.savefig("../results/direction_hist_plot.pdf")
             if hist_plot_conf['show']:
                 plt.show()
-            pass
 
 
         # T-test for the melt_df dataframe.

@@ -61,6 +61,8 @@ __init__	gen_aruco.py	/^    def __init__(self, idi:int, size:int=700,bgsize:int=
 __init__	mvp.py	/^    def __init__(self, initial_value):$/;"	m	class:test_atrib
 __init__	readset.py	/^    def __init__(self, name:str):$/;"	m	class:dataset
 __init__	show_pos.py	/^    def __init__(self, bgfname:str):$/;"	m	class:imgs
+__init__	show_pos.py	/^    def __init__(self, dataset:dataset):$/;"	m	class:features
+__init__	show_pos.py	/^    def __init__(self, dataset:dataset):$/;"	m	class:imgs_set
 __init__	show_pos.py	/^    def __init__(self, filename:str):$/;"	m	class:posdata
 __init__	show_pos.py	/^    def __init__(self, imgobj:imgs):$/;"	m	class:window
 __str__	atlasCL/Transfermod.py	/^    def __str__(self):$/;"	m	class:Transfer
@@ -82,8 +84,6 @@ _view_test	atlas.py	/^def _view_test():$/;"	f
 _wheighting	atlasCL/Transfermod.py	/^    def _wheighting(self)-> float:$/;"	m	class:Transfer	typeref:typename:float
 adapter	.vimspector.json	/^      "adapter": "debugpy",$/;"	s	object:configurations.main: Launch
 add_View	atlas.py	/^    def add_View(self, view):$/;"	m	class:Atlas
-add_aruco	show_pos.py	/^    def add_aruco(self, nr:int, fname:str):$/;"	m	class:imgs
-add_camera	show_pos.py	/^    def add_camera(self,fname:str):$/;"	m	class:imgs
 add_transfer	atlasCL/Transfermod.py	/^    def add_transfer(self, tf:Type[Transfer]):$/;"	m	class:Linkable
 alpha	show_pos.py	/^    alpha = lambda self, a: a*(np.pi\/180)$/;"	m	class:posdata
 analyse_feature	readset.py	/^    def analyse_feature(self, andarg, rest_col=[]):$/;"	m	class:dataset
@@ -91,13 +91,15 @@ angle	show_pos.py	/^    angle = 37               # Angle of the data$/;"	v	class
 argen	gen_aruco.py	/^class argen():$/;"	c
 aruco_imgs	show_pos.py	/^    aruco_imgs = dict()$/;"	v	class:imgs
 aruco_value	atlasCL/Cornermod.py	/^    aruco_value:int = 10e6 #$/;"	v	class:Corner	typeref:typename:int
-auto_aruco	show_pos.py	/^    def auto_aruco(self, path, data:posdata):$/;"	m	class:imgs
 bc	readset.py	/^        bc = lambda x: f"{bcolors.INF}{x}{bcolors.END}"$/;"	f	member:dataset.load_anatations	file:
 bcolors	atlasCL/bcolor.py	/^class bcolors:$/;"	c
 bcolors	bcolor.py	/^class bcolors:$/;"	c
+bg_img_count	show_pos.py	/^    bg_img_count = 0$/;"	v	class:window
+binstat	readset.py	/^from bioinfokit.analys import stat as binstat$/;"	x	nameref:unknown:stat
 build	atlas.py	/^    def build(self):$/;"	m	class:Atlas
 build_atlas	readset.py	/^    def build_atlas(self):$/;"	m	class:dataset
 calibrate	camera.py	/^    def calibrate(self):$/;"	m	class:Camera
+camera_img	show_pos.py	/^    camera_img=None$/;"	v	class:imgs
 camera_scale	show_pos.py	/^    camera_scale = 1.0      # Image size of the camera marker$/;"	v	class:window
 caruco_board	gen_aruco.py	/^def caruco_board(retboard:bool=False,retimg:bool=True)->np.ndarray:$/;"	f	typeref:typename:np.ndarray
 check_transfer	atlasCL/Cornermod.py	/^    def check_transfer(self)->bool:$/;"	m	class:Corner	typeref:typename:bool
@@ -109,7 +111,9 @@ configuration	.vimspector.json	/^      "configuration": {$/;"	o	object:configura
 configurations	.vimspector.json	/^  "configurations": {$/;"	o
 confusion_atlas	atlas.py	/^    def confusion_atlas(self):$/;"	m	class:Atlas
 connect_data	show_pos.py	/^    def connect_data(self,pdata:posdata):$/;"	m	class:window
+connect_featuers	show_pos.py	/^    def connect_featuers(self, features:features):$/;"	m	class:window
 console	.vimspector.json	/^        "console": "externalTerminal",$/;"	s	object:configurations.main: Launch.configuration
+corners	show_pos.py	/^def corners():$/;"	f
 count	atlas.py	/^    def count(self):$/;"	m	class:Atlas
 count	readset.py	/^    def count(self):$/;"	m	class:dataset
 create3d	plot3d.py	/^def create3d(name):$/;"	f
@@ -119,8 +123,10 @@ cross	show_pos.py	/^    def cross(self, pos, color, label=""):$/;"	m	class:windo
 cross_length	show_pos.py	/^    cross_length = 30$/;"	v	class:window
 cross_width	show_pos.py	/^    cross_width  = 50$/;"	v	class:window
 cwd	.vimspector.json	/^        "cwd": "\/home\/r00tr4t\/xjob\/work\/src",$/;"	s	object:configurations.main: Launch.configuration
+data_points	show_pos.py	/^def data_points():$/;"	f
 dataset	readset.py	/^class dataset():$/;"	c
 debugOptions	.vimspector.json	/^        "debugOptions": [],$/;"	a	object:configurations.main: Launch.configuration
+direction_selftest	readset.py	/^    def direction_selftest(self):$/;"	m	class:dataset
 dist	atlasCL/Transfermod.py	/^    def dist(self):$/;"	m	class:Transfer
 dist	camera.py	/^    def dist(self):$/;"	m	class:Camera
 dist	camera.py	/^    def dist(self,matrix):$/;"	m	class:Camera
@@ -144,6 +150,7 @@ f_logformat	atlasCL/Viewmod.py	/^f_logformat = logging.Formatter("%(name)s:%(lev
 f_logformat	camera.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
 f_logformat	gen_aruco.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
 f_logformat	readset.py	/^f_logformat = logging.Formatter("%(name)s:%(levelname)s:%(lineno)s-> %(message)s")$/;"	v
+features	show_pos.py	/^class features:$/;"	c
 fname	atlasCL/Viewmod.py	/^    fname:str=None$/;"	v	class:View	typeref:typename:str
 gd_solver	atlas.py	/^    def gd_solver(self):$/;"	m	class:Atlas
 gen	gen_aruco.py	/^def gen():$/;"	f
@@ -151,8 +158,12 @@ geometry_solver	readset.py	/^    def geometry_solver(self):$/;"	m	class:dataset
 get_TRvec	atlasCL/Viewmod.py	/^    def get_TRvec(self, id:int):$/;"	m	class:View
 getsub	readset.py	/^        getsub = lambda df: self.select_data({'filename':file,'label':label},['u','v'],df=df)$/;"	f	member:dataset.error_calulation	file:
 gt	readset.py	/^            gt = lambda i,j: int(tt.iloc[i][j])$/;"	f	member:dataset.plot3dstats	file:
+human_np	show_pos.py	/^    def human_np(self):$/;"	m	class:features
 id	atlasCL/Cornermod.py	/^    id:int = -1$/;"	v	class:Corner	typeref:typename:int
+img_select	show_pos.py	/^    def img_select(self,id):$/;"	m	class:imgs_set
+img_selected	show_pos.py	/^    img_selected = None$/;"	v	class:features
 imgs	show_pos.py	/^class imgs:$/;"	c
+imgs_set	show_pos.py	/^class imgs_set(imgs):$/;"	c
 input_analysis	main.py	/^def input_analysis(name:str,test:list):$/;"	f
 inversePerspective	mvp.py	/^def inversePerspective(rvec, tvec):$/;"	f
 len_transfers	atlasCL/Transfermod.py	/^    def len_transfers(self)->int:$/;"	m	class:Linkable	typeref:typename:int
@@ -190,6 +201,7 @@ np	mvp.py	/^import numpy as np$/;"	I	nameref:module:numpy
 np	readset.py	/^import numpy as np$/;"	I	nameref:module:numpy
 np	show_pos.py	/^import numpy as np$/;"	I	nameref:module:numpy
 nx	atlas.py	/^import networkx as nx$/;"	I	nameref:module:networkx
+openp_np	show_pos.py	/^    def openp_np(self):$/;"	m	class:features
 origin_aruco	atlasCL/Viewmod.py	/^    origin_aruco:int = 0$/;"	v	class:View	typeref:typename:int
 overlay_camera	show_pos.py	/^    def overlay_camera(self, id):$/;"	m	class:window
 overlay_marker	show_pos.py	/^    def overlay_marker(self, id):$/;"	m	class:window
@@ -204,6 +216,7 @@ plot3dstats	readset.py	/^    def plot3dstats(self, andarg,  alpha=0.0, outputfp=
 plt	atlas.py	/^import matplotlib.pyplot as plt$/;"	I	nameref:module:matplotlib.pyplot
 plt	camera.py	/^import matplotlib.pyplot as plt$/;"	I	nameref:module:matplotlib.pyplot
 plt	gen_aruco.py	/^import matplotlib.pyplot as plt$/;"	I	nameref:module:matplotlib.pyplot
+plt	readset.py	/^import matplotlib.pyplot as plt$/;"	I	nameref:module:matplotlib.pyplot
 pos	atlasCL/Transfermod.py	/^    def pos(self):$/;"	m	class:Linkable
 pos	atlasCL/Transfermod.py	/^    def pos(self, pos):$/;"	m	class:Linkable
 pos	show_pos.py	/^    pos = [452,330]         # Position of the data$/;"	v	class:window
@@ -224,12 +237,14 @@ save_param	camera.py	/^            def save_param(self):$/;"	f	member:Camera.rec
 save_param	camera.py	/^    def save_param(self):$/;"	m	class:Camera
 savedir	show_pos.py	/^    savedir = Path("..\/results\/correct_pos\/")$/;"	v	class:window
 select_data	readset.py	/^    def select_data(self, andarg:dict, request_col=[], df=None):$/;"	m	class:dataset
+select_id	show_pos.py	/^    def select_id(self, id):$/;"	m	class:features
 set_TRvec	atlasCL/Viewmod.py	/^    def set_TRvec(self,id:int, tvec,rvec,corners2d):$/;"	m	class:View
 set_atlas	readset.py	/^    def set_atlas(self, atlas_link):$/;"	m	class:dataset
 shape_scale	show_pos.py	/^    shape_scale = 250.0     # Scaling of the data$/;"	v	class:window
 show	gen_aruco.py	/^    def show(self):$/;"	m	class:argen
 show_atlas	readset.py	/^    def show_atlas(self):$/;"	m	class:dataset
 show_bg	show_pos.py	/^    def show_bg(self):$/;"	m	class:window
+sns	readset.py	/^import seaborn as sns$/;"	I	nameref:module:seaborn
 start	show_pos.py	/^    def start(self):$/;"	m	class:window
 stopOnEntry	.vimspector.json	/^        "stopOnEntry": true,$/;"	b	object:configurations.main: Launch.configuration
 temp_transfer	atlasCL/Transfermod.py	/^    temp_transfer:Transfer = None$/;"	v	class:Linkable	typeref:typename:Transfer

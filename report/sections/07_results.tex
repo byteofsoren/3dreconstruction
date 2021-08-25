@@ -17,16 +17,20 @@ From the results in table~\ref{tab:results:human}, it can be observed that F-tes
 This then propose that the $H_0$ hypothesis is weekly rejected as it fails on $\sigma_H = \simgma_O$ but is passed on $\mu_H = \mu_O$.
 Therefore the $H_1$ hypothesis is accepted, and that shows that \openpose{ } do not have the same accuracy as a human label setter.
 
-The directional error shown as a box plot in figure~\ref{fig:results:dirbox} shows how South provides the smaller error compared to the quadrants.
-But is that significant enough to be a problem?
-According the p-value in table~\ref{lab:results:dir_stats} that is not the case as the p-value is higher then 0.05 in all cases except East - North.
+Each image was annotated dependent on which quadrant\footnote{North,East,South and West} the image was taken.
+The results from the cumulative error for each quadrant is shown in figure~\ref{fig:results:dirbox}.
+As the figure shows the cumulative data is not normally distributed.
+This effects the results in table~\ref{tab:results:dir_stats} and may be the cause for the high q-values.
+
 
 \begin{figure}
 \begin{center}
     \includegraphics[scale=0.4]{../results/ftest_againstself_boxplot.pdf}
     \includegraphics[scale=0.4]{../results/direction_hist_plot.pdf}
 \end{center}
-\caption{In this figure the individual error for each direction is plotted. Observe that the error from South has a smaller footprint then the rest of the boxes. Could this be a part of the problem \openpose faces when the subject is laying on the ground?. However by inspecting the histograms on the left the data is clearly not normally distributed. }
+\caption{
+\todo[inline]{Note: this seams to be a log normal distrubution, not a normal distributed. Perhaps change f test to other test.}
+In this figure the individual error for each direction is plotted. Observe that the error from South has a smaller footprint then the rest of the boxes. Could this be a part of the problem \openpose faces when the subject is laying on the ground?. However by inspecting the histograms on the left the data is clearly not normally distributed. }
 \label{fig:results:dirbox}
 \end{figure}
 
@@ -57,7 +61,12 @@ According the p-value in table~\ref{lab:results:dir_stats} that is not the case 
         % \input{../results/ftest_pos_df.latex}
         \input{../results/direction_error_df.latex}
     \end{center}
-    \caption{Testing \openpose directional invariance against its own data provides the following results for the F-test based on ANOVA\@. The p-values indicate that the $\text{h}_0$ holds for the most parts except in the case East to North, where $p=0.018$ is $p<\alpha$ for a $\alpha=0.05$\@. However the large q-value points to that this low p-value is a false positive or as shown in~\ref{fig:results:dirbox} a non normal distributed data.}
+    \caption{
+    Testing \openpose directional invariance against its own data provides the following results for the F-test based on ANOVA\@.
+    The p values in the right most column is lower the 0.05 thus indicating that the $h_0$ hypotheses do not hold.
+    However the large q values above 1 can tell us that this perhaps true and instead is false positive.
+    This can be because the data inputted to the image has not a normal distributed function as shown in figure~\ref{fig:results:dirbox}
+    }
     \label{tab:results:dir_stats}
 \end{table}
 %----------------------------
@@ -137,6 +146,24 @@ Cameras and corner position is deduced from several images, therefore an approxi
     To the \textbf{right} the relative position of the cameras is displayed in relation to the \aruco{ } origin corner.
 Moreover, as can be observed, the corners have a good match, while the camera locations do not.}
 \label{fig:correct_pose}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+    % \includegraphics[scale=]{Figures/}
+    \begin{minipage}[b]{0.40\linewidth}
+        \includegraphics[width=1\linewidth]{../results/correct_pos/south_west_high.png}\vspace{4pt}
+        \includegraphics[width=1\linewidth]{../results/correct_pos/north_west_high.png}\vspace{4pt}
+        \includegraphics[width=1\linewidth]{../results/correct_pos/east_high.png}\vspace{4pt}
+    \end{minipage}
+    \begin{minipage}[b]{0.40\linewidth}
+        \includegraphics[width=1\linewidth]{../results/correct_pos/north_high.png}\vspace{4pt}
+        \includegraphics[width=1\linewidth]{../results/correct_pos/north_low.png}\vspace{4pt}
+        \includegraphics[width=1\linewidth]{../results/correct_pos/west_low_close.png}\vspace{4pt}
+    \end{minipage}
+\end{center}
+\caption{The image in this figure shows the results from \openpose when it runs against the images in the dataset. The \textbf{Left} column the \openpose annotations in \textbf{green} and in \textbf{right} column, the results from \openpose are missing due to the algorithm returned a empty sett. The \textbf{reed} dots are the human labeller's input.}
+\label{fig:res:camerapose}
 \end{figure}
 
 

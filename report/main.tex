@@ -103,12 +103,18 @@
 % ] \textbf{#2}%
 % }
 
+% Par skipping for paragraphs and visual indentations
+\setlength{\parindent}{5em}
+\setlength{\parskip}{3mm}
+% \ReNewDocumentCommand\baselinestretch{3.0}
+
 % % \newcommand{\R}{\(\mathbb{R}\)}
 % \newcommand*\aruco[1]{ArUco#1}
-\NewDocumentCommand\aruco{}{
-    \IfNoValueTF{#1}
-        Aruco
-        Aruco#1}
+\NewDocumentCommand\aruco{}{%
+    \IfNoValueTF{#1}%
+        Aruco%
+        Aruco#1%
+    }%
 \newcommand*\arucoS{\aruco{ }}
 \NewDocumentCommand\openpose{}{OpenPose }
 % {\IfNoValueTF{#1}{No open}{OpenPose#1}}
@@ -191,11 +197,11 @@
 \input{sections/01_introduction}
 \newpage
 % \input{sections/02_background} %SOTA
-\input{sections/02_initial_thougts.tex} %SOTA
-\newpage
 \input{sections/03_relatedWork}
 \newpage
 \input{sections/04_method}
+\newpage
+\input{sections/02_initial_thougts.tex} %SOTA
 \newpage
 % \input{sections/06_contribs}
 % \newpage

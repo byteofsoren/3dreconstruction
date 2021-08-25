@@ -1,17 +1,42 @@
 \section{Related Work}
 \label{sec:related_work}
-In this paper, an evaluation of accuracy is performed on subjects lying on the ground from several angles with body parts partly occlusion because it remains hidden under the body.
-This occlusion can pose a problem for methods that uses a model-based/top-down approach mentioned by Sarafianos et al.~\cite{sarafianos2016} with a pre-defined skeleton as suddenly the images have a missing body part due to self-occlusion.
-Future more the according to Sarafianos, the top-down approach takes significantly more time to compute than a generative bottom-up model.
-%But the bottom line is that pose estimation from a monocular camera requires heavy computation for each frame.
-Sins machine learning is the primary method for solving this problem; a god data set is necessary.
+As stated in the introduction~\ref{sec:intro} there are over 7000 technical papers regarding elderly.
+% Detection systems
+The majority of the research on assisting elderly that have fallen down is on the detection using \ac{iot} devices.
+Te papers~\cite{Rac2020good,Kong2018deapth,xia2017deapth,Barabas2019kinect} focuses on using cameras to detect if the elderly has fallen.
+While the papers like~\cite{Ostadabbas2016falldetect,Hariharan2019remote,Balli2018smart} uses wearable devices with a verity of sensors and algorithms to detect the fall.
+Those papers do not contain any active components in such way to assist or help the elderly person.
+Thus while providing the health care system a way to monitor the elderly it ultimately needs to send human resources to help the elderly.
+
+% Write about assisting elderly with robots.
+The authors Cong Li et,al in his review paper on stand assists lifts for the elderly~\cite{Li2016assist}.
+Mr Li explains that there general are two types of assist systems available to the patients.
+Ether its a fixed in place system mounted to beds, toilets and roof, or a movable systems.
+The movable system many cases are electrical and thus can help the elderly to stand in a situation where the elderly is on the floor.
+% However those system do not have any sense of automation or the ability to auto assists fallen elders.
+However those system cant help the elderly if they fall out of range of the lifters as the system lacks any sense of automation and situational awareness.
+The report also concludes that the research, development and applications remains to be improved.
+
+
+The OpenPose~\cite{cao2017realtime} algorithm is an 2D pose estimator that is focused on localization and classification of body parts in an image or a video clip.
+The algorithm works by deriving a part affinity field with the limbs in focus and then input them to an two-branch multi stage \ac{cnn}.
+The resulting output from the \openpose algorithm is ruffly a x,y coordinates and score for each joint on the human body in the camera image.
+This is output demonstrated in figure~\ref{fig:res:camerapose} in the left column it is show that the labels in green are marked ether rknee, rhip or rwrist at a position on the image.
+That can then be used with an connection diagram to form a approximated skeleton of the subject.
+
+% Re write this part.
+% In this paper, an evaluation of accuracy is performed on subjects lying on the ground from several angles with body parts partly occlusion because it remains hidden under the body.
+%This occlusion can pose a problem for methods that uses a model-based/top-down approach mentioned by Sarafianos et al.~\cite{sarafianos2016} with a pre-defined skeleton as suddenly the images have a missing body part due to self-occlusion.
+%Future more the according to Sarafianos, the top-down approach takes significantly more time to compute than a generative bottom-up model.
+%%But the bottom line is that pose estimation from a monocular camera requires heavy computation for each frame.
+%Sins machine learning is the primary method for solving this problem; a god data set is necessary.
 
 % walking
-In the broader perspective, Erika D’Antonio et al. \cite{d2021validation} evaluates the accuracy of \openposeS when the subject is walking or running by observing the joint angles between each joint.
+In the broader perspective, Erika D’Antonio et al. \cite{d2021validation} evaluates the accuracy of \openpose when the subject is walking or running by observing the joint angles between each joint.
 That was done by using two fixed cameras, a \ac{imu} and linear triangulation algorithms. It was performed on six healthy subjects.
 Among the results, a significant effect of the camera positioning concerning the subject was observed.
 Thus, the analysed results focused on the accuracy of the hip and knee joints from one camera direction.
-To differentiate the results, the authors use statistical methods to conclude that the \operpose{ } is not adequate for a complete human body kinematics analysis.
+To differentiate the results, the authors use statistical methods to conclude that the \operpose is not adequate for a complete human body kinematics analysis.
 
 % On the ground
 Currently, at the time of writing, there exist no 3D pose dataset for humans that are lying on the ground outside the lab environments \cite{yang2018, mehta2017, yasin2016, wang2019}.
@@ -21,7 +46,7 @@ The set then contains images taken with an \ac{rgb} camera, \ac{rgbd} camera wit
 This paper aims to create a dataset with subjects lying on a bed with our without a blanket.
 Thus the results from that paper are not directly aimed at the validation of the system.
 
-The authors Sun, Guangmin and Wang, Zhongqi~\ref{sun2020falldetect} attempts to detect if an elderly human falls on to the floor.
+The authors Sun, Guangmin and Wang, Zhongqi~\cite{sun2020falldetect} attempts to detect if an elderly human falls on to the floor.
 This is done by using the \opnepose algorithms to detect if the subject is on the ground.
 The authors tries to deal with the false positives from \openpose using a object classifier named SSD-MobilNet.
 \todo[inline]{Write more}
@@ -35,6 +60,7 @@ However, Mu{\~n}oz-Salinas continues, keypoint matching has a somewhat limited i
 In their work, they divide the tasks into three steps, mapping the markers in the input domain, creating a pose quiver for how each marker is connected, and finally calculating each marker's global position and camera using the shortest path algorithm.
 Nevertheless, they refine the position by solving the bundle adjustment problem to fine calibrate the position.
 These results it is shown that they achieve better maps and localisation than native \ac{slam} or \ac{sfm} under a broader range of viewports.
+
 
 %aruco markers and aruco mapping
 % reliable markers \cite{garrido2014automatic}
